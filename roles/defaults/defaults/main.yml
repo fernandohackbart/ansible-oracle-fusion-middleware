@@ -14,7 +14,7 @@ ofmInstallUserHomeDir: "{{ ansible_env.HOME }}"
 mediassource: "webserver"
 #mediassource: "filesystem"
 
-mediasURL: "https://medias.xpto.com/pub/omid"
+mediasURL: "https://medias.xpto.com/medias"
 
 #requiredpython: 'python-2.7.10'
 requiredpython: 'python-2.7.5'

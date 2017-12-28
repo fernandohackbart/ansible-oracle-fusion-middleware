@@ -5,7 +5,7 @@ This playbook is aimed to support the installtion of the Oracle Fusion Middlewar
 ## Usage:
 * In the case the download is required the variables should defined in the group variables
   * mediassource: "webserver"
-  * mediasurl : 'https://medias.xpto.com/pub/omid'
+  * mediasurl : 'https://medias.xpto.com/medias'
 
 ## Documentation reference:
 
