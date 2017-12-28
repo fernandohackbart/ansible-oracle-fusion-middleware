@@ -16,9 +16,6 @@ mediassource: "webserver"
 
 mediasURL: "https://medias.xpto.com/medias"
 
-#requiredpython: 'python-2.7.10'
-requiredpython: 'python-2.7.5'
-
 stageBaseVolume: "/u01"
 stageDir: "{{ stageBaseVolume }}/oracle/stage"
 stageRequiredSpace: 2095005696
