@@ -1,6 +1,6 @@
 # Oracle Fusion Middleware 12.2 installation and configuration
 
-This playbook is aimed to support the installtion of the Oracle Fusion Middleware 12.2 over the Linux technical standard 4.0.
+This playbook is aimed to support the installtion of the Oracle Fusion Middleware 12.2 over the RHEL 7 (or equivalent)
 
 ## Usage:
 * In the case the download is required the variables should defined in the group variables

@@ -3,7 +3,7 @@
 # Developed by Fernando Hackbart (fhackbart@gmail.com)
 # Lisbon 2017-12-28
 ---
-lowenvs: ['d2','pte','cte-f','cte-m']
+lowenvs: ['dev','test','test-func','test-int']
 highenvs: ['ppe','prod']
 
 mode: "0755"
