@@ -1,0 +1,40 @@
+##################################################################################################################################        
+# Oracle Fusion Middleware 12.2 Infrastructure installation playbook 
+# Developed by Fernando Hackbart (fhackbart@gmail.com)
+# Lisbon 2017-12-28
+---  
+- name: Check if OFM domain {{ ofmDomainName }} exists at {{ ofmDomainHome }}
+  stat: 
+    path: "{{ ofmDomainHome }}"
+  register: ofmDomainHome_configured   
+  
+- name: Packing the domain {{ ofmDomainName }}
+  block:
+       
+  - name: Clean {{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar
+    file: 
+      path: "{{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar" 
+      state: absent
+    
+  - name: Packing domain {{ ofmDomainName }} from {{ ofmDomainHome }} to {{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar
+    shell: "{{ oracleHome }}/oracle_common/common/bin/pack.sh -domain={{ ofmDomainHome }} -template={{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar -template_name=Pack-{{ ofmDomainName }} -managed=true -log={{ ofmDomainLogsHome }}/Pack-{{ ofmDomainName }}.log -log_priority=info"
+    args:
+      chdir: "{{oracleHome }}/oracle_common/bin"
+    environment:
+      JAVA_HOME: "{{ javaHome }}"
+      ORACLE_HOME: "{{ oracleHome }}"
+      TEMP: "{{ tempDir }}"
+
+  - name: Copying the nodemanager home from {{ ofmDomainHome }}/nodemanager to {{ ofmDomainStageDir }}/{{ ofmDomainName }}-nodemanager.tgz
+    archive:
+      path: "{{ ofmDomainHome }}/nodemanager"
+      dest: "{{ ofmDomainStageDir }}/{{ ofmDomainName }}-nodemanager.tgz"
+    
+  - name: Fetching the packed domain to the Ansible server from {{ ofmAdminserverMachine }}:{{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar
+    fetch:
+      src: "{{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar"
+      dest: "{{ ofmAdminserverMachine }}/{{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar"
+      flat: yes
+
+  when: >
+    ofmDomainHome_configured.stat.exists == True

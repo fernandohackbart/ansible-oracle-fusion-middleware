@@ -1,0 +1,48 @@
+##################################################################################################################################        
+# Oracle Fusion Middleware 12.2 Infrastructure installation playbook 
+# Developed by Fernando Hackbart (fhackbart@gmail.com)
+# Lisbon 2017-12-28
+---  
+- name: Checking serverEnvironment = {{ serverEnvironment }}
+  fail:
+    msg: "serverEnvironment = {{ serverEnvironment }} not valid!"
+  when: > 
+         ((not (serverEnvironment in highenvs)) and (not(serverEnvironment in lowenvs)))
+         
+- name: Check if OFM home {{ oraclePresenceFolder }} is already installed 
+  stat: path={{ oraclePresenceFolder }}
+  register: oracleHome_installed
+
+- name: Deinstalling Oracle Fusion Middleware
+  block:
+  
+#  - name: Create stage folder "{{ stageDir }}"
+#    file:
+#      path: "{{ stageDir }}"
+#      state: directory
+#      mode: "{{ mode }}"
+
+#  - name: Create response file {{ stageDir }}/{{ ofmresponseFile }}
+#    template: 
+#      src: "{{ ofmresponseFile }}"
+#      dest: "{{ stageDir }}/{{ ofmresponseFile }}"
+
+#  - name: Deinstalling Oracle Fusion Middleware {{ ofmVersion }} on {{ oracleHome }}
+#    command: "{{ oracleHome }}/oui/bin/deinstall.sh -silent -responseFile {{ stageDir }}/{{ ofmresponseFile }}"
+
+  - name: Detaching Oracle Fusion Middleware {{ ofmVersion }} on {{ oracleHome }} from central inventory
+    command: "{{ oracleHome }}/oui/bin/detachHome.sh"
+    ignore_errors: true
+       
+#  - name: Post clean {{ stageDir }}/{{ ofmresponseFile }}
+#    file: 
+#      path: "{{ stageDir }}/{{ ofmresponseFile }}" 
+#      state: absent
+
+  - name: Post clean {{ oracleHome }}
+    file: 
+      path: "{{ oracleHome }}" 
+      state: absent
+      
+  when: >
+    oracleHome_installed.stat.exists == True   

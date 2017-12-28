@@ -1,0 +1,11 @@
+operation={{ ofmRCUOperation }}
+connectString={{ ofmJdbcURLrcu }}
+databaseType=ORACLE
+dbUser={{ ofmJdbcsysUsername }}
+dbRole={{ ofmJDBCsysrole }}
+schemaPrefix={{ ofmJdbcRCUSchemaPrefix }}
+componentList={{ ofmRCUComponents }}
+selectDependentsForComponents=true
+useSamePasswordForAllSchemaUsers=true
+skipCleanupOnFailure=no
+skipTablespaceDrop=no

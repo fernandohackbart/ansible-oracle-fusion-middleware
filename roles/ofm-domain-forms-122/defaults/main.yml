@@ -1,0 +1,17 @@
+##################################################################################################################################        
+# Oracle Fusion Middleware 12.2 Infrastructure installation playbook 
+# Developed by Fernando Hackbart (fhackbart@gmail.com)
+# Lisbon 2017-12-28
+---
+ofmFRMextacronym: 'FRM'
+ofmFRMextversion: '12.2.1.2.0'
+#ofmFRMextclustername: 'FRM_CLUSTER'
+ofmFRMextclustername: 'cluster_forms'
+ofmFRMextserverprefix: 'FRM_MS'
+ofmFRMextservergroups: 'FORMS-MAN-SVR'
+ofmFRMextprovideserver: 'TRUE'
+ofmFRMextprovidedservername: 'WLS_FORMS'
+ofmFRMextrequireserver: 'TRUE'
+ofmFRMextmsargs: ' -Xms2000m -Xmx2000m '
+ofmFRMextmsport: '14006'
+ofmFRMextmachines: ['server21.xpto.com','server22.xpto.com']

@@ -1,0 +1,13 @@
+##################################################################################################################################        
+# Oracle Fusion Middleware 12.2 Infrastructure installation playbook 
+# Developed by Fernando Hackbart (fhackbart@gmail.com)
+# Lisbon 2017-12-28
+---
+javaBaseVolume: "/u01"
+javaVersion: "1.8.0"
+javaRelease: "101"
+javaInstallationFile: "jdk-8u{{ javaRelease }}-linux-x64.tar.gz"
+javaBaseHome: "{{ javaBaseVolume }}/oracle/product/{{ javaVersion }}/{{ javaRelease }}"
+javaHome: "{{ javaBaseHome }}/jdk"
+javaExecutable: "{{ javaHome }}/bin/java"
+javaRequiredSpace: 300000000

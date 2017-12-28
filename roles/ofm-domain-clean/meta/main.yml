@@ -1,0 +1,4 @@
+---
+dependencies:
+  - ofm-java-8
+  - ofm-domain-defaults

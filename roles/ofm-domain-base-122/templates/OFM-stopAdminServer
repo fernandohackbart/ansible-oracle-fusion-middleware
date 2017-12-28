@@ -1,0 +1,2 @@
+#!/bin/bash
+{{ oracleHome }}/oracle_common/common/bin/wlst.sh "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}.py"

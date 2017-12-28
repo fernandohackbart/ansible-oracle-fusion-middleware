@@ -1,0 +1,21 @@
+##################################################################################################################################        
+# Oracle Fusion Middleware 12.2 Infrastructure installation playbook 
+# Developed by Fernando Hackbart (fhackbart@gmail.com)
+# Lisbon 2017-12-28
+---
+tempBaseVolume: '/tmp'
+tempDir: "/tmp"
+tempRequiredSpace: 1073741824
+
+oraBaseVolume: "/u01"
+oraBaseDir: "{{ oraBaseVolume }}/oracle/product"
+ofmInstallRequiredSpace: 2095005696
+
+oraInvPointer: "/etc/oraInst.loc"
+orainvPointerTemplate: "oraInst.loc"
+oraInvDir: "/u01/oraInventory"
+
+ofmModule: "ofm"
+ofmVersion: "12.2.1.2"
+oracleHome: "{{ oraBaseDir }}/{{ ofmVersion }}/{{ ofmModule }}"
+oraclePresenceFolder: "{{ oracleHome }}"

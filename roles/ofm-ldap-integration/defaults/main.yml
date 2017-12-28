@@ -1,0 +1,30 @@
+##################################################################################################################################        
+# Oracle Fusion Middleware 12.2 Infrastructure installation playbook 
+# Developed by Fernando Hackbart (fhackbart@gmail.com)
+# Lisbon 2017-12-28
+---
+ofmLDAPProviderName: "LDAP"
+ofmLDAPProviderClass: "weblogic.security.providers.authentication.IPlanetAuthenticator"
+ofmLDAPProviderControlFlag: "SUFFICIENT"
+ofmLDAPHostName: "ldap.xpto.com"
+ofmLDAPHostPort: "389"
+ofmLDAPHostPrincipal: "" 
+ofmLDAPHostCredential: ""
+ofmLDAPBaseDN: "o=xpto.com"
+ofmLDAPAllUsersFilter: "(&(xptolegacyuid=*)(objectclass=xptoperson)(xptomanagerdn=uid=manager.example,ou=people,ou=eu,o=xpto.com))"
+ofmLDAPUserFromNameFilter: "(&(xptolegacyuid=%u)(objectclass=xptoperson)(xptomanagerdn=uid=manager.example,ou=people,ou=eu,o=xpto.com))"
+ofmLDAPUserSearchScope: "subtree"
+ofmLDAPUserNameAttribute: "xptolegacyuid"
+ofmLDAPUserNameObjectClass: "xptoperson"
+ofmLDAPGroupBaseDN: "o=xpto.com"
+ofmLDAPAllGroupsFilter: "(&(objectclass=xptousergroup)(cn=OEM*))"
+ofmLDAPGroupFromNameFilter: "(&(objectclass=xptousergroup)(cn=%g))"
+ofmLDAPSearchScope: "subtree"
+ofmLDAPGroupMembershipSearching: "unlimited"
+ofmLDAPGroupMembershipSearchLevel: "0"
+ofmLDAPGroupIgnoreDuplicateMembership: "0" 
+ofmLDAPGroupFromUserFilterForMemberUID: "(&(memberuid=%M)(objectclass=groupofuniquenames))"
+ofmLDAPStaticGroupObjectclass: "xptousergroup"
+ofmLDAPStaticMemberDNAttribute: "uniquemember"
+ofmLDAPStaticGroupDNSFromMemberDNFilter: "(&(uniquemember=%M)(objectclass=xptousergroup))"
+ofmLDAPDefaultAuthenticatorControlFlag: "SUFFICIENT"

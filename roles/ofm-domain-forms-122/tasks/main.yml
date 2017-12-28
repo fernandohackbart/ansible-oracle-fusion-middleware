@@ -1,0 +1,147 @@
+##################################################################################################################################        
+# Oracle Fusion Middleware 12.2 Infrastructure installation playbook 
+# Developed by Fernando Hackbart (fhackbart@gmail.com)
+# Lisbon 2017-12-28
+---  
+- name: Checking serverEnvironment = {{ serverEnvironment }}
+  fail:
+    msg: "serverEnvironment = {{ serverEnvironment }} not valid!"
+  when: > 
+         ((not (serverEnvironment in highenvs)) and (not(serverEnvironment in lowenvs)))
+         
+- name: Check if OFM domain {{ ofmDomainName }} exists at {{ ofmDomainHome }}
+  stat: path={{ ofmDomainHome }}
+  register: ofmDomainHome_configured   
+
+- name: Extending Oracle Fusion Middleware Infrastructure domain for Oracle Enterprise Manager
+  block:
+  
+  - name: Create stage folder "{{ ofmDomainStageDir }}"
+    file:
+      path: "{{ ofmDomainStageDir }}"
+      state: directory
+      mode: "{{ mode }}"
+
+  - name: Create variables for restricted JRF extension
+    set_fact:
+      ofmFRMexttemplate: 'Oracle Forms'
+    when: > 
+      ofmRestrictedJRF == "TRUE"
+
+  - name: Create variables for non restricted JRF extension
+    set_fact:
+      ofmFRMexttemplate: 'Oracle Forms'
+    when: > 
+      ofmRestrictedJRF == "FALSE"
+
+  - name: Assigning default value to ofmFRMextassignexistingserver
+    set_fact:
+      ofmFRMextassignexistingserver: ""
+          
+  - name: Check if the template requires a server to be assigned to
+    set_fact:
+      ofmFRMextassignexistingserver: "{{ ofmAdminserverName }}"
+    when: > 
+          ofmFRMextrequireserver == "TRUE" and ofmFRMextprovideserver == "FALSE"
+  
+  - name: Defined the server name for the template provided server {{ ofmFRMextserverprefix }}0
+    set_fact:
+      ofmFRMextservername: "{{ ofmFRMextserverprefix }}0"
+  
+  ########################################################################################################################    
+  - name: Stopping {{ ofmAdminserverName }} with {{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}
+    command: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}"
+    args:
+      chdir: "{{ ofmInstallUserHomeDir }}/bin"
+    environment:
+      JAVA_HOME: "{{ javaHome }}"
+      JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
+      TEMP: "{{ tempDir }}"
+  
+  - name: Create extend domain Jython script {{ ofmDomainStageDir }}/OFM-12.2-extendDomain-FRM.py
+    ignore_errors: True
+    template: 
+      src: "OFM-12.2-extendDomain-FRM.py"
+      dest: "{{ ofmDomainStageDir }}/OFM-12.2-extendDomain-FRM.py"    
+      mode: "{{ mode }}"    
+      
+  - name: Create move filestores Jython script {{ ofmDomainStageDir }}/OFM-12.2-moveFileStoresToConfig.py
+    template: 
+      src: "OFM-12.2-moveFileStoresToConfig.py"
+      dest: "{{ ofmDomainStageDir }}/OFM-12.2-moveFileStoresToConfig.py"    
+      mode: "{{ mode }}"
+              
+  - name: Extending {{ ofmDomainName }} with {{ ofmFRMexttemplate  }}
+    command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-extendDomain-FRM.py"
+    args:
+      chdir: "{{ oracleHome }}/oracle_common/common/bin"
+    environment:
+      JAVA_HOME: "{{ javaHome }}"
+      JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
+      TEMP: "{{ tempDir }}"
+      
+  ########################################################################################################################  
+
+  - name: Creating create managed servers Jython script {{ ofmDomainStageDir }}/OFM-12.2-createManagedServer-{{ ofmFRMextserverprefix }}{{ item.0 }}.py
+    template: 
+      src: "OFM-12.2-createManagedServer.py"
+      dest: "{{ ofmDomainStageDir }}/OFM-12.2-createManagedServer-{{ ofmFRMextserverprefix }}{{ item.0 }}.py"    
+      mode: "{{ mode }}"
+    when: >
+      item.0 > 0
+    with_indexed_items:
+      - "{{ ofmFRMextmachines }}"
+  
+  - name: Creating managed servers {{ ofmDomainName }} with {{ ofmFRMexttemplate  }}
+    command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-createManagedServer-{{ ofmFRMextserverprefix }}{{ item.0 }}.py"
+    args:
+      chdir: "{{ oracleHome }}/oracle_common/common/bin"
+    environment:
+      JAVA_HOME: "{{ javaHome }}"
+      JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
+      TEMP: "{{ tempDir }}"
+    when: >
+      item.0 > 0  
+    with_indexed_items:
+      - "{{ ofmFRMextmachines }}"
+      
+  ########################################################################################################################           
+  - name: Starting {{ ofmAdminserverName }} with {{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}
+    command: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}"
+    args:
+      chdir: "{{ ofmInstallUserHomeDir }}/bin"
+    environment:
+      JAVA_HOME: "{{ javaHome }}"
+      JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
+      TEMP: "{{ tempDir }}"
+      
+  ########################################################################################################################   
+  
+  - name: Creating adjust managed servers Jython script {{ ofmDomainStageDir }}/OFM-12.2-createManagedServer-{{ ofmFRMextserverprefix }}{{ item.0 }}.py
+    template: 
+      src: "OFM-12.2-adjustManagedServer.py"
+      dest: "{{ ofmDomainStageDir }}/OFM-12.2-adjustManagedServer-{{ ofmFRMextserverprefix }}{{ item.0 }}.py"    
+      mode: "{{ mode }}"
+    with_indexed_items:
+      - "{{ ofmFRMextmachines }}"
+  
+  - name: Adjusting managed servers {{ ofmDomainName }} with {{ ofmFRMexttemplate  }}
+    command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-adjustManagedServer-{{ ofmFRMextserverprefix }}{{ item.0 }}.py"
+    args:
+      chdir: "{{ oracleHome }}/oracle_common/common/bin"
+    environment:
+      JAVA_HOME: "{{ javaHome }}"
+      JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
+      TEMP: "{{ tempDir }}"
+    with_indexed_items:
+      - "{{ ofmFRMextmachines }}"
+      
+  ########################################################################################################################
+  - name: Clean {{ ofmDomainStageDir }}/OFM-12.2-extendDomain-FRM.py
+    file: 
+      path: "{{ ofmDomainStageDir }}/OFM-12.2-extendDomain-FRM.py" 
+      state: absent
+      
+  ########################################################################################################################       
+  when: >
+    ofmDomainHome_configured.stat.exists == True

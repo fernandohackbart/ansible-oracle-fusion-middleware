@@ -1,0 +1,24 @@
+##################################################################################################################################        
+# Oracle Fusion Middleware 12.2 Infrastructure installation playbook 
+# Developed by Fernando Hackbart (fhackbart@gmail.com)
+# Lisbon 2017-12-28
+---
+lowenvs: ['d2','pte','cte-f','cte-m']
+highenvs: ['ppe','prod']
+
+mode: "0755"
+secureMode: "0700"
+
+ofmInstallUserHomeDir: "{{ ansible_env.HOME }}"
+
+mediassource: "webserver"
+#mediassource: "filesystem"
+
+mediasURL: "https://medias.xpto.com/pub/omid"
+
+#requiredpython: 'python-2.7.10'
+requiredpython: 'python-2.7.5'
+
+stageBaseVolume: "/u01"
+stageDir: "{{ stageBaseVolume }}/oracle/stage"
+stageRequiredSpace: 2095005696

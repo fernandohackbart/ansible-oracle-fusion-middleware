@@ -1,0 +1,10 @@
+##################################################################################################################################        
+# Oracle Fusion Middleware 12.2 Infrastructure installation playbook 
+# Developed by Fernando Hackbart (fhackbart@gmail.com)
+# Lisbon 2017-12-28
+---
+ofmMGDSRVextserverprefix: 'WLS_SERVER'
+ofmMGDSRVextservergroups: ''
+ofmMGDSRVextmsargs: ' -Xms2000m -Xmx2000m '
+ofmMGDSRVextmsport: '8000'
+ofmMGDSRVextmachines: ['server21.xpto.com','server22.xpto.com']

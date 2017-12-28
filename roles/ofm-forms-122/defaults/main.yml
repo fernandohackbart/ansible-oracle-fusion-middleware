@@ -1,0 +1,10 @@
+##################################################################################################################################        
+# Oracle Fusion Middleware 12.2 Infrastructure installation playbook 
+# Developed by Fernando Hackbart (fhackbart@gmail.com)
+# Lisbon 2017-12-28
+---
+ofmInstallationMedia: "V789399-01.zip"
+ofmInstallationFile: "fmw_12.2.1.2.0_fr_linux64.bin"
+ofmresponseFile: "OFMWEB-12.2.1.2-install.rsp"
+ofmInstallationInstallType: "Forms and Reports Deployment"
+oraclePresenceFolder: "{{ oracleHome }}/forms"

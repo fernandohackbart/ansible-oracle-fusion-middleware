@@ -1,0 +1,130 @@
+##################################################################################################################################        
+# Oracle Fusion Middleware 12.2 Infrastructure installation playbook 
+# Developed by Fernando Hackbart (fhackbart@gmail.com)
+# Lisbon 2017-12-28
+---  
+
+#- name: Counting the Weblogic processes for domain {{ ofmDomainName }}
+#  shell: "pgrep -f {{ ofmDomainName }} | wc -l "
+#  ignore_errors: True
+#  register: process_count
+  
+- name: Killing the Weblogic processes for domain {{ ofmDomainName }} (may raise errors)
+  shell: "pkill -9 -f {{ ofmDomainName }} || true "
+  ignore_errors: True
+#  when: >
+#    process_count > 0 
+####################################################################################################################################
+# Run RCU to clean up the schemas
+- name: Cleaning the RCU created repository
+  block:
+  #ignore_errors: True
+  
+  - name: Create stage folder {{ ofmDomainStageDir }}
+    file:
+      path: "{{ ofmDomainStageDir }}"
+      state: directory
+      mode: "{{ mode }}"
+      
+  - name: Create RCU response file {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp
+    template: 
+      src: "RCU-12.2.1.2.0-generic.rsp"
+      dest: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp"    
+      mode: "{{ mode }}"
+      
+  - name: Create RCU response file {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp
+    template: 
+      src: "RCU-12.2.1.2.0-passwords.rsp"
+      dest: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp"    
+      mode: "{{ mode }}"
+      
+  - name: Run RCU {{ ofmRCUOperation }} prefix {{ ofmJdbcRCUSchemaPrefix }} and components ({{ ofmRCUComponents }}) at {{ ofmJdbcURLrcu }}
+    ignore_errors: True
+    shell: "{{oracleHome }}/oracle_common/bin/rcu -silent -responseFile {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp -f < {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp"
+    args:
+      chdir: "{{ oracleHome }}/oracle_common/bin"
+    environment:
+      JAVA_HOME: "{{ javaHome }}"
+      ORACLE_HOME: "{{ oracleHome }}"
+      TEMP: "{{ tempDir }}"
+      
+  - name: Post clean {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp
+    file: 
+      path: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp" 
+      state: absent
+
+  - name: Post clean {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp
+    file: 
+      path: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp" 
+      state: absent
+      
+  when: >
+    ofmRestrictedJRF == 'FALSE'   
+
+####################################################################################################################################
+
+- name: Clean {{ ofmDomainLogsHome }}
+  file: 
+    path: "{{ ofmDomainLogsHome }}" 
+    state: absent
+    
+- name: Clean {{ ofmDomainHome }}
+  file: 
+    path: "{{ ofmDomainHome }}" 
+    state: absent
+  
+- name: Clean {{ ofmTransHome }}
+  file: 
+    path: "{{ ofmTransHome }}" 
+    state: absent
+  
+- name: Clean {{ ofmApplicationHome }}
+  file: 
+    path: "{{ ofmApplicationHome }}" 
+    state: absent
+
+- name: Clean {{ ofmDomainStageDir }}
+  file: 
+    path: "{{ ofmDomainStageDir }}" 
+    state: absent
+
+- name: Clean {{ ansible_env.HOME }}/{{ ofmDomainName }}-cred.secure
+  file: 
+    path: "{{ ansible_env.HOME }}/{{ ofmDomainName }}-cred.secure" 
+    state: absent
+    
+- name: Clean {{ ansible_env.HOME }}/{{ ofmDomainName }}-key.secure
+  file: 
+    path: "{{ ansible_env.HOME }}/{{ ofmDomainName }}-key.secure" 
+    state: absent
+    
+- name: Clean {{ ansible_env.HOME }}/{{ ofmDomainName }}-nodemanager.config
+  file: 
+    path: "{{ ansible_env.HOME }}/{{ ofmDomainName }}-nodemanager.config" 
+    state: absent    
+
+- name: Clean {{ ansible_env.HOME }}/{{ ofmDomainName }}-nodemanager.keyfile
+  file: 
+    path: "{{ ansible_env.HOME }}/{{ ofmDomainName }}-nodemanager.keyfile" 
+    state: absent    
+        
+- name: Clean {{ ansible_env.HOME }}/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}
+  file: 
+    path: "{{ ansible_env.HOME }}/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}" 
+    state: absent    
+        
+- name: Clean {{ ansible_env.HOME }}/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}.py
+  file: 
+    path: "{{ ansible_env.HOME }}/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}.py" 
+    state: absent    
+
+- name: Clean {{ ansible_env.HOME }}/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}
+  file: 
+    path: "{{ ansible_env.HOME }}/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}" 
+    state: absent    
+        
+- name: Clean {{ ansible_env.HOME }}/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}.py
+  file: 
+    path: "{{ ansible_env.HOME }}/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}.py" 
+    state: absent    
+

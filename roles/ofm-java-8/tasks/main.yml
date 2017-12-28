@@ -1,0 +1,83 @@
+##################################################################################################################################        
+# Oracle Fusion Middleware 12.2 Infrastructure installation playbook 
+# Developed by Fernando Hackbart (fhackbart@gmail.com)
+# Lisbon 2017-12-28
+---  
+
+- name: Checking serverEnvironment = {{ serverEnvironment }}
+  fail:
+    msg: "serverEnvironment = {{ serverEnvironment }} not valid!"
+  when: > 
+         ((not (serverEnvironment in highenvs)) and (not(serverEnvironment in lowenvs)))
+ 
+- name: Check if java home {{ javaHome }} is already installed 
+  stat: path={{ javaHome }}
+  register: javahome_installed
+
+- name: Installing Java
+  block:
+  - name: Check available disk space in {{ tempBaseVolume }}
+    assert:
+      that: 
+        -  item.size_available > tempRequiredSpace
+    with_items: 
+      - "{{ ansible_mounts }}"
+    when: >
+      item.mount == tempBaseVolume
+    register: tmp_free
+  
+  - name: Check available disk space in {{ javaBaseVolume }}
+    assert:
+      that: 
+        -  item.size_available > javaRequiredSpace
+    with_items: 
+      - "{{ ansible_mounts }}"
+    when: >
+      item.mount == javaBaseVolume    
+    register: install_free 
+  
+  - name: Create base folder {{ javaBaseHome }}
+    ignore_errors: yes
+    file:
+      path: "{{ javaBaseHome }}"
+      state: directory
+      mode: "{{ mode }}"
+      
+  - name: Create stage folder {{ stageDir }}
+    file:
+      path: "{{ stageDir }}"
+      state: directory
+      mode: "{{ mode }}"
+  
+  - name: Pre clean {{ stageDir }}/{{ javaInstallationFile }}
+    file: 
+      path: "{{ stageDir }}/{{ javaInstallationFile }}" 
+      state: absent
+   
+  - name: Download Java from {{ mediasURL }}/{{ javaInstallationFile }} to {{ stageDir }}/{{ javaInstallationFile }}
+    get_url: 
+      url: "{{ mediasURL }}/{{ javaInstallationFile }}"
+      dest: "{{ stageDir }}/{{ javaInstallationFile }}"
+    when: > 
+      mediassource == 'webserver'  
+  
+  - name: Unzip {{ stageDir }}/{{ javaInstallationFile }} to {{ stageDir }}
+    unarchive: 
+      dest: "{{ stageDir }}"
+      src: "{{ stageDir }}/{{ javaInstallationFile }}"
+      creates: "{{ stageDir }}/jdk{{ javaVersion }}_{{ javaRelease }}"
+      copy: no
+      
+  - name: Move {{ stageDir }}/jdk{{ javaVersion }}_{{ javaRelease }} to {{ javaHome }}
+    command: "mv {{ stageDir }}/jdk{{ javaVersion }}_{{ javaRelease }} {{ javaHome }}"
+      
+  - name: Post clean {{ stageDir }}/{{ javaInstallationFile }}
+    file: 
+      path: "{{ stageDir }}/{{ javaInstallationFile }}" 
+      state: absent
+    
+  when: >
+    javahome_installed.stat.exists == False 
+    
+    
+    

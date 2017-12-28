@@ -1,0 +1,4 @@
+---
+dependencies:
+  - ofm-domain-defaults
+  - ofm-domain-base-122

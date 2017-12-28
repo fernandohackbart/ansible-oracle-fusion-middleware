@@ -1,0 +1,86 @@
+##################################################################################################################################        
+# Oracle Fusion Middleware 12.2 Infrastructure installation playbook 
+# Developed by Fernando Hackbart (fhackbart@gmail.com)
+# Lisbon 2017-12-28
+---  
+- name: Checking serverEnvironment = {{ serverEnvironment }}
+  fail:
+    msg: "serverEnvironment = {{ serverEnvironment }} not valid!"
+  when: > 
+         ((not (serverEnvironment in highenvs)) and (not(serverEnvironment in lowenvs)))
+         
+- name: Check if domain {{ ofmDomainName }} exists at {{ ofmDomainHome }}
+  stat: path={{ ofmDomainHome }}
+  register: ofmDomainHome_configured   
+  
+#TODO: Check if the domain was already extended for Oracle Enterprise Manager
+  
+- name: Extending Oracle Fusion Middleware Infrastructure domain for Oracle Enterprise Manager
+  block:
+  
+  - name: Create stage folder "{{ stageDir }}"
+    file:
+      path: "{{ stageDir }}"
+      state: directory
+      mode: "{{ mode }}"
+ 
+  - name: Create variables for restricted JRF extension
+    set_fact:
+      ofmOEMexttemplate: 'Oracle Enterprise Manager-Restricted JRF'
+    when: > 
+          ofmRestrictedJRF == "TRUE"
+
+  - name: Create variables for non restricted JRF extension
+    set_fact:
+      ofmOEMexttemplate: 'Oracle Enterprise Manager'
+    when: > 
+          ofmRestrictedJRF == "FALSE"
+     
+  ########################################################################################################################    
+  - name: Stopping {{ ofmAdminserverName }} with {{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}
+    command: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}"
+    args:
+      chdir: "{{ ofmInstallUserHomeDir }}/bin"
+    environment:
+      JAVA_HOME: "{{ javaHome }}"
+      JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
+      TEMP: "{{ tempDir }}"
+  
+  - name: Create extend domain Jython script {{ ofmDomainStageDir }}/OFM-12.2-extendDomain-OEM.py
+    template: 
+      src: "OFM-12.2-extendDomain-OEM.py"
+      dest: "{{ ofmDomainStageDir }}/OFM-12.2-extendDomain-OEM.py"    
+      mode: "{{ mode }}"    
+      
+  - name: Create move filestores Jython script {{ ofmDomainStageDir }}/OFM-12.2-moveFileStoresToConfig.py
+    template: 
+      src: "OFM-12.2-moveFileStoresToConfig.py"
+      dest: "{{ ofmDomainStageDir }}/OFM-12.2-moveFileStoresToConfig.py"    
+      mode: "{{ mode }}"
+        
+  - name: Extending {{ ofmDomainName }} with {{ ofmOEMexttemplate  }}
+    command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-extendDomain-OEM.py"
+    args:
+      chdir: "{{ oracleHome }}/oracle_common/common/bin"
+    environment:
+      JAVA_HOME: "{{ javaHome }}"
+      JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
+      TEMP: "{{ tempDir }}"
+  
+  - name: Starting {{ ofmAdminserverName }} with {{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}
+    command: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}"
+    args:
+      chdir: "{{ ofmInstallUserHomeDir }}/bin"
+    environment:
+      JAVA_HOME: "{{ javaHome }}"
+      JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
+      TEMP: "{{ tempDir }}"
+  
+  - name: Clean {{ ofmDomainStageDir }}/OFM-12.2-extendDomain-OEM.py
+    file: 
+      path: "{{ ofmDomainStageDir }}/OFM-12.2-extendDomain-OEM.py" 
+      state: absent
+  ########################################################################################################################       
+  when: >
+    ofmDomainHome_configured.stat.exists == True 
+ 

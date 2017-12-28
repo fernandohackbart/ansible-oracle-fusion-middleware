@@ -1,0 +1,4 @@
+---
+dependencies:
+  - ofm-forms-122
+  - ofm-domain-base-122

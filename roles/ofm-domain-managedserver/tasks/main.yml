@@ -1,0 +1,48 @@
+##################################################################################################################################        
+# Oracle Fusion Middleware 12.2 Infrastructure installation playbook 
+# Developed by Fernando Hackbart (fhackbart@gmail.com)
+# Lisbon 2017-12-28
+---  
+- name: Checking serverEnvironment = {{ serverEnvironment }}
+  fail:
+    msg: "serverEnvironment = {{ serverEnvironment }} not valid!"
+  when: > 
+         ((not (serverEnvironment in highenvs)) and (not(serverEnvironment in lowenvs)))
+         
+- name: Check if OFM domain {{ ofmDomainName }} exists at {{ ofmDomainHome }}
+  stat: path={{ ofmDomainHome }}
+  register: ofmDomainHome_configured   
+
+- name: Creating new managed servers
+  block:
+  
+  - name: Create stage folder "{{ ofmDomainStageDir }}"
+    file:
+      path: "{{ ofmDomainStageDir }}"
+      state: directory
+      mode: "{{ mode }}"
+                
+  ########################################################################################################################  
+
+  - name: Creating create managed servers Jython script {{ ofmDomainStageDir }}/OFM-12.2-createManagedServer-{{ ofmMGDSRVextserverprefix }}{{ item.0 }}.py
+    template: 
+      src: "OFM-12.2-createManagedServer.py"
+      dest: "{{ ofmDomainStageDir }}/OFM-12.2-createManagedServer-{{ ofmMGDSRVextserverprefix }}{{ item.0 }}.py"    
+      mode: "{{ mode }}"
+    with_indexed_items:
+      - "{{ ofmMGDSRVextmachines }}"
+  
+  - name: Creating managed servers {{ ofmDomainName }} with {{ ofmMGDSRVexttemplate  }}
+    command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-createManagedServer-{{ ofmMGDSRVextserverprefix }}{{ item.0 }}.py"
+    args:
+      chdir: "{{ oracleHome }}/oracle_common/common/bin"
+    environment:
+      JAVA_HOME: "{{ javaHome }}"
+      JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
+      TEMP: "{{ tempDir }}"
+    with_indexed_items:
+      - "{{ ofmMGDSRVextmachines }}"
+      
+  ########################################################################################################################       
+  when: >
+    ofmDomainHome_configured.stat.exists == True
