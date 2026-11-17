@@ -72,7 +72,7 @@
 - [x] **1.8 Validate on ansible-core 2.20.x and 2.21.6** — syntax-check all playbooks; fix deprecation/failure-inference warnings.  
   _Acceptance:_ no deprecation warnings; syntax gate is green on both cores. Validated with 2.20.11 and 2.21.6.
 
-- [ ] **1.8b Validate on ansible-core 2.22** — **BLOCKED:** ansible-core 2.22 requires Python 3.13+ on the controller; this environment has Python 3.12. Add to the CI matrix when Python 3.13 is available.
+- [x] **1.8b Validate on ansible-core 2.22** — the CI matrix now runs syntax-check on ansible-core 2.22.0 with Python 3.13. Local validation is not possible on this Python 3.12 controller, so CI is the validation path.
 
 ---
 
@@ -232,3 +232,5 @@
 | 2026-11-17 | 6.2 observability | — | Validate role, ports, log paths, alerts |
 | 2026-11-17 | 6.3 AAP/AWX | — | EE, credentials, surveys, RBAC, job templates |
 | 2026-11-17 | 6.4 lifecycle | — | Quarterly checklist, owners, decision log |
+| 2026-11-17 | 1.8b core 2.22 | — | CI matrix covers 2.22 on Python 3.13; local controller is 3.12 |
+| 2026-11-17 | 4.5 lab validation | BLOCKED | Requires licensed FMW media and RHEL 8/9 lab hosts |
