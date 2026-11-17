@@ -1,0 +1,188 @@
+# ROADMAP — Implementation Checklist
+
+**Status:** In progress  
+**Updated:** 2026-11-17  
+**Baseline:** 15 playbooks, 17 roles, 42 templates, FMW 12.2.1.2, JDK 8u101, RHEL 7-era assumptions  
+**Target:** Ansible 14.6.0 / ansible-core 2.21.6, Python 3.12+, RHEL 8/9, FMW 12.2.1.4 → 14.1.2
+
+> Detailed assessment, evidence, defect table, and rationale: [docs/roadmap-details.md](docs/roadmap-details.md).
+
+## How to use this checklist
+
+- Each checkbox is a shippable unit of work.
+- One commit per item (or per tight group of directly related items).
+- `[x]` = implemented **and** validated with the available checks.
+- `[ ]` = not started. Add `**BLOCKED:**` with the reason when work cannot proceed without licensed media, lab hosts, or a decision.
+- Local validation commands: `make lint`, `make syntax`, `make test`.
+- Do not tick an item if its acceptance criteria were not met.
+
+---
+
+## Phase 0 — Baseline and guardrails
+
+- [ ] **0.1 Add `ansible.cfg`** — deterministic inventory/roles/collections paths, host-key checking, no retry files, deprecation warnings, interpreter discovery.  
+  _Acceptance:_ `ansible-config dump --only-changed` shows only intentional settings.
+
+- [ ] **0.2 Add `requirements.yml` and `requirements-dev.txt`** — pin `community.general`, `ansible.posix`, `ansible==14.6.0`, `ansible-lint`, `yamllint`, `molecule`, `ansible-builder`, `pre-commit`.  
+  _Acceptance:_ `ansible-galaxy collection install -r requirements.yml` succeeds; versions are pinned.
+
+- [ ] **0.3 Add lint/format configuration** — `.ansible-lint` (`profile: basic`), `.yamllint`, `.editorconfig`, `.gitignore` (vault files, `.venv`, artifacts, media, retries, molecule state).  
+  _Acceptance:_ `ansible-lint` and `yamllint` run with the committed config and no missing-file errors.
+
+- [ ] **0.4 Add example inventory and group vars** — `inventories/example/hosts.yml`, `group_vars/all.yml`, `group_vars/vault.yml.example`; define `ofm_admin`, `ofm_managed`, `ofm_ohs`, `ofm_forms`.  
+  _Acceptance:_ playbook syntax-check works without `-e targetHosts=...`.
+
+- [ ] **0.5 Rewrite `README.md`** — purpose, support matrix, prerequisites, quick start, inventory, variables, secrets, validation, links.  
+  _Acceptance:_ a new engineer can run the example inventory by following the README only.
+
+- [ ] **0.6 Add `Makefile` and CI workflow** — `setup`, `syntax`, `lint`, `test`, `clean`; CI runs syntax-check, yamllint, ansible-lint.  
+  _Acceptance:_ `make lint` and `make syntax` pass locally; CI workflow is syntactically valid.
+
+- [ ] **0.7 Add project metadata** — `CHANGELOG.md`, `LICENSE`, `CONTRIBUTING.md`.  
+  _Acceptance:_ files exist and state the project’s support and contribution policy.
+
+- [ ] **0.8 Normalize file hygiene** — remove trailing whitespace, fix YAML indentation, add final newlines, remove executable bits from YAML.  
+  _Acceptance:_ `git diff --check` is clean; `find . -name '*.yml' -perm -u+x` returns nothing.
+
+---
+
+## Phase 1 — Ansible 14 compatibility
+
+- [ ] **1.1 Add FQCN to every module action** — replace short names with `ansible.builtin.*` or the correct collection FQCN.  
+  _Acceptance:_ `fqcn` lint rule is at zero (excluding documented waivers).
+
+- [ ] **1.2 Fix collection modules and unarchive options** — `archive` → `community.general.archive`; `unarchive: copy: no` → `remote_src: true`; add `requirements.yml` coverage.  
+  _Acceptance:_ `ansible-playbook --syntax-check` passes with only `ansible-core` + pinned collections.
+
+- [ ] **1.3 Replace legacy loops** — `with_items` and `with_indexed_items` → `loop` with `loop_control.index_var` where an index is needed.  
+  _Acceptance:_ no `with_*` loop keys remain.
+
+- [ ] **1.4 Replace free-form module arguments** — `stat: path=...`, `fail: msg=...` → mapping syntax.  
+  _Acceptance:_ `no-free-form` lint rule is at zero.
+
+- [ ] **1.5 Normalize booleans and conditionals** — `yes`/`no` → `true`/`false`; `x == False` → `not x`; string booleans → real booleans where safe.  
+  _Acceptance:_ `yaml[truthy]` and `literal-compare` are at zero or documented.
+
+- [ ] **1.6 Modernize play keywords** — `user:` → `remote_user:`; `become_method: sudo` → `ansible.builtin.sudo` or default.  
+  _Acceptance:_ no `user:` play keyword remains; schema lint passes for playbooks.
+
+- [ ] **1.7 Make `command`/`shell` tasks explicit** — add `argv` where possible, `creates`, `changed_when`, `failed_when`, `check_mode: false` as appropriate.  
+  _Acceptance:_ `no-changed-when` is at zero or every remaining task has a documented reason.
+
+- [ ] **1.8 Validate on ansible-core 2.21.6 and 2.22** — syntax-check all playbooks; fix deprecation/failure-inference warnings.  
+  _Acceptance:_ no deprecation warnings; syntax gate is green on both cores.
+
+---
+
+## Phase 2 — Security and secrets
+
+- [ ] **2.1 Remove hardcoded passwords** — delete `Welcome1` defaults; require `ofm_admin_password`, `ofm_nodemanager_password`, `ofm_rcu_schema_password`, `ofm_db_sys_password`, `ofm_jdbc_password`.  
+  _Acceptance:_ `grep -R "Welcome1"` returns nothing; missing secrets fail with a clear message.
+
+- [ ] **2.2 Add vaulted-secret example** — documented `group_vars/<env>/vault.yml`, vault password handling, and `.gitignore` protections.  
+  _Acceptance:_ example uses `!vault` or a documented external secret lookup; no real secret is committed.
+
+- [ ] **2.3 Add `no_log` coverage** — every task that templates, copies, or consumes a secret.  
+  _Acceptance:_ `-vvv` run does not print passwords; secret tasks are identifiable.
+
+- [ ] **2.4 Fix secret file modes and cleanup** — RCU password files `0600`, `boot.properties` `0600`, security dir `0700`, WLST credential/key files `0600`, stage dirs `0750`; cleanup in `block/always`.  
+  _Acceptance:_ no secret file is world-readable; failed tasks do not leave secrets behind.
+
+- [ ] **2.5 Harden downloads** — SHA256 checksums, `timeout`, `retries`, `until`, explicit `validate_certs`/`ca_path`; gate `-ignoreSysPrereqs` and `DECLINE_SECURITY_UPDATES`.  
+  _Acceptance:_ every `get_url` has a checksum variable and retry policy; bypass flags are opt-in.
+
+- [ ] **2.6 Guard destructive operations** — `ofm_confirm_destroy` assertion, production environment guard, backup before clean, remove `pkill -9 -f`.  
+  _Acceptance:_ clean playbooks refuse to run without confirmation; no broad `pkill -9`.
+
+- [ ] **2.7 Harden generated wrappers** — `umask 077`, `0600` logs, no plaintext passwords in `OFM-env-domain`/wrapper scripts; remove dead secret-bearing templates.  
+  _Acceptance:_ generated wrappers are not world-readable and do not export passwords unnecessarily.
+
+---
+
+## Phase 3 — Correctness, idempotency, and reliability
+
+- [ ] **3.1 Fix simple verified defects** — undefined `ofmMGDSRVexttemplate`, OEM stage-dir mismatch, trailing space in wait-script cleanup, duplicate OEM playbooks.  
+  _Acceptance:_ syntax/lint pass; the affected tasks reference defined variables and paths.
+
+- [ ] **3.2 Fix execution-context assumptions** — replace `ansible_env.HOME` with a defined Oracle user home; replace hardcoded `ofmAdminserverMachine` with inventory-derived values.  
+  _Acceptance:_ running as root + `become_user: oracle` writes to the Oracle home, not `/root`; admin host is inventory-driven.
+
+- [ ] **3.3 Fix pack/unpack** — controller-side artifact directory, fetch both JAR and NodeManager tarball, restore and template NodeManager files, validate unpack.  
+  _Acceptance:_ pack → fetch → unpack → start round trip is documented and code-complete.
+
+- [ ] **3.4 Bound waits and fix disk checks** — WLST wait loops exit non-zero after a maximum; disk assertions fail when a mount is absent; realistic space values.  
+  _Acceptance:_ no infinite loop; missing mount produces a clear failure.
+
+- [ ] **3.5 Make multi-host runs safe** — inventory groups, `run_once`/`delegate_to` for RCU and domain creation, `serial` for rolling changes, `any_errors_fatal` where appropriate.  
+  _Acceptance:_ a two-host play creates RCU/domain once and managed servers per host.
+
+- [ ] **3.6 Add tags and handlers** — `install`, `configure`, `extend`, `pack`, `unpack`, `clean`, `validate`; `never` on destructive tasks; restart handlers.  
+  _Acceptance:_ `--tags validate` works without running install; restart tasks are notified, not unconditional.
+
+- [ ] **3.7 Make WLST operations idempotent** — check `getMBean(...)` before create; add install/domain markers with version and checksum.  
+  _Acceptance:_ second run of configure/extend does not fail on existing objects.
+
+- [ ] **3.8 Remove dead code and duplicates** — unused `OFM-env-domain`, unused NodeManager templates (or wire them up), unused Coherence vars, duplicate Forms `set_fact`, unused `stageRequiredSpace`.  
+  _Acceptance:_ no unreferenced templates/vars remain; lint is cleaner.
+
+---
+
+## Phase 4 — Oracle platform modernization
+
+- [ ] **4.1 Add `ofm_os_prepare` role** — OS validation, packages, `oracle` user/groups, limits, sysctl, SELinux/firewalld, directories, `/etc/hosts`, `/etc/oraInst.loc`, inventory.  
+  _Acceptance:_ role is idempotent and `--check` clean on RHEL 8/9.
+
+- [ ] **4.2 Add versioned Java role and software catalog** — JDK 8 latest for 12.2.1.4; JDK 17/21 for 14.1.2; checksums, alternatives, profile.d.  
+  _Acceptance:_ Java version is a variable; no hardcoded 8u101; catalog is the single source of media names/checksums.
+
+- [ ] **4.3 Parameterize FMW 12.2.1.4** — version, RCU version, response file names, WLST script names, media names.  
+  _Acceptance:_ no hardcoded `12.2.1.2` strings remain; 12.2.1.4 is selectable by variable.
+
+- [ ] **4.4 Scaffold FMW 14.1.2** — versioned vars/roles, RCU 14.1.2 response files, JDK 17/21, upgrade/rollback docs.  
+  _Acceptance:_ 14.1.2 path is selectable; lab validation is explicitly tracked as blocked/pending.
+
+- [ ] **4.5 Lab validation** — install 12.2.1.4 and 14.1.2 on RHEL 8/9 with licensed media; validate Forms/OHS.  
+  **BLOCKED:** requires licensed Oracle media, lab hosts, and an approved maintenance window.
+
+---
+
+## Phase 5 — Engineering quality and CI
+
+- [ ] **5.1 Add `meta/argument_specs.yml` to all roles** — types, required flags, defaults, choices.  
+  _Acceptance:_ invalid inventory values fail before tasks run.
+
+- [ ] **5.2 Add Molecule scenarios** — `syntax`, `os_prepare`, `java`; container images; mock media fixtures.  
+  _Acceptance:_ `molecule test` passes for the non-Oracle roles.
+
+- [ ] **5.3 Add CI matrix and Execution Environment** — ansible-core 2.20/2.21/2.22, Python 3.12/3.13, lint profiles, `ansible-builder`.  
+  _Acceptance:_ CI is green; EE builds reproducibly without licensed media.
+
+- [ ] **5.4 Add documentation set** — architecture, prerequisites, inventory, variables, secrets, runbooks, troubleshooting, 12c→14c upgrade.  
+  _Acceptance:_ docs match the implemented roles and variables.
+
+- [ ] **5.5 Add release/deprecation policy** — SemVer tags, changelog rules, one-major-release alias window.  
+  _Acceptance:_ `v0.1`/`v0.2`/`v1.0`/`v2.0` milestones are defined and followed.
+
+---
+
+## Phase 6 — Operations and lifecycle
+
+- [ ] **6.1 Add backup/restore and rollback runbook** — pack before change, artifact retention, restore procedure.  
+  _Acceptance:_ runbook is tested in the lab or clearly marked pending lab validation.
+
+- [ ] **6.2 Add health checks and observability** — AdminServer, NodeManager, OHS checks; log locations; failure messages.  
+  _Acceptance:_ `--tags validate` reports actionable status.
+
+- [ ] **6.3 Document AAP/AWX integration** — inventories, credentials, surveys, RBAC, EE.  
+  _Acceptance:_ a platform operator can import the project without extra-var host targeting.
+
+- [ ] **6.4 Define lifecycle review cadence** — quarterly Ansible/collection review; FMW 27, Java 25, RHEL 10 planning.  
+  _Acceptance:_ owners and dates are recorded.
+
+---
+
+## Progress log
+
+| Date | Item | Commit | Notes |
+|---|---|---|---|
+| 2026-11-17 | Checklist created | — | Detailed version retained in `docs/roadmap-details.md` |
