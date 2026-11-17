@@ -7,13 +7,16 @@
   fail:
     msg: "serverEnvironment = {{ serverEnvironment }} not valid!"
   when: >
-         ((not (serverEnvironment in highenvs)) and (not(serverEnvironment in lowenvs)))
+    ((not (serverEnvironment in highenvs)) and (not(serverEnvironment in lowenvs)))
 
 - name: Check if OFM home {{ oraclePresenceFolder }} is already installed
-  stat: path={{ oraclePresenceFolder }}
+  stat:
+    path: "{{ oraclePresenceFolder }}"
   register: oracleHome_installed
 
 - name: Deinstalling Oracle Fusion Middleware
+  when: >
+    oracleHome_installed.stat.exists == True
   block:
 
 #  - name: Create stage folder "{{ stageDir }}"
@@ -30,19 +33,16 @@
 #  - name: Deinstalling Oracle Fusion Middleware {{ ofmVersion }} on {{ oracleHome }}
 #    command: "{{ oracleHome }}/oui/bin/deinstall.sh -silent -responseFile {{ stageDir }}/{{ ofmresponseFile }}"
 
-  - name: Detaching Oracle Fusion Middleware {{ ofmVersion }} on {{ oracleHome }} from central inventory
-    command: "{{ oracleHome }}/oui/bin/detachHome.sh"
-    ignore_errors: true
+    - name: Detaching Oracle Fusion Middleware {{ ofmVersion }} on {{ oracleHome }} from central inventory
+      command: "{{ oracleHome }}/oui/bin/detachHome.sh"
+      ignore_errors: true
 
 #  - name: Post clean {{ stageDir }}/{{ ofmresponseFile }}
 #    file:
 #      path: "{{ stageDir }}/{{ ofmresponseFile }}"
 #      state: absent
 
-  - name: Post clean {{ oracleHome }}
-    file:
-      path: "{{ oracleHome }}"
-      state: absent
-
-  when: >
-    oracleHome_installed.stat.exists == True
+    - name: Post clean {{ oracleHome }}
+      file:
+        path: "{{ oracleHome }}"
+        state: absent

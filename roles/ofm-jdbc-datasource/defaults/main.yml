@@ -10,5 +10,5 @@ ofmJDBCJNDI: "jndi/TestDataSource"
 ofmJDBCSchema: "XPTO001_WLS"
 ofmJDBCPassword: "Welcome1"
 ofmJDBCGlobalTransactionsProtocol: "None"
-ofmJDBCManagedServerTargets: ['FRM_MS0','FRM_MS1']
-ofmJDBCClusterTargets: ['cluster_forms']
+ofmJDBCManagedServerTargets: ["FRM_MS0", "FRM_MS1"]
+ofmJDBCClusterTargets: ["cluster_forms"]

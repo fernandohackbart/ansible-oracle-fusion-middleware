@@ -11,57 +11,58 @@
 
 - name: Killing the Weblogic processes for domain {{ ofmDomainName }} (may raise errors)
   shell: "pkill -9 -f {{ ofmDomainName }} || true "
-  ignore_errors: True
+  ignore_errors: true
 #  when: >
 #    process_count > 0
 ####################################################################################################################################
 # Run RCU to clean up the schemas
 - name: Cleaning the RCU created repository
-  block:
-  #ignore_errors: True
-
-  - name: Create stage folder {{ ofmDomainStageDir }}
-    file:
-      path: "{{ ofmDomainStageDir }}"
-      state: directory
-      mode: "{{ mode }}"
-
-  - name: Create RCU response file {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp
-    template:
-      src: "RCU-12.2.1.2.0-generic.rsp"
-      dest: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp"
-      mode: "{{ mode }}"
-
-  - name: Create RCU response file {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp
-    template:
-      src: "RCU-12.2.1.2.0-passwords.rsp"
-      dest: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp"
-      mode: "{{ mode }}"
-
-  - name: Run RCU {{ ofmRCUOperation }} prefix {{ ofmJdbcRCUSchemaPrefix }} and components ({{ ofmRCUComponents }}) at {{ ofmJdbcURLrcu }}
-    ignore_errors: True
-    shell: "{{oracleHome }}/oracle_common/bin/rcu -silent -responseFile {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp -f < {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp"
-    args:
-      chdir: "{{ oracleHome }}/oracle_common/bin"
-    environment:
-      JAVA_HOME: "{{ javaHome }}"
-      ORACLE_HOME: "{{ oracleHome }}"
-      TEMP: "{{ tempDir }}"
-
-  - name: Post clean {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp
-    file:
-      path: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp"
-      state: absent
-
-  - name: Post clean {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp
-    file:
-      path: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp"
-      state: absent
-
   when: >
     ofmRestrictedJRF == 'FALSE'
 
 ####################################################################################################################################
+
+  block:
+  #ignore_errors: True
+
+    - name: Create stage folder {{ ofmDomainStageDir }}
+      file:
+        path: "{{ ofmDomainStageDir }}"
+        state: directory
+        mode: "{{ mode }}"
+
+    - name: Create RCU response file {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp
+      template:
+        src: "RCU-12.2.1.2.0-generic.rsp"
+        dest: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp"
+        mode: "{{ mode }}"
+
+    - name: Create RCU response file {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp
+      template:
+        src: "RCU-12.2.1.2.0-passwords.rsp"
+        dest: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp"
+        mode: "{{ mode }}"
+
+    - name: Run RCU {{ ofmRCUOperation }} prefix {{ ofmJdbcRCUSchemaPrefix }} and components ({{ ofmRCUComponents }}) at {{ ofmJdbcURLrcu }}
+      ignore_errors: true
+      shell: "{{oracleHome }}/oracle_common/bin/rcu -silent -responseFile {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp -f < {{ ofmDomainStageDir
+        }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp"
+      args:
+        chdir: "{{ oracleHome }}/oracle_common/bin"
+      environment:
+        JAVA_HOME: "{{ javaHome }}"
+        ORACLE_HOME: "{{ oracleHome }}"
+        TEMP: "{{ tempDir }}"
+
+    - name: Post clean {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp
+      file:
+        path: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp"
+        state: absent
+
+    - name: Post clean {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp
+      file:
+        path: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp"
+        state: absent
 
 - name: Clean {{ ofmDomainLogsHome }}
   file:

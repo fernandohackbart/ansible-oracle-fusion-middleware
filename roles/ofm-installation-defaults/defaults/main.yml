@@ -3,7 +3,7 @@
 # Developed by Fernando Hackbart (fhackbart@gmail.com)
 # Lisbon 2017-12-28
 ---
-tempBaseVolume: '/tmp'
+tempBaseVolume: "/tmp"
 tempDir: "/tmp"
 tempRequiredSpace: 1073741824
 

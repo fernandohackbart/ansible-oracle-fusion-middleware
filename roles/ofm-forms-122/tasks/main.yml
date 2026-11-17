@@ -7,16 +7,17 @@
   fail:
     msg: "serverEnvironment = {{ serverEnvironment }} not valid!"
   when: >
-         ((not (serverEnvironment in highenvs)) and (not(serverEnvironment in lowenvs)))
+    ((not (serverEnvironment in highenvs)) and (not(serverEnvironment in lowenvs)))
 
 - name: Check if OFM home {{ oraclePresenceFolder }} is already installed
-  stat: path={{ oraclePresenceFolder }}
+  stat:
+    path: "{{ oraclePresenceFolder }}"
   register: oracleHome_installed
 
 - name: Check available disk space in {{ tempBaseVolume }}
   assert:
     that:
-      -  item.size_available > tempRequiredSpace
+      - item.size_available > tempRequiredSpace
   with_items:
     - "{{ ansible_mounts }}"
   when: >
@@ -26,7 +27,7 @@
 - name: Check available disk space in {{ oraBaseVolume }}
   assert:
     that:
-      -  item.size_available > ofmInstallRequiredSpace
+      - item.size_available > ofmInstallRequiredSpace
   with_items:
     - "{{ ansible_mounts }}"
   when: >
@@ -34,7 +35,7 @@
   register: install_free
 
 - name: Create base folder {{ oraBaseDir }}
-  ignore_errors: yes
+  ignore_errors: true
   file:
     path: "{{ oraBaseDir }}"
     state: directory
@@ -74,7 +75,7 @@
     dest: "{{ stageDir }}"
     src: "{{ stageDir }}/{{ ofmInstallationMedia }}"
     creates: "{{ stageDir }}/{{ ofmInstallationFile }}"
-    copy: no
+    copy: false
   when: >
     oracleHome_installed.stat.exists == False
 

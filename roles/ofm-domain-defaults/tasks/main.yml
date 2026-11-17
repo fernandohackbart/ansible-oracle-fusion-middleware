@@ -14,69 +14,68 @@
   register: ofmDomainHome_configured
 
 - name: Creating Oracle Fusion Middleware Infrastructure base domain defaults
-  block:
-
-  - name: Create stage folder "{{ stageDir }}"
-    file:
-      path: "{{ stageDir }}"
-      state: directory
-      mode: "{{ mode }}"
-
-  - name: Create domain base folder {{ ofmDomainBase }}
-    ignore_errors: yes
-    file:
-      path: "{{ ofmDomainBase }}"
-      state: directory
-      mode: "{{ mode }}"
-
-  - name: Create application base folder {{ ofmApplicationBase }}
-    ignore_errors: yes
-    file:
-      path: "{{ ofmApplicationBase }}"
-      state: directory
-      mode: "{{ mode }}"
-
-  - name: Create transations base folder {{ ofmTransBase }}
-    ignore_errors: yes
-    file:
-      path: "{{ ofmTransBase }}"
-      state: directory
-      mode: "{{ mode }}"
-
-  - name: Create transations home folder {{ ofmTransHome }}
-    ignore_errors: yes
-    file:
-      path: "{{ ofmTransHome }}"
-      state: directory
-      mode: "{{ mode }}"
-
-  - name: Create logs home folder {{ ofmDomainLogsHome }}
-    ignore_errors: yes
-    file:
-      path: "{{ ofmDomainLogsHome }}"
-      state: directory
-      mode: "{{ mode }}"
-
-  - name: Create user home binaries folder {{ ofmInstallUserHomeDir }}/bin
-    ignore_errors: yes
-    file:
-      path: "{{ ofmInstallUserHomeDir }}/bin"
-      state: directory
-      mode: "{{ mode }}"
-
-  - name: Pre clean {{ ofmDomainStageDir }}
-    file:
-      path: "{{ ofmDomainStageDir }}"
-      state: absent
-    when: >
-      ofmRestrictedJRF == 'FALSE'
-
-  - name: Create domain stage directory {{ ofmDomainStageDir }}
-    ignore_errors: yes
-    file:
-      path: "{{ ofmDomainStageDir }}"
-      state: directory
-      mode: "{{ mode }}"
-
   when: >
     oracleHome_installed.stat.exists == True and ofmDomainHome_configured.stat.exists == False
+  block:
+
+    - name: Create stage folder "{{ stageDir }}"
+      file:
+        path: "{{ stageDir }}"
+        state: directory
+        mode: "{{ mode }}"
+
+    - name: Create domain base folder {{ ofmDomainBase }}
+      ignore_errors: true
+      file:
+        path: "{{ ofmDomainBase }}"
+        state: directory
+        mode: "{{ mode }}"
+
+    - name: Create application base folder {{ ofmApplicationBase }}
+      ignore_errors: true
+      file:
+        path: "{{ ofmApplicationBase }}"
+        state: directory
+        mode: "{{ mode }}"
+
+    - name: Create transations base folder {{ ofmTransBase }}
+      ignore_errors: true
+      file:
+        path: "{{ ofmTransBase }}"
+        state: directory
+        mode: "{{ mode }}"
+
+    - name: Create transations home folder {{ ofmTransHome }}
+      ignore_errors: true
+      file:
+        path: "{{ ofmTransHome }}"
+        state: directory
+        mode: "{{ mode }}"
+
+    - name: Create logs home folder {{ ofmDomainLogsHome }}
+      ignore_errors: true
+      file:
+        path: "{{ ofmDomainLogsHome }}"
+        state: directory
+        mode: "{{ mode }}"
+
+    - name: Create user home binaries folder {{ ofmInstallUserHomeDir }}/bin
+      ignore_errors: true
+      file:
+        path: "{{ ofmInstallUserHomeDir }}/bin"
+        state: directory
+        mode: "{{ mode }}"
+
+    - name: Pre clean {{ ofmDomainStageDir }}
+      file:
+        path: "{{ ofmDomainStageDir }}"
+        state: absent
+      when: >
+        ofmRestrictedJRF == 'FALSE'
+
+    - name: Create domain stage directory {{ ofmDomainStageDir }}
+      ignore_errors: true
+      file:
+        path: "{{ ofmDomainStageDir }}"
+        state: directory
+        mode: "{{ mode }}"
