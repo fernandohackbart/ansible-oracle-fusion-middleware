@@ -431,6 +431,7 @@
         - "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-key.secure"
         - "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-nodemanager.config"
         - "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-nodemanager.keyfile"
+        - "{{ ofmDomainHome }}/servers/{{ ofmAdminserverName }}/security/boot.properties"
       register: ofm_wlst_cred_files
       no_log: true
 

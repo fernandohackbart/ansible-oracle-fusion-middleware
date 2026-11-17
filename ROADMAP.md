@@ -96,7 +96,7 @@
 - [x] **2.6 Guard destructive operations** — `ofm_confirm_destroy` assertion, production environment guard, backup before clean, remove `pkill -9 -f`.  
   _Acceptance:_ clean playbooks refuse to run without confirmation; no broad `pkill -9`.
 
-- [ ] **2.7 Harden generated wrappers** — `umask 077`, `0600` logs, no plaintext passwords in `OFM-env-domain`/wrapper scripts; remove dead secret-bearing templates.  
+- [x] **2.7 Harden generated wrappers** — `umask 077`, `0600` logs, no plaintext passwords in dead env templates/wrapper scripts; remove dead secret-bearing templates.  
   _Acceptance:_ generated wrappers are not world-readable and do not export passwords unnecessarily.
 
 ---
@@ -210,3 +210,4 @@
 | 2026-11-17 | 2.4 secret modes/cleanup | — | RCU/boot/WLST credentials secured; RCU cleanup in `always` |
 | 2026-11-17 | 2.5 download hardening | — | Checksum variable, retries/until, TLS options, opt-in bypass flags |
 | 2026-11-17 | 2.6 destructive guards | — | Confirmation/prod guards, backup check, graceful process stop |
+| 2026-11-17 | 2.7 wrapper hardening | — | `umask 077`, boot.properties secured, dead secret templates removed |
