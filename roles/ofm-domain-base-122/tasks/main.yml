@@ -68,14 +68,14 @@
           ansible.builtin.template:
             src: "RCU-12.2.1.2.0-generic.rsp"
             dest: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp"
-            mode: "{{ mode }}"
+            mode: "0600"
 
           no_log: true
         - name: Create RCU response file {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp
           ansible.builtin.template:
             src: "RCU-12.2.1.2.0-passwords.rsp"
             dest: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp"
-            mode: "{{ mode }}"
+            mode: "0600"
 
           no_log: true
         - name: Run RCU {{ ofmRCUOperation }} prefix {{ ofmJdbcRCUSchemaPrefix }} and components ({{ ofmRCUComponents }}) at {{ ofmJdbcURLrcu }}
@@ -93,6 +93,7 @@
             ORACLE_HOME: "{{ oracleHome }}"
             TEMP: "{{ tempDir }}"
 
+      always:
         - name: Post clean {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp
           ansible.builtin.file:
             path: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp"
@@ -144,13 +145,13 @@
       ansible.builtin.file:
         path: "{{ ofmDomainHome }}/servers/{{ ofmAdminserverName }}/security"
         state: directory
-        mode: "{{ mode }}"
+        mode: "0700"
 
     - name: Create boot.properties file {{ ofmDomainHome }}/servers/{{ ofmAdminserverName }}/security/boot.properties
       ansible.builtin.template:
         src: "boot.properties"
         dest: "{{ ofmDomainHome }}/servers/{{ ofmAdminserverName }}/security/boot.properties"
-        mode: "{{ mode }}"
+        mode: "0600"
 
       no_log: true
     - name: Create start admin server bash script {{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.sh
@@ -421,4 +422,23 @@
         src: "OFM-stopAdminServer"
         dest: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}"
         mode: "{{ secureMode }}"
+
+    - name: Check WLST credential files
+      ansible.builtin.stat:
+        path: "{{ item }}"
+      loop:
+        - "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-cred.secure"
+        - "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-key.secure"
+        - "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-nodemanager.config"
+        - "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-nodemanager.keyfile"
+      register: ofm_wlst_cred_files
+      no_log: true
+
+    - name: Secure WLST credential files
+      ansible.builtin.file:
+        path: "{{ item.item }}"
+        mode: "0600"
+      loop: "{{ ofm_wlst_cred_files.results }}"
+      when: item.stat.exists
+      no_log: true
   ########################################################################################################################

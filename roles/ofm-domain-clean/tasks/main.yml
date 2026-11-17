@@ -36,14 +36,14 @@
       ansible.builtin.template:
         src: "RCU-12.2.1.2.0-generic.rsp"
         dest: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp"
-        mode: "{{ mode }}"
+        mode: "0600"
 
       no_log: true
     - name: Create RCU response file {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp
       ansible.builtin.template:
         src: "RCU-12.2.1.2.0-passwords.rsp"
         dest: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp"
-        mode: "{{ mode }}"
+        mode: "0600"
 
       no_log: true
     - name: Run RCU {{ ofmRCUOperation }} prefix {{ ofmJdbcRCUSchemaPrefix }} and components ({{ ofmRCUComponents }}) at {{ ofmJdbcURLrcu }}
@@ -61,6 +61,7 @@
         ORACLE_HOME: "{{ oracleHome }}"
         TEMP: "{{ tempDir }}"
 
+  always:
     - name: Post clean {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp
       ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp"

@@ -87,7 +87,7 @@
 - [x] **2.3 Add `no_log` coverage** — every task that templates, copies, or consumes a secret.  
   _Acceptance:_ `-vvv` run does not print passwords; secret tasks are identifiable.
 
-- [ ] **2.4 Fix secret file modes and cleanup** — RCU password files `0600`, `boot.properties` `0600`, security dir `0700`, WLST credential/key files `0600`, stage dirs `0750`; cleanup in `block/always`.  
+- [x] **2.4 Fix secret file modes and cleanup** — RCU password files `0600`, `boot.properties` `0600`, security dir `0700`, WLST credential/key files `0600`, stage dirs `0750`; cleanup in `block/always`.  
   _Acceptance:_ no secret file is world-readable; failed tasks do not leave secrets behind.
 
 - [ ] **2.5 Harden downloads** — SHA256 checksums, `timeout`, `retries`, `until`, explicit `validate_certs`/`ca_path`; gate `-ignoreSysPrereqs` and `DECLINE_SECURITY_UPDATES`.  
@@ -207,3 +207,4 @@
 | 2026-11-17 | 2.1 hardcoded passwords | — | Defaults empty; domain/JDBC asserts fail with guidance |
 | 2026-11-17 | 2.2 vault example | — | `docs/secrets.md`, vault example, ignore rules |
 | 2026-11-17 | 2.3 no_log coverage | — | Secret-bearing templates and RCU tasks marked `no_log` |
+| 2026-11-17 | 2.4 secret modes/cleanup | — | RCU/boot/WLST credentials secured; RCU cleanup in `always` |
