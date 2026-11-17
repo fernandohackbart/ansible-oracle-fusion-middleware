@@ -114,4 +114,4 @@ and OHS endpoints.
   licensed distribution.
 - Forms 14.1.2 availability is not assumed. Check Oracle certification first.
 
-See [ROADMAP.md](../ROADMAP.md) items 4.4 and 4.5 for status.
+See [ROADMAP.md](ROADMAP.md) items 4.4 and 4.5 for status.

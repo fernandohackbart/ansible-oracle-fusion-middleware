@@ -2,7 +2,7 @@
 
 Ansible playbooks and roles for installing, configuring, packing, unpacking, and cleaning Oracle Fusion Middleware 12c/14c domains on Linux.
 
-> **Project status:** active modernization. The playbooks are being migrated from a 2017-era Ansible 2.x baseline to Ansible 14.6 / ansible-core 2.21.6. Track progress and known gaps in [ROADMAP.md](ROADMAP.md).
+> **Project status:** active modernization. The playbooks are being migrated from a 2017-era Ansible 2.x baseline to Ansible 14.6 / ansible-core 2.21.6. Track progress and known gaps in [ROADMAP.md](docs/ROADMAP.md).
 
 ## Supported matrix
 
@@ -21,7 +21,7 @@ RHEL 7 is **not** a supported target for ansible-core 2.21 (it requires Python 3
 - A control node with Python 3.12–3.14.
 - Ansible 14.6.0 and the pinned collections.
 - SSH access to the target hosts and a sudo-capable login user.
-- An `oracle` user and the required OS prerequisites on the targets (see [ROADMAP.md](ROADMAP.md), Phase 4).
+- An `oracle` user and the required OS prerequisites on the targets (see [ROADMAP.md](docs/ROADMAP.md), Phase 4).
 - Oracle media (licensed; not included) reachable through an artifact repository or local path.
 - Vaulted secrets for the AdminServer, NodeManager, RCU, and database passwords.
 
@@ -121,7 +121,7 @@ make yamllint # YAML style checks
 make test     # syntax + lint + yamllint
 ```
 
-The current `ansible-lint` configuration starts at profile `basic` and temporarily warns on rules scheduled for Phase 1/3. See [ROADMAP.md](ROADMAP.md) for the target profile and exit criteria.
+The current `ansible-lint` configuration starts at profile `basic` and temporarily warns on rules scheduled for Phase 1/3. See [ROADMAP.md](docs/ROADMAP.md) for the target profile and exit criteria.
 
 ## Documentation
 
@@ -142,7 +142,7 @@ The current `ansible-lint` configuration starts at profile `basic` and temporari
 
 ## Roadmap
 
-The implementation checklist, prioritized backlog, known defects, and Oracle lifecycle notes are in [ROADMAP.md](ROADMAP.md). The detailed assessment is in [docs/roadmap-details.md](docs/roadmap-details.md).
+The implementation checklist, prioritized backlog, known defects, and Oracle lifecycle notes are in [ROADMAP.md](docs/ROADMAP.md). The detailed assessment is in [docs/roadmap-details.md](docs/roadmap-details.md).
 
 ## License
 

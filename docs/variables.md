@@ -58,4 +58,4 @@
 ## Naming
 
 Legacy camelCase names are retained for compatibility. New code should use
-snake_case; the migration is tracked in [ROADMAP.md](../ROADMAP.md) Phase 5.
+snake_case; the migration is tracked in [ROADMAP.md](ROADMAP.md) Phase 5.

@@ -5,7 +5,7 @@
 **Baseline:** 15 playbooks, 17 roles, 42 templates, FMW 12.2.1.2, JDK 8u101, RHEL 7-era assumptions  
 **Target:** Ansible 14.6.0 / ansible-core 2.21.6, Python 3.12+, RHEL 8/9, FMW 12.2.1.4 → 14.1.2
 
-> Detailed assessment, evidence, defect table, and rationale: [docs/roadmap-details.md](docs/roadmap-details.md).
+> Detailed assessment, evidence, defect table, and rationale: [roadmap-details.md](roadmap-details.md).
 
 ## How to use this checklist
 
@@ -187,7 +187,7 @@
 
 | Date | Item | Commit | Notes |
 |---|---|---|---|
-| 2026-11-17 | Checklist created | — | Detailed version retained in `docs/roadmap-details.md` |
+| 2026-11-17 | Checklist created | — | Detailed version retained in `roadmap-details.md` |
 | 2026-11-17 | 0.1 `ansible.cfg` | — | Validated with `ansible-config dump --only-changed` |
 | 2026-11-17 | 0.2 dependencies pinned | — | `ansible-galaxy` confirms collections installed |
 | 2026-11-17 | 0.4 example inventory | — | 15/15 playbooks pass `--syntax-check` without extra vars |
@@ -205,7 +205,7 @@
 | 2026-11-17 | 1.7 command/shell | — | 40 tasks now declare `changed_when`; long commands use folded scalars |
 | 2026-11-17 | 1.8 core validation | — | Syntax green on 2.20.11 and 2.21.6; 2.22 blocked by Python 3.13 |
 | 2026-11-17 | 2.1 hardcoded passwords | — | Defaults empty; domain/JDBC asserts fail with guidance |
-| 2026-11-17 | 2.2 vault example | — | `docs/secrets.md`, vault example, ignore rules |
+| 2026-11-17 | 2.2 vault example | — | `secrets.md`, vault example, ignore rules |
 | 2026-11-17 | 2.3 no_log coverage | — | Secret-bearing templates and RCU tasks marked `no_log` |
 | 2026-11-17 | 2.4 secret modes/cleanup | — | RCU/boot/WLST credentials secured; RCU cleanup in `always` |
 | 2026-11-17 | 2.5 download hardening | — | Checksum variable, retries/until, TLS options, opt-in bypass flags |

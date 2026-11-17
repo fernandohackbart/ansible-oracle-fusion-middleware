@@ -22,7 +22,7 @@ the project uses [Semantic Versioning](https://semver.org/). See
 - Rewritten README and documentation set: architecture, prerequisites,
   inventory, variables, secrets, runbooks, troubleshooting, upgrade, EE, and
   release policy.
-- Implementation checklist in `ROADMAP.md` and detailed assessment in
+- Implementation checklist in `docs/ROADMAP.md` and detailed assessment in
   `docs/roadmap-details.md`.
 - OS preparation role (`ofm_os_prepare`) for packages, users, limits, sysctl,
   directories, firewall, SELinux, and `/etc/oraInst.loc`.

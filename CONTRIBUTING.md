@@ -2,11 +2,11 @@
 
 ## Workflow
 
-1. Pick an unchecked item from [ROADMAP.md](ROADMAP.md).
+1. Pick an unchecked item from [ROADMAP.md](docs/ROADMAP.md).
 2. Create a short-lived branch: `feature/<item-id>-<slug>`.
 3. Make the smallest coherent change.
 4. Run `make test` (and `make yamllint` once whitespace cleanup is complete).
-5. Update the checkbox and progress log in `ROADMAP.md`.
+5. Update the checkbox and progress log in `docs/ROADMAP.md`.
 6. Commit with a focused message, for example `fix: correct oem stage directory`.
 7. Open a pull request describing the acceptance criteria that were met.
 

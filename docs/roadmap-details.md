@@ -2,7 +2,7 @@
 
 > **Historical assessment.** This document records the initial analysis and
 > rationale. For the live checklist and current status, see
-> [../ROADMAP.md](../ROADMAP.md).
+> [ROADMAP.md](ROADMAP.md).
 
 **Status:** Draft for review  
 **Last updated:** 2026-11-17  

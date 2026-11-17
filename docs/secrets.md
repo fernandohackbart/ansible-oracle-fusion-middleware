@@ -63,4 +63,4 @@ grep -R "the old default password" roles || true
 find roles -type f \( -name '*.rsp' -o -name 'boot.properties' \) -perm -004
 ```
 
-See [ROADMAP.md](../ROADMAP.md) Phase 2 for the remaining hardening work.
+See [ROADMAP.md](ROADMAP.md) Phase 2 for the remaining hardening work.
