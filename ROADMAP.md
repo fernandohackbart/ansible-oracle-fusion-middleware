@@ -20,7 +20,7 @@
 
 ## Phase 0 — Baseline and guardrails
 
-- [ ] **0.1 Add `ansible.cfg`** — deterministic inventory/roles/collections paths, host-key checking, no retry files, deprecation warnings, interpreter discovery.  
+- [x] **0.1 Add `ansible.cfg`** — deterministic inventory/roles/collections paths, host-key checking, no retry files, deprecation warnings, interpreter discovery.  
   _Acceptance:_ `ansible-config dump --only-changed` shows only intentional settings.
 
 - [ ] **0.2 Add `requirements.yml` and `requirements-dev.txt`** — pin `community.general`, `ansible.posix`, `ansible==14.6.0`, `ansible-lint`, `yamllint`, `molecule`, `ansible-builder`, `pre-commit`.  
@@ -186,3 +186,4 @@
 | Date | Item | Commit | Notes |
 |---|---|---|---|
 | 2026-11-17 | Checklist created | — | Detailed version retained in `docs/roadmap-details.md` |
+| 2026-11-17 | 0.1 `ansible.cfg` | — | Validated with `ansible-config dump --only-changed` |
