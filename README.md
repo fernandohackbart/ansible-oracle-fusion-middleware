@@ -134,6 +134,7 @@ The current `ansible-lint` configuration starts at profile `basic` and temporari
 - [Troubleshooting](docs/troubleshooting.md)
 - [Upgrade 12c to 14.1.2](docs/upgrade-12c-to-14c.md)
 - [Execution Environment](docs/execution-environment.md)
+- [Release policy](docs/release-policy.md)
 
 ## Roadmap
 

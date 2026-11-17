@@ -162,7 +162,7 @@
 - [x] **5.4 Add documentation set** — architecture, prerequisites, inventory, variables, secrets, runbooks, troubleshooting, 12c→14c upgrade.  
   _Acceptance:_ docs match the implemented roles and variables.
 
-- [ ] **5.5 Add release/deprecation policy** — SemVer tags, changelog rules, one-major-release alias window.  
+- [x] **5.5 Add release/deprecation policy** — SemVer tags, changelog rules, one-major-release alias window.  
   _Acceptance:_ `v0.1`/`v0.2`/`v1.0`/`v2.0` milestones are defined and followed.
 
 ---
@@ -227,3 +227,4 @@
 | 2026-11-17 | 5.2 molecule | — | Syntax scenario passes; Docker scenarios scaffolded |
 | 2026-11-17 | 5.3 CI matrix/EE | — | 2.20/2.21/2.22 matrix, EE and navigator config |
 | 2026-11-17 | 5.4 documentation | — | Architecture, prerequisites, inventory, variables, runbooks, troubleshooting |
+| 2026-11-17 | 5.5 release policy | — | SemVer, deprecation window, release checklist, changelog refresh |
