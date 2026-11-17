@@ -19,3 +19,10 @@ ofmModule: "ofm"
 ofmVersion: "12.2.1.2"
 oracleHome: "{{ oraBaseDir }}/{{ ofmVersion }}/{{ ofmModule }}"
 oraclePresenceFolder: "{{ oracleHome }}"
+
+# Download and installer policy.
+ofm_validate_certs: true
+# ofm_ca_path: /etc/pki/tls/certs/internal-ca.pem
+ofm_decline_security_updates: true
+ofm_decline_auto_updates: true
+ofm_ignore_sys_prereqs: false

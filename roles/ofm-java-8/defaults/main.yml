@@ -11,3 +11,6 @@ javaBaseHome: "{{ javaBaseVolume }}/oracle/product/{{ javaVersion }}/{{ javaRele
 javaHome: "{{ javaBaseHome }}/jdk"
 javaExecutable: "{{ javaHome }}/bin/java"
 javaRequiredSpace: 300000000
+
+# Full checksum string, for example: "sha256:0123..."
+# javaInstallationFileChecksum: ""

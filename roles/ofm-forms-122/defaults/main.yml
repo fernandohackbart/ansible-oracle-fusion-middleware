@@ -8,3 +8,6 @@ ofmInstallationFile: "fmw_12.2.1.2.0_fr_linux64.bin"
 ofmresponseFile: "OFMWEB-12.2.1.2-install.rsp"
 ofmInstallationInstallType: "Forms and Reports Deployment"
 oraclePresenceFolder: "{{ oracleHome }}/forms"
+
+# Full checksum string, for example: "sha256:0123..."
+# ofmInstallationMediaChecksum: ""

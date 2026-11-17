@@ -3,7 +3,7 @@ Response File Version=1.0.0.0.0
 [GENERIC]
 ORACLE_HOME={{ oracleHome }}
 INSTALL_TYPE={{ ofmInstallationInstallType }}
-DECLINE_SECURITY_UPDATES=true
+DECLINE_SECURITY_UPDATES={{ ofm_decline_security_updates | lower }}
 MYORACLESUPPORT_USERNAME=
 MYORACLESUPPORT_PASSWORD=
 SECURITY_UPDATES_VIA_MYORACLESUPPORT=false

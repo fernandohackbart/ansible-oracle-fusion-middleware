@@ -90,7 +90,7 @@
 - [x] **2.4 Fix secret file modes and cleanup** — RCU password files `0600`, `boot.properties` `0600`, security dir `0700`, WLST credential/key files `0600`, stage dirs `0750`; cleanup in `block/always`.  
   _Acceptance:_ no secret file is world-readable; failed tasks do not leave secrets behind.
 
-- [ ] **2.5 Harden downloads** — SHA256 checksums, `timeout`, `retries`, `until`, explicit `validate_certs`/`ca_path`; gate `-ignoreSysPrereqs` and `DECLINE_SECURITY_UPDATES`.  
+- [x] **2.5 Harden downloads** — SHA256 checksums, `timeout`, `retries`, `until`, explicit `validate_certs`/`ca_path`; gate `-ignoreSysPrereqs` and `DECLINE_SECURITY_UPDATES`.  
   _Acceptance:_ every `get_url` has a checksum variable and retry policy; bypass flags are opt-in.
 
 - [ ] **2.6 Guard destructive operations** — `ofm_confirm_destroy` assertion, production environment guard, backup before clean, remove `pkill -9 -f`.  
@@ -208,3 +208,4 @@
 | 2026-11-17 | 2.2 vault example | — | `docs/secrets.md`, vault example, ignore rules |
 | 2026-11-17 | 2.3 no_log coverage | — | Secret-bearing templates and RCU tasks marked `no_log` |
 | 2026-11-17 | 2.4 secret modes/cleanup | — | RCU/boot/WLST credentials secured; RCU cleanup in `always` |
+| 2026-11-17 | 2.5 download hardening | — | Checksum variable, retries/until, TLS options, opt-in bypass flags |

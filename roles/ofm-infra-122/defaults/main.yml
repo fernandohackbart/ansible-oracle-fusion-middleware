@@ -8,3 +8,6 @@ ofmInstallationFile: "fmw_12.2.1.2.0_infrastructure.jar"
 ofmresponseFile: "OFMAPP-12.2.1.2-install.rsp"
 ofmInstallationInstallType: "Fusion Middleware Infrastructure"
 oraclePresenceFolder: "{{ oracleHome }}"
+
+# Full checksum string, for example: "sha256:0123..."
+# ofmInstallationMediaChecksum: ""

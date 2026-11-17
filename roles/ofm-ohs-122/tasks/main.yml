@@ -63,7 +63,16 @@
       ansible.builtin.get_url:
         url: "{{ mediasURL }}/{{ ofmInstallationMedia }}"
         dest: "{{ stageDir }}/{{ ofmInstallationMedia }}"
+        checksum: "{{ ofmInstallationMediaChecksum | default(omit) }}"
+        timeout: 120
+        mode: "0640"
+        validate_certs: "{{ ofm_validate_certs | default(true) }}"
+        ca_path: "{{ ofm_ca_path | default(omit) }}"
 
+      register: ofm_media_download
+      until: ofm_media_download is succeeded
+      retries: 3
+      delay: 10
     - name: Unzip {{ stageDir }}/{{ ofmInstallationMedia }} to {{ stageDir }}
       ansible.builtin.unarchive:
         dest: "{{ stageDir }}"
@@ -77,7 +86,7 @@
         state: absent
 
     - name: Installing Oracle Fusion Middleware {{ ofmVersion }} on {{ oracleHome }}
-      ansible.builtin.command: "{{ stageDir }}/{{ ofmInstallationFile }} -silent -responseFile {{ stageDir }}/{{ ofmresponseFile }} -ignoreSysPrereqs"
+      ansible.builtin.command: "{{ stageDir }}/{{ ofmInstallationFile }} -silent -responseFile {{ stageDir }}/{{ ofmresponseFile }} {{ ofm_ignore_sys_prereqs | ternary('-ignoreSysPrereqs', '') }}"
       changed_when: true
       environment:
         JAVA_HOME: "{{ javaHome }}"

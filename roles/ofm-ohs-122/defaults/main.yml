@@ -8,3 +8,6 @@ ofmInstallationFile: "fmw_12.2.1.2.0_ohs_linux64.bin"
 ofmresponseFile: "OFMWEB-12.2.1.2-install.rsp"
 ofmInstallationInstallType: "Collocated HTTP Server (Managed through WebLogic server)"
 oraclePresenceFolder: "{{ oracleHome }}/ohs"
+
+# Full checksum string, for example: "sha256:0123..."
+# ofmInstallationMediaChecksum: ""
