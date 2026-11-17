@@ -4,9 +4,10 @@
 # Lisbon 2017-12-28
 ---
 javaBaseVolume: "/u01"
-javaVersion: "1.8.0"
-javaRelease: "101"
-javaInstallationFile: "jdk-8u{{ javaRelease }}-linux-x64.tar.gz"
+javaVersion: "{{ ofm_software.java.version }}"
+javaRelease: "{{ ofm_software.java.release }}"
+javaInstallationFile: "{{ ofm_software.java.file }}"
+javaInstallationFileChecksum: "{{ ofm_software.java.sha256 }}"
 javaBaseHome: "{{ javaBaseVolume }}/oracle/product/{{ javaVersion }}/{{ javaRelease }}"
 javaHome: "{{ javaBaseHome }}/jdk"
 javaExecutable: "{{ javaHome }}/bin/java"

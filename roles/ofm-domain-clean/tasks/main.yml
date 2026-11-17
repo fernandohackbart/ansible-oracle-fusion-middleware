@@ -89,25 +89,25 @@
         state: directory
         mode: "{{ mode }}"
 
-    - name: Create RCU response file {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp
+    - name: Create RCU response file {{ ofmDomainStageDir }}/RCU-{{ ofm_software.rcu_version }}-{{ ofmDomainName }}.rsp
       ansible.builtin.template:
-        src: "RCU-12.2.1.2.0-generic.rsp"
-        dest: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp"
+        src: "RCU-{{ ofm_software.rcu_version }}-generic.rsp"
+        dest: "{{ ofmDomainStageDir }}/RCU-{{ ofm_software.rcu_version }}-{{ ofmDomainName }}.rsp"
         mode: "0600"
 
       no_log: true
-    - name: Create RCU response file {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp
+    - name: Create RCU response file {{ ofmDomainStageDir }}/RCU-{{ ofm_software.rcu_version }}-{{ ofmDomainName }}-passwords.rsp
       ansible.builtin.template:
-        src: "RCU-12.2.1.2.0-passwords.rsp"
-        dest: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp"
+        src: "RCU-{{ ofm_software.rcu_version }}-passwords.rsp"
+        dest: "{{ ofmDomainStageDir }}/RCU-{{ ofm_software.rcu_version }}-{{ ofmDomainName }}-passwords.rsp"
         mode: "0600"
 
       no_log: true
     - name: Run RCU {{ ofmRCUOperation }} prefix {{ ofmJdbcRCUSchemaPrefix }} and components ({{ ofmRCUComponents }}) at {{ ofmJdbcURLrcu }}
       ansible.builtin.shell: >-
         {{ oracleHome }}/oracle_common/bin/rcu -silent
-        -responseFile {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp
-        -f < {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp
+        -responseFile {{ ofmDomainStageDir }}/RCU-{{ ofm_software.rcu_version }}-{{ ofmDomainName }}.rsp
+        -f < {{ ofmDomainStageDir }}/RCU-{{ ofm_software.rcu_version }}-{{ ofmDomainName }}-passwords.rsp
       no_log: true
       changed_when: true
       args:
@@ -118,14 +118,14 @@
         TEMP: "{{ tempDir }}"
 
   always:
-    - name: Post clean {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp
+    - name: Post clean {{ ofmDomainStageDir }}/RCU-{{ ofm_software.rcu_version }}-{{ ofmDomainName }}.rsp
       ansible.builtin.file:
-        path: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp"
+        path: "{{ ofmDomainStageDir }}/RCU-{{ ofm_software.rcu_version }}-{{ ofmDomainName }}.rsp"
         state: absent
 
-    - name: Post clean {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp
+    - name: Post clean {{ ofmDomainStageDir }}/RCU-{{ ofm_software.rcu_version }}-{{ ofmDomainName }}-passwords.rsp
       ansible.builtin.file:
-        path: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp"
+        path: "{{ ofmDomainStageDir }}/RCU-{{ ofm_software.rcu_version }}-{{ ofmDomainName }}-passwords.rsp"
         state: absent
 
 - name: Clean {{ ofmDomainLogsHome }}

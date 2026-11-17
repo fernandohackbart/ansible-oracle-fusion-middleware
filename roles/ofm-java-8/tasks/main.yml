@@ -68,11 +68,11 @@
       ansible.builtin.get_url:
         url: "{{ mediasURL }}/{{ javaInstallationFile }}"
         dest: "{{ stageDir }}/{{ javaInstallationFile }}"
-        checksum: "{{ javaInstallationFileChecksum | default(omit) }}"
+        checksum: "{{ javaInstallationFileChecksum | default(omit, true) }}"
         timeout: 120
         mode: "0640"
         validate_certs: "{{ ofm_validate_certs | default(true) }}"
-        ca_path: "{{ ofm_ca_path | default(omit) }}"
+        ca_path: "{{ ofm_ca_path | default(omit, true) }}"
       register: ofm_media_download
       until: ofm_media_download is succeeded
       retries: 3

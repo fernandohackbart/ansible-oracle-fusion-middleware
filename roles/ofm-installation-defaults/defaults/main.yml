@@ -16,7 +16,83 @@ orainvPointerTemplate: "oraInst.loc"
 oraInvDir: "/u01/oraInventory"
 
 ofmModule: "ofm"
-ofmVersion: "12.2.1.2"
+
+# Software catalog. Replace REPLACE placeholders with the licensed media names
+# and SHA256 checksums for the target release before running an installation.
+ofm_software_catalog:
+  "12.2.1.2":
+    version: "12.2.1.2"
+    rcu_version: "12.2.1.2.0"
+    java:
+      version: "1.8.0"
+      release: "101"
+      file: "jdk-8u101-linux-x64.tar.gz"
+      sha256: ""
+    infrastructure:
+      archive: "V779122-01.zip"
+      installer: "fmw_12.2.1.2.0_infrastructure.jar"
+      response_file: "OFMAPP-12.2.1.2-install.rsp"
+      sha256: ""
+    forms:
+      archive: "V789399-01.zip"
+      installer: "fmw_12.2.1.2.0_fr_linux64.bin"
+      response_file: "OFMWEB-12.2.1.2-install.rsp"
+      sha256: ""
+    ohs:
+      archive: "V789368-01.zip"
+      installer: "fmw_12.2.1.2.0_ohs_linux64.bin"
+      response_file: "OFMWEB-12.2.1.2-install.rsp"
+      sha256: ""
+  "12.2.1.4":
+    version: "12.2.1.4"
+    rcu_version: "12.2.1.4.0"
+    java:
+      version: "1.8.0"
+      release: "REPLACE"
+      file: "jdk-8uREPLACE-linux-x64.tar.gz"
+      sha256: ""
+    infrastructure:
+      archive: "REPLACE-infrastructure.zip"
+      installer: "fmw_12.2.1.4.0_infrastructure.jar"
+      response_file: "OFMAPP-12.2.1.4-install.rsp"
+      sha256: ""
+    forms:
+      archive: "REPLACE-forms.zip"
+      installer: "fmw_12.2.1.4.0_fr_linux64.bin"
+      response_file: "OFMWEB-12.2.1.4-install.rsp"
+      sha256: ""
+    ohs:
+      archive: "REPLACE-ohs.zip"
+      installer: "fmw_12.2.1.4.0_ohs_linux64.bin"
+      response_file: "OFMWEB-12.2.1.4-install.rsp"
+      sha256: ""
+  "14.1.2":
+    version: "14.1.2"
+    rcu_version: "14.1.2.0.0"
+    java:
+      version: "17.0"
+      release: "0.12"
+      file: "jdk-17.0.12_linux-x64_bin.tar.gz"
+      sha256: ""
+    infrastructure:
+      archive: "REPLACE-infrastructure.zip"
+      installer: "fmw_14.1.2.0.0_infrastructure.jar"
+      response_file: "OFMAPP-14.1.2-install.rsp"
+      sha256: ""
+    forms:
+      archive: "REPLACE-forms.zip"
+      installer: "fmw_14.1.2.0.0_fr_linux64.bin"
+      response_file: "OFMWEB-14.1.2-install.rsp"
+      sha256: ""
+    ohs:
+      archive: "REPLACE-ohs.zip"
+      installer: "fmw_14.1.2.0.0_ohs_linux64.bin"
+      response_file: "OFMWEB-14.1.2-install.rsp"
+      sha256: ""
+
+ofm_release: "12.2.1.2"
+ofm_software: "{{ ofm_software_catalog[ofm_release] }}"
+ofmVersion: "{{ ofm_software.version }}"
 oracleHome: "{{ oraBaseDir }}/{{ ofmVersion }}/{{ ofmModule }}"
 oraclePresenceFolder: "{{ oracleHome }}"
 

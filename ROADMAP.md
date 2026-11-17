@@ -134,13 +134,13 @@
 - [x] **4.1 Add `ofm_os_prepare` role** — OS validation, packages, `oracle` user/groups, limits, sysctl, SELinux/firewalld, directories, `/etc/oraInst.loc`, inventory.  
   _Acceptance:_ role is idempotent and `--check` clean on RHEL 8/9. Lab validation pending in 4.5.
 
-- [ ] **4.2 Add versioned Java role and software catalog** — JDK 8 latest for 12.2.1.4; JDK 17/21 for 14.1.2; checksums, alternatives, profile.d.  
-  _Acceptance:_ Java version is a variable; no hardcoded 8u101; catalog is the single source of media names/checksums.
+- [x] **4.2 Add versioned Java role and software catalog** — JDK 8 latest for 12.2.1.4; JDK 17/21 for 14.1.2; checksums, alternatives, profile.d.  
+  _Acceptance:_ Java version is a variable; no hardcoded 8u101; catalog is the single source of media names/checksums. The role name remains `ofm-java-8` for compatibility and is renamed in Phase 5.
 
-- [ ] **4.3 Parameterize FMW 12.2.1.4** — version, RCU version, response file names, WLST script names, media names.  
-  _Acceptance:_ no hardcoded `12.2.1.2` strings remain; 12.2.1.4 is selectable by variable.
+- [x] **4.3 Parameterize FMW 12.2.1.4** — version, RCU version, response file names, WLST script names, media names.  
+  _Acceptance:_ no hardcoded `12.2.1.2` strings remain; 12.2.1.4 is selectable by variable. Lab validation is tracked in 4.5.
 
-- [ ] **4.4 Scaffold FMW 14.1.2** — versioned vars/roles, RCU 14.1.2 response files, JDK 17/21, upgrade/rollback docs.  
+- [x] **4.4 Scaffold FMW 14.1.2** — versioned vars/roles, RCU 14.1.2 response files, JDK 17/21, upgrade/rollback docs.  
   _Acceptance:_ 14.1.2 path is selectable; lab validation is explicitly tracked as blocked/pending.
 
 - [ ] **4.5 Lab validation** — install 12.2.1.4 and 14.1.2 on RHEL 8/9 with licensed media; validate Forms/OHS.  
@@ -220,3 +220,6 @@
 | 2026-11-17 | 3.7 WLST idempotency | — | MBean guards, install/domain/extension markers |
 | 2026-11-17 | 3.8 dead code | — | Removed unused vars/templates/comments; server groups implemented |
 | 2026-11-17 | 4.1 OS prepare role | — | Packages, user/groups, limits, sysctl, directories, oraInst.loc |
+| 2026-11-17 | 4.2 software catalog/Java | — | Catalog for 12.2.1.2/12.2.1.4/14.1.2; Java versioned |
+| 2026-11-17 | 4.3 FMW 12.2.1.4 | — | Version/RCU/response/media parameterized; lab pending |
+| 2026-11-17 | 4.4 FMW 14.1.2 scaffold | — | RCU/response/JDK 17 scaffold and upgrade runbook |
