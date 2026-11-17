@@ -109,7 +109,7 @@
 - [x] **3.2 Fix execution-context assumptions** — replace `ansible_env.HOME` with a defined Oracle user home; replace hardcoded `ofmAdminserverMachine` with inventory-derived values.  
   _Acceptance:_ running as root + `become_user: oracle` writes to the Oracle home, not `/root`; admin host is inventory-driven.
 
-- [ ] **3.3 Fix pack/unpack** — controller-side artifact directory, fetch both JAR and NodeManager tarball, restore and template NodeManager files, validate unpack.  
+- [x] **3.3 Fix pack/unpack** — controller-side artifact directory, fetch both JAR and NodeManager tarball, restore and template NodeManager files, validate unpack.  
   _Acceptance:_ pack → fetch → unpack → start round trip is documented and code-complete.
 
 - [ ] **3.4 Bound waits and fix disk checks** — WLST wait loops exit non-zero after a maximum; disk assertions fail when a mount is absent; realistic space values.  
@@ -213,3 +213,4 @@
 | 2026-11-17 | 2.7 wrapper hardening | — | `umask 077`, boot.properties secured, dead secret templates removed |
 | 2026-11-17 | 3.1 simple defects | — | Undefined var, OEM stage dir, trailing path, OEM alias fixed |
 | 2026-11-17 | 3.2 execution context | — | Oracle home variable and inventory-derived admin host |
+| 2026-11-17 | 3.3 pack/unpack | — | Controller artifact repo, both artifacts fetched/restored, NM templates wired |

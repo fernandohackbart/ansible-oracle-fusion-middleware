@@ -3,31 +3,52 @@
 # Developed by Fernando Hackbart (fhackbart@gmail.com)
 # Lisbon 2017-12-28
 ---
-# Create stagedir for domain
 - name: Check if OFM domain {{ ofmDomainName }} exists at {{ ofmDomainHome }}
   ansible.builtin.stat:
     path: "{{ ofmDomainHome }}"
   register: ofmDomainHome_configured
 
-- name: Packing the domain {{ ofmDomainName }}
-  when: >
-    not ofmDomainHome_configured.stat.exists
+- name: Unpack the domain {{ ofmDomainName }}
+  when: not ofmDomainHome_configured.stat.exists
   block:
-
-    - name: Create stage folder {{ ofmDomainStageDir }}
+    - name: Ensure the domain stage directory exists
       ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}"
         state: directory
         mode: "{{ mode }}"
 
+    - name: Check the packed artifacts on the controller
+      ansible.builtin.stat:
+        path: "{{ ofm_domain_artifact_dir }}/{{ item }}"
+      loop:
+        - "Pack-{{ ofmDomainName }}.jar"
+        - "{{ ofmDomainName }}-nodemanager.tgz"
+      register: ofm_pack_artifacts
+      delegate_to: localhost
+      become: false
 
-    - name: Copying the packed domain from the Ansible server to {{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar
+    - name: Assert that the packed artifacts exist
+      ansible.builtin.assert:
+        that:
+          - ofm_pack_artifacts.results | selectattr('stat.exists') | list | length == 2
+        fail_msg: >-
+          Missing artifacts under {{ ofm_domain_artifact_dir }}. Run
+          OFM-domain-pack.yml on {{ groups['ofm_admin'][0] }} first.
+        quiet: true
+
+    - name: Copy the packed domain to the target
       ansible.builtin.copy:
-        src: "{{ ofmAdminserverMachine }}/{{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar"
+        src: "{{ ofm_domain_artifact_dir }}/Pack-{{ ofmDomainName }}.jar"
         dest: "{{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar"
+        mode: "0600"
 
+    - name: Copy the NodeManager archive to the target
+      ansible.builtin.copy:
+        src: "{{ ofm_domain_artifact_dir }}/{{ ofmDomainName }}-nodemanager.tgz"
+        dest: "{{ ofmDomainStageDir }}/{{ ofmDomainName }}-nodemanager.tgz"
+        mode: "0600"
 
-    - name: Unpacking domain {{ ofmDomainName }} to {{ ofmDomainHome }} from {{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar
+    - name: Unpack domain {{ ofmDomainName }} to {{ ofmDomainHome }}
       ansible.builtin.command: >-
         {{ oracleHome }}/oracle_common/common/bin/unpack.sh
         -initialize=false
@@ -46,20 +67,39 @@
         ORACLE_HOME: "{{ oracleHome }}"
         TEMP: "{{ tempDir }}"
 
-    - name: Create start nodemanager bash script {{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh
+    - name: Restore the NodeManager home
+      ansible.builtin.unarchive:
+        src: "{{ ofmDomainStageDir }}/{{ ofmDomainName }}-nodemanager.tgz"
+        dest: "{{ ofmDomainHome }}"
+        remote_src: true
+        creates: "{{ ofmDomainHome }}/nodemanager"
+
+    - name: Template the NodeManager domains file
+      ansible.builtin.template:
+        src: "nodemanager.domains"
+        dest: "{{ ofmDomainHome }}/nodemanager/nodemanager.domains"
+        mode: "0600"
+
+    - name: Template the NodeManager properties file
+      ansible.builtin.template:
+        src: "nodemanager.properties"
+        dest: "{{ ofmDomainHome }}/nodemanager/nodemanager.properties"
+        mode: "0600"
+
+    - name: Create the NodeManager start script
       ansible.builtin.template:
         src: "OFM-12.2-startNodeManager.sh"
         dest: "{{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh"
         mode: "{{ secureMode }}"
 
-    - name: Create wait nodemanager Jython script {{ ofmDomainStageDir }}/OFM-waitNodeManager.py
+    - name: Create the NodeManager wait script
       ansible.builtin.template:
         src: "OFM-waitNodeManager.py"
         dest: "{{ ofmDomainStageDir }}/OFM-waitNodeManager.py"
         mode: "{{ secureMode }}"
-
       no_log: true
-    - name: Start nodemanager with {{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh
+
+    - name: Start the NodeManager
       ansible.builtin.command: "{{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh"
       changed_when: true
       args:
@@ -70,8 +110,8 @@
         NODEMGR_HOME: "{{ ofmDomainHome }}/nodemanager"
         TEMP: "{{ tempDir }}"
 
-    - name: Wait the startup of nodemanager {{ ofmDomainName }} at {{ ofmDomainHome }}
-      ansible.builtin.command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh  {{ ofmDomainStageDir }}/OFM-waitNodeManager.py"
+    - name: Wait for the NodeManager to start
+      ansible.builtin.command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-waitNodeManager.py"
       changed_when: false
       check_mode: false
       args:

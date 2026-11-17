@@ -31,3 +31,8 @@ ofm_ignore_sys_prereqs: false
 ofm_confirm_destroy: false
 ofm_confirm_destroy_prod: false
 ofm_require_domain_backup: true
+
+# Controller-side domain artifact repository.
+ofm_artifacts_dir: "{{ playbook_dir }}/artifacts"
+ofm_domain_artifact_dir: >-
+  {{ ofm_artifacts_dir }}/{{ (groups['ofm_admin'] | default([]) | first) | default(inventory_hostname) }}

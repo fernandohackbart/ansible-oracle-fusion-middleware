@@ -8,17 +8,26 @@
     path: "{{ ofmDomainHome }}"
   register: ofmDomainHome_configured
 
-- name: Packing the domain {{ ofmDomainName }}
-  when: >
-    ofmDomainHome_configured.stat.exists
+- name: Pack the domain {{ ofmDomainName }}
+  when: ofmDomainHome_configured.stat.exists
   block:
+    - name: Ensure the domain stage directory exists
+      ansible.builtin.file:
+        path: "{{ ofmDomainStageDir }}"
+        state: directory
+        mode: "{{ mode }}"
 
-    - name: Clean {{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar
+    - name: Remove an old packed domain
       ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar"
         state: absent
 
-    - name: Packing domain {{ ofmDomainName }} from {{ ofmDomainHome }} to {{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar
+    - name: Remove an old NodeManager archive
+      ansible.builtin.file:
+        path: "{{ ofmDomainStageDir }}/{{ ofmDomainName }}-nodemanager.tgz"
+        state: absent
+
+    - name: Pack domain {{ ofmDomainName }} from {{ ofmDomainHome }}
       ansible.builtin.command: >-
         {{ oracleHome }}/oracle_common/common/bin/pack.sh
         -domain={{ ofmDomainHome }}
@@ -35,13 +44,29 @@
         ORACLE_HOME: "{{ oracleHome }}"
         TEMP: "{{ tempDir }}"
 
-    - name: Copying the nodemanager home from {{ ofmDomainHome }}/nodemanager to {{ ofmDomainStageDir }}/{{ ofmDomainName }}-nodemanager.tgz
+    - name: Archive the NodeManager home
       community.general.archive:
         path: "{{ ofmDomainHome }}/nodemanager"
         dest: "{{ ofmDomainStageDir }}/{{ ofmDomainName }}-nodemanager.tgz"
+        format: gz
+        mode: "0600"
 
-    - name: Fetching the packed domain to the Ansible server from {{ ofmAdminserverMachine }}:{{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar
+    - name: Fetch the packed domain to the Ansible controller
       ansible.builtin.fetch:
         src: "{{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar"
-        dest: "{{ ofmAdminserverMachine }}/{{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar"
+        dest: "{{ ofm_artifacts_dir }}/{{ inventory_hostname }}/"
         flat: true
+      changed_when: true
+
+    - name: Fetch the NodeManager archive to the Ansible controller
+      ansible.builtin.fetch:
+        src: "{{ ofmDomainStageDir }}/{{ ofmDomainName }}-nodemanager.tgz"
+        dest: "{{ ofm_artifacts_dir }}/{{ inventory_hostname }}/"
+        flat: true
+      changed_when: true
+
+    - name: Show the artifact location
+      ansible.builtin.debug:
+        msg: >-
+          Domain artifacts are available at
+          {{ ofm_artifacts_dir }}/{{ inventory_hostname }}/.
