@@ -54,7 +54,7 @@
 - [x] **1.2 Fix collection modules and unarchive options** — `archive` → `community.general.archive`; `unarchive: copy: no` → `remote_src: true`; add `requirements.yml` coverage.  
   _Acceptance:_ `ansible-playbook --syntax-check` passes with only `ansible-core` + pinned collections.
 
-- [ ] **1.3 Replace legacy loops** — `with_items` and `with_indexed_items` → `loop` with `loop_control.index_var` where an index is needed.  
+- [x] **1.3 Replace legacy loops** — `with_items` and `with_indexed_items` → `loop` with `loop_control.index_var` where an index is needed.  
   _Acceptance:_ no `with_*` loop keys remain.
 
 - [ ] **1.4 Replace free-form module arguments** — `stat: path=...`, `fail: msg=...` → mapping syntax.  
@@ -196,3 +196,4 @@
 | 2026-11-17 | 0.8 file hygiene | — | `git diff --check` clean; yamllint exits 0; autofixes applied |
 | 2026-11-17 | 1.1 FQCN | — | All role task modules converted; syntax/lint pass |
 | 2026-11-17 | 1.2 collection modules | — | `archive` uses `community.general`; `remote_src: true` |
+| 2026-11-17 | 1.3 loops | — | No `with_*` remains; indexed loops use `index_var` |

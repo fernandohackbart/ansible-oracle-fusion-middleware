@@ -18,8 +18,7 @@
   ansible.builtin.assert:
     that:
       - item.size_available > tempRequiredSpace
-  with_items:
-    - "{{ ansible_mounts }}"
+  loop: "{{ ansible_mounts }}"
   when: >
     item.mount == tempBaseVolume
   register: tmp_free
@@ -28,8 +27,7 @@
   ansible.builtin.assert:
     that:
       - item.size_available > ofmInstallRequiredSpace
-  with_items:
-    - "{{ ansible_mounts }}"
+  loop: "{{ ansible_mounts }}"
   when: >
     item.mount == oraBaseVolume
   register: install_free

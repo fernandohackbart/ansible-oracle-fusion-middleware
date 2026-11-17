@@ -3,7 +3,7 @@ DOMAINHOME='{{ ofmDomainHome }}'
 EXTCLUSTERNAME='{{ ofmFRMextclustername }}'
 EXTSERVERPREFIX='{{ ofmFRMextserverprefix }}'
 EXTSERVERGROUPS='{{ ofmFRMextservergroups }}'
-EXTSERVERINDEX='{{ item.0 }}'
+EXTSERVERINDEX='{{ index }}'
 
 print 'Reading the domain'
 readDomain(DOMAINHOME)

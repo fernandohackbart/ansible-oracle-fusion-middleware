@@ -27,23 +27,25 @@
 
   ########################################################################################################################
 
-    - name: Creating create managed servers Jython script {{ ofmDomainStageDir }}/OFM-12.2-createManagedServer-{{ ofmMGDSRVextserverprefix }}{{ item.0 }}.py
+    - name: Creating create managed servers Jython script {{ ofmDomainStageDir }}/OFM-12.2-createManagedServer-{{ ofmMGDSRVextserverprefix }}{{ index }}.py
       ansible.builtin.template:
         src: "OFM-12.2-createManagedServer.py"
-        dest: "{{ ofmDomainStageDir }}/OFM-12.2-createManagedServer-{{ ofmMGDSRVextserverprefix }}{{ item.0 }}.py"
+        dest: "{{ ofmDomainStageDir }}/OFM-12.2-createManagedServer-{{ ofmMGDSRVextserverprefix }}{{ index }}.py"
         mode: "{{ mode }}"
-      with_indexed_items:
-        - "{{ ofmMGDSRVextmachines }}"
+      loop: "{{ ofmMGDSRVextmachines }}"
+      loop_control:
+        index_var: index
 
     - name: Creating managed servers {{ ofmDomainName }} with {{ ofmMGDSRVexttemplate  }}
-      ansible.builtin.command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-createManagedServer-{{ ofmMGDSRVextserverprefix }}{{ item.0 }}.py"
+      ansible.builtin.command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-createManagedServer-{{ ofmMGDSRVextserverprefix }}{{ index }}.py"
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:
         JAVA_HOME: "{{ javaHome }}"
         JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
         TEMP: "{{ tempDir }}"
-      with_indexed_items:
-        - "{{ ofmMGDSRVextmachines }}"
+      loop: "{{ ofmMGDSRVextmachines }}"
+      loop_control:
+        index_var: index
 
   ########################################################################################################################

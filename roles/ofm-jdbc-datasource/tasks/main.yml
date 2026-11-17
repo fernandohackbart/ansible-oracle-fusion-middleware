@@ -52,7 +52,7 @@
         src: "OFM-add-JDBC-MS-target.py"
         dest: "{{ ofmDomainStageDir }}/OFM-add-JDBC-MS-target-{{ item }}.py"
         mode: "{{ mode }}"
-      with_items: "{{ ofmJDBCManagedServerTargets }}"
+      loop: "{{ ofmJDBCManagedServerTargets }}"
 
     - name: Targeting the JDBC datasource {{ ofmJDBCDATASOURCENAME }} to managed servers {{ ofmJDBCManagedServerTargets }}
       ansible.builtin.command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-add-JDBC-MS-target-{{ item }}.py"
@@ -62,13 +62,13 @@
         JAVA_HOME: "{{ javaHome }}"
         JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
         TEMP: "{{ tempDir }}"
-      with_items: "{{ ofmJDBCManagedServerTargets }}"
+      loop: "{{ ofmJDBCManagedServerTargets }}"
 
     - name: Clean {{ ofmDomainStageDir }}/OFM-add-JDBC-MS-target.py
       ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}/OFM-add-JDBC-MS-target-{{ item }}.py"
         state: absent
-      with_items: "{{ ofmJDBCManagedServerTargets }}"
+      loop: "{{ ofmJDBCManagedServerTargets }}"
 
     ########################################################################################################################
     - name: Creating JDBC cluster target Jython script {{ ofmDomainStageDir }}/OFM-add-JDBC-CLUSTER-target.py
@@ -76,7 +76,7 @@
         src: "OFM-add-JDBC-CLUSTER-target.py"
         dest: "{{ ofmDomainStageDir }}/OFM-add-JDBC-CLUSTER-target-{{ item }}.py"
         mode: "{{ mode }}"
-      with_items: "{{ ofmJDBCClusterTargets }}"
+      loop: "{{ ofmJDBCClusterTargets }}"
 
     - name: Targeting the JDBC datasource {{ ofmJDBCDATASOURCENAME }} to managed servers {{ ofmJDBCClusterTargets }}
       ansible.builtin.command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-add-JDBC-CLUSTER-target-{{ item }}.py"
@@ -86,11 +86,11 @@
         JAVA_HOME: "{{ javaHome }}"
         JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
         TEMP: "{{ tempDir }}"
-      with_items: "{{ ofmJDBCClusterTargets }}"
+      loop: "{{ ofmJDBCClusterTargets }}"
 
     - name: Clean {{ ofmDomainStageDir }}/OFM-add-JDBC-CLUSTER-target.py
       ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}/OFM-add-JDBC-CLUSTER-target-{{ item }}.py"
         state: absent
-      with_items: "{{ ofmJDBCClusterTargets }}"
+      loop: "{{ ofmJDBCClusterTargets }}"
   ########################################################################################################################

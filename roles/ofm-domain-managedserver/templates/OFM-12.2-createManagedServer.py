@@ -1,6 +1,6 @@
 import os, sys
 
-EXTSERVERINDEX='{{ item.0 }}'
+EXTSERVERINDEX='{{ index }}'
 USERHOMEDIR='{{ ofmInstallUserHomeDir }}'
 RESTRICTEDJRF='{{ ofmRestrictedJRF }}'
 EXTSERVERPREFIX='{{ ofmMGDSRVextserverprefix }}'
@@ -9,11 +9,11 @@ ADMINSERVERMACHINE='{{ ofmAdminserverMachine }}'
 ADMINSERVERNAME='{{ ofmAdminserverName }}'
 ADMINSERVERPORT='{{ ofmAdminserverPort }}'
 DOMAINNAME='{{ ofmDomainName }}'
-ADJUSTSERVERNAME='{{ ofmMGDSRVextserverprefix }}{{ item.0}}'
+ADJUSTSERVERNAME='{{ ofmMGDSRVextserverprefix }}{{ index }}'
 ADJUSTSERVERMSARGS='{{ ofmMGDSRVextmsargs }}'
-ADJUSTSERVERMACHINE='{{ item.1 }}'
+ADJUSTSERVERMACHINE='{{ item }}'
 ADJUSTSERVERPORT='{{ ofmMGDSRVextmsport }}'
-ADJUSTSERVERLOGDIR='{{ ofmDomainLogsHome }}/{{ ofmMGDSRVextserverprefix }}{{ item.0}}'
+ADJUSTSERVERLOGDIR='{{ ofmDomainLogsHome }}/{{ ofmMGDSRVextserverprefix }}{{ index }}'
 NODEMGRPORT='{{ ofmNodemgrPort }}'
 JDBCRCUSCHEMAPREFIX='{{ ofmJdbcRCUSchemaPrefix }}'
 
