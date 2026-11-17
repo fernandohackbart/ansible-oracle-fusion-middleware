@@ -17,6 +17,7 @@
       ofmJdbcsysPassword. See inventories/example/group_vars/vault.yml.example.
     quiet: true
   no_log: true
+  when: ofm_require_domain_secrets | default(true) | bool
 
 - name: Check if OFM home {{ oraclePresenceFolder }} is already installed
   ansible.builtin.stat:
