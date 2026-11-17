@@ -135,6 +135,10 @@ The current `ansible-lint` configuration starts at profile `basic` and temporari
 - [Upgrade 12c to 14.1.2](docs/upgrade-12c-to-14c.md)
 - [Execution Environment](docs/execution-environment.md)
 - [Release policy](docs/release-policy.md)
+- [Backup, restore, and rollback](docs/backup-restore.md)
+- [Observability and health checks](docs/observability.md)
+- [AAP/AWX integration](docs/aap-awx.md)
+- [Lifecycle review](docs/lifecycle.md)
 
 ## Roadmap
 

@@ -169,16 +169,16 @@
 
 ## Phase 6 — Operations and lifecycle
 
-- [ ] **6.1 Add backup/restore and rollback runbook** — pack before change, artifact retention, restore procedure.  
-  _Acceptance:_ runbook is tested in the lab or clearly marked pending lab validation.
+- [x] **6.1 Add backup/restore and rollback runbook** — pack before change, artifact retention, restore procedure.  
+  _Acceptance:_ runbook is documented; lab validation is pending in 4.5.
 
-- [ ] **6.2 Add health checks and observability** — AdminServer, NodeManager, OHS checks; log locations; failure messages.  
+- [x] **6.2 Add health checks and observability** — AdminServer, NodeManager, OHS checks; log locations; failure messages.  
   _Acceptance:_ `--tags validate` reports actionable status.
 
-- [ ] **6.3 Document AAP/AWX integration** — inventories, credentials, surveys, RBAC, EE.  
+- [x] **6.3 Document AAP/AWX integration** — inventories, credentials, surveys, RBAC, EE.  
   _Acceptance:_ a platform operator can import the project without extra-var host targeting.
 
-- [ ] **6.4 Define lifecycle review cadence** — quarterly Ansible/collection review; FMW 27, Java 25, RHEL 10 planning.  
+- [x] **6.4 Define lifecycle review cadence** — quarterly Ansible/collection review; FMW 27, Java 25, RHEL 10 planning.  
   _Acceptance:_ owners and dates are recorded.
 
 ---
@@ -228,3 +228,7 @@
 | 2026-11-17 | 5.3 CI matrix/EE | — | 2.20/2.21/2.22 matrix, EE and navigator config |
 | 2026-11-17 | 5.4 documentation | — | Architecture, prerequisites, inventory, variables, runbooks, troubleshooting |
 | 2026-11-17 | 5.5 release policy | — | SemVer, deprecation window, release checklist, changelog refresh |
+| 2026-11-17 | 6.1 backup/restore | — | Runbook documented; lab validation pending |
+| 2026-11-17 | 6.2 observability | — | Validate role, ports, log paths, alerts |
+| 2026-11-17 | 6.3 AAP/AWX | — | EE, credentials, surveys, RBAC, job templates |
+| 2026-11-17 | 6.4 lifecycle | — | Quarterly checklist, owners, decision log |
