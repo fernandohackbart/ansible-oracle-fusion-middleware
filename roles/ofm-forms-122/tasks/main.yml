@@ -112,6 +112,12 @@
   when: >
     not oracleHome_installed.stat.exists
 
+- name: Record the forms installation marker
+  ansible.builtin.copy:
+    dest: "{{ oracleHome }}/.ofm-install-forms.json"
+    content: "{{ {'product': 'forms', 'version': ofmVersion, 'media_checksum': ofmInstallationMediaChecksum | default(''), 'installed_at': ansible_facts.date_time.iso8601} | to_nice_json }}\n"
+    mode: "0644"
+
 - name: Post clean {{ stageDir }}/{{ ofmInstallationFile }}
   ansible.builtin.file:
     path: "{{ stageDir }}/{{ ofmInstallationFile }}"

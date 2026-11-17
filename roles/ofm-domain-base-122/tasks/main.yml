@@ -456,4 +456,10 @@
       loop: "{{ ofm_wlst_cred_files.results }}"
       when: item.stat.exists
       no_log: true
+
+    - name: Record the domain marker
+      ansible.builtin.copy:
+        dest: "{{ ofmDomainHome }}/.ofm-domain.json"
+        content: "{{ {'domain': ofmDomainName, 'version': ofmVersion, 'restricted_jrf': ofmRestrictedJRF, 'created_at': ansible_facts.date_time.iso8601} | to_nice_json }}\n"
+        mode: "0644"
   ########################################################################################################################

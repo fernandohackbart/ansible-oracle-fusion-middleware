@@ -17,6 +17,10 @@ print 'Connecting to the '+ADMINSERVERNAME
 connect(userConfigFile=USERHOMEDIR+'/bin/'+DOMAINNAME+'-cred.secure',userKeyFile=USERHOMEDIR+'/bin/'+DOMAINNAME+'-key.secure',url='t3://'+ADMINSERVERMACHINE+':'+ADMINSERVERPORT)
 edit()
 startEdit()
+if getMBean('/JDBCSystemResources/'+JDBCDATASOURCENAME) != None:
+  print 'Datasource '+JDBCDATASOURCENAME+' already exists; skipping.'
+  stopEdit('y')
+  exit()
 try:
   print 'Configuring JDBC datasource '+JDBCDATASOURCENAME+' pointing to jdbc:oracle:thin:@//'+JDBCURL
   cd('/')

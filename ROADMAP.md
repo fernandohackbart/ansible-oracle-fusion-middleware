@@ -121,7 +121,7 @@
 - [x] **3.6 Add tags and handlers** — `install`, `configure`, `extend`, `pack`, `unpack`, `clean`, `validate`; `never` on destructive tasks; restart handlers.  
   _Acceptance:_ `--tags validate` works without running install; restart handlers are defined. The explicit bootstrap start/stop remains because domain creation requires it.
 
-- [ ] **3.7 Make WLST operations idempotent** — check `getMBean(...)` before create; add install/domain markers with version and checksum.  
+- [x] **3.7 Make WLST operations idempotent** — check `getMBean(...)` before create; add install/domain markers with version and checksum.  
   _Acceptance:_ second run of configure/extend does not fail on existing objects.
 
 - [ ] **3.8 Remove dead code and duplicates** — unused `OFM-env-domain`, unused NodeManager templates (or wire them up), unused Coherence vars, duplicate Forms `set_fact`, unused `stageRequiredSpace`.  
@@ -217,3 +217,4 @@
 | 2026-11-17 | 3.4 waits/disk | — | Wait scripts capped at 60 attempts; mount lookup fails explicitly; sizes updated |
 | 2026-11-17 | 3.5 multi-host safety | — | Group targets, RCU `run_once`, serial clean/unpack, fail-fast |
 | 2026-11-17 | 3.6 tags/handlers | — | Play tags, `never` on clean, validate playbook, restart handlers |
+| 2026-11-17 | 3.7 WLST idempotency | — | MBean guards, install/domain/extension markers |

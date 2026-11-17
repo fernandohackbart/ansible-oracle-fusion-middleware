@@ -14,11 +14,14 @@
     path: "{{ ofmDomainHome }}"
   register: ofmDomainHome_configured
 
-#TODO: Check if the domain was already extended for Oracle Enterprise Manager
+- name: Check whether the OEM extension marker exists
+  ansible.builtin.stat:
+    path: "{{ ofmDomainHome }}/.ofm-extended-oem"
+  register: ofm_oem_extended
 
 - name: Extending Oracle Fusion Middleware Infrastructure domain for Oracle Enterprise Manager
   when: >
-    ofmDomainHome_configured.stat.exists
+    ofmDomainHome_configured.stat.exists and not ofm_oem_extended.stat.exists
   block:
 
     - name: Create stage folder "{{ ofmDomainStageDir }}"
@@ -86,4 +89,10 @@
       ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}/OFM-12.2-extendDomain-OEM.py"
         state: absent
+
+    - name: Record the OEM extension marker
+      ansible.builtin.copy:
+        dest: "{{ ofmDomainHome }}/.ofm-extended-oem"
+        content: "{{ {'extension': 'oem', 'version': ofmVersion, 'extended_at': ansible_facts.date_time.iso8601} | to_nice_json }}\n"
+        mode: "0644"
   ########################################################################################################################

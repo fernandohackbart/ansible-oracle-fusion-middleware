@@ -34,6 +34,10 @@ print 'Connecting to the '+ADMINSERVERNAME
 connect(userConfigFile=USERHOMEDIR+'/bin/'+DOMAINNAME+'-cred.secure',userKeyFile=USERHOMEDIR+'/bin/'+DOMAINNAME+'-key.secure',url='t3://'+ADMINSERVERMACHINE+':'+ADMINSERVERPORT)
 edit()
 startEdit()
+if getMBean('/SecurityConfiguration/'+DOMAINNAME+'/Realms/myrealm/AuthenticationProviders/'+LDAPPROVIDERNAME) != None:
+  print 'LDAP provider '+LDAPPROVIDERNAME+' already exists; skipping.'
+  stopEdit('y')
+  exit()
 try:
   print 'Configuring LDAP integration with provider '+LDAPPROVIDERNAME+' ('+LDAPHOSTNAME+')'
   cd('/SecurityConfiguration/'+DOMAINNAME+'/Realms/myrealm')

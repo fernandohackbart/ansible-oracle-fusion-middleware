@@ -14,9 +14,14 @@
     path: "{{ ofmDomainHome }}"
   register: ofmDomainHome_configured
 
-- name: Extending Oracle Fusion Middleware Infrastructure domain for Oracle Enterprise Manager
+- name: Check whether the Forms extension marker exists
+  ansible.builtin.stat:
+    path: "{{ ofmDomainHome }}/.ofm-extended-forms"
+  register: ofm_forms_extended
+
+- name: Extending Oracle Fusion Middleware Infrastructure domain for Oracle Forms
   when: >
-    ofmDomainHome_configured.stat.exists
+    ofmDomainHome_configured.stat.exists and not ofm_forms_extended.stat.exists
   block:
 
     - name: Create stage folder "{{ ofmDomainStageDir }}"
@@ -153,5 +158,11 @@
       ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}/OFM-12.2-extendDomain-FRM.py"
         state: absent
+
+    - name: Record the Forms extension marker
+      ansible.builtin.copy:
+        dest: "{{ ofmDomainHome }}/.ofm-extended-forms"
+        content: "{{ {'extension': 'forms', 'version': ofmVersion, 'extended_at': ansible_facts.date_time.iso8601} | to_nice_json }}\n"
+        mode: "0644"
 
   ########################################################################################################################

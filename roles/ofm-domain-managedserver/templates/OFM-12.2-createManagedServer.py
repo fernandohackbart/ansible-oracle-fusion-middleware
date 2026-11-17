@@ -23,8 +23,11 @@ if ADMINSERVERNAME!=ADJUSTSERVERNAME:
   edit()
   startEdit()
 
-cd('/')
-cmo.createServer(ADJUSTSERVERNAME)
+if getMBean('/Servers/'+ADJUSTSERVERNAME) == None:
+  cd('/')
+  cmo.createServer(ADJUSTSERVERNAME)
+else:
+  print 'Server '+ADJUSTSERVERNAME+' already exists; updating configuration.'
 
 
 cd('/Servers/'+ADJUSTSERVERNAME)
