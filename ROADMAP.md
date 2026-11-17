@@ -32,7 +32,7 @@
 - [x] **0.4 Add example inventory and group vars** — `inventories/example/hosts.yml`, `group_vars/all.yml`, `group_vars/vault.yml.example`; define `ofm_admin`, `ofm_managed`, `ofm_ohs`, `ofm_forms`.  
   _Acceptance:_ playbook syntax-check works without `-e targetHosts=...`.
 
-- [ ] **0.5 Rewrite `README.md`** — purpose, support matrix, prerequisites, quick start, inventory, variables, secrets, validation, links.  
+- [x] **0.5 Rewrite `README.md`** — purpose, support matrix, prerequisites, quick start, inventory, variables, secrets, validation, links.  
   _Acceptance:_ a new engineer can run the example inventory by following the README only.
 
 - [ ] **0.6 Add `Makefile` and CI workflow** — `setup`, `syntax`, `lint`, `test`, `clean`; CI runs syntax-check, yamllint, ansible-lint.  
@@ -190,3 +190,4 @@
 | 2026-11-17 | 0.2 dependencies pinned | — | `ansible-galaxy` confirms collections installed |
 | 2026-11-17 | 0.4 example inventory | — | 15/15 playbooks pass `--syntax-check` without extra vars |
 | 2026-11-17 | 0.3 lint/format config | — | `ansible-lint` exits 0 with warnings; yamllint reports existing whitespace debt |
+| 2026-11-17 | 0.5 README rewrite | — | Includes support matrix, inventory, secrets, and playbook reference |
