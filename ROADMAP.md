@@ -41,7 +41,7 @@
 - [x] **0.7 Add project metadata** — `CHANGELOG.md`, `LICENSE`, `CONTRIBUTING.md`.  
   _Acceptance:_ files exist and state the project’s support and contribution policy.
 
-- [ ] **0.8 Normalize file hygiene** — remove trailing whitespace, fix YAML indentation, add final newlines, remove executable bits from YAML.  
+- [x] **0.8 Normalize file hygiene** — remove trailing whitespace, fix YAML indentation, add final newlines, remove executable bits from YAML.  
   _Acceptance:_ `git diff --check` is clean; `find . -name '*.yml' -perm -u+x` returns nothing.
 
 ---
@@ -193,3 +193,4 @@
 | 2026-11-17 | 0.5 README rewrite | — | Includes support matrix, inventory, secrets, and playbook reference |
 | 2026-11-17 | 0.6 Makefile + CI | — | `make syntax` and `make lint` pass locally |
 | 2026-11-17 | 0.7 project metadata | — | License is a proprietary placeholder pending owner decision |
+| 2026-11-17 | 0.8 file hygiene | — | `git diff --check` clean; yamllint exits 0; autofixes applied |
