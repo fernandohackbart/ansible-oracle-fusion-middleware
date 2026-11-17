@@ -9,7 +9,9 @@ highenvs: ["ppe", "prod"]
 mode: "0755"
 secureMode: "0700"
 
-ofmInstallUserHomeDir: "{{ ansible_env.HOME }}"
+ofm_user: "oracle"
+ofm_user_home: "/home/{{ ofm_user }}"
+ofmInstallUserHomeDir: "{{ ofm_user_home }}"
 
 mediassource: "webserver"
 #mediassource: "filesystem"

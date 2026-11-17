@@ -106,7 +106,7 @@
 - [x] **3.1 Fix simple verified defects** — undefined `ofmMGDSRVexttemplate`, OEM stage-dir mismatch, trailing space in wait-script cleanup, duplicate OEM playbooks.  
   _Acceptance:_ syntax/lint pass; the affected tasks reference defined variables and paths.
 
-- [ ] **3.2 Fix execution-context assumptions** — replace `ansible_env.HOME` with a defined Oracle user home; replace hardcoded `ofmAdminserverMachine` with inventory-derived values.  
+- [x] **3.2 Fix execution-context assumptions** — replace `ansible_env.HOME` with a defined Oracle user home; replace hardcoded `ofmAdminserverMachine` with inventory-derived values.  
   _Acceptance:_ running as root + `become_user: oracle` writes to the Oracle home, not `/root`; admin host is inventory-driven.
 
 - [ ] **3.3 Fix pack/unpack** — controller-side artifact directory, fetch both JAR and NodeManager tarball, restore and template NodeManager files, validate unpack.  
@@ -212,3 +212,4 @@
 | 2026-11-17 | 2.6 destructive guards | — | Confirmation/prod guards, backup check, graceful process stop |
 | 2026-11-17 | 2.7 wrapper hardening | — | `umask 077`, boot.properties secured, dead secret templates removed |
 | 2026-11-17 | 3.1 simple defects | — | Undefined var, OEM stage dir, trailing path, OEM alias fixed |
+| 2026-11-17 | 3.2 execution context | — | Oracle home variable and inventory-derived admin host |

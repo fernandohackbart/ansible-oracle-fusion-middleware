@@ -161,42 +161,42 @@
     path: "{{ ofmDomainStageDir }}"
     state: absent
 
-- name: Clean {{ ansible_env.HOME }}/{{ ofmDomainName }}-cred.secure
+- name: Clean {{ ofmInstallUserHomeDir }}/{{ ofmDomainName }}-cred.secure
   ansible.builtin.file:
-    path: "{{ ansible_env.HOME }}/{{ ofmDomainName }}-cred.secure"
+    path: "{{ ofmInstallUserHomeDir }}/{{ ofmDomainName }}-cred.secure"
     state: absent
 
-- name: Clean {{ ansible_env.HOME }}/{{ ofmDomainName }}-key.secure
+- name: Clean {{ ofmInstallUserHomeDir }}/{{ ofmDomainName }}-key.secure
   ansible.builtin.file:
-    path: "{{ ansible_env.HOME }}/{{ ofmDomainName }}-key.secure"
+    path: "{{ ofmInstallUserHomeDir }}/{{ ofmDomainName }}-key.secure"
     state: absent
 
-- name: Clean {{ ansible_env.HOME }}/{{ ofmDomainName }}-nodemanager.config
+- name: Clean {{ ofmInstallUserHomeDir }}/{{ ofmDomainName }}-nodemanager.config
   ansible.builtin.file:
-    path: "{{ ansible_env.HOME }}/{{ ofmDomainName }}-nodemanager.config"
+    path: "{{ ofmInstallUserHomeDir }}/{{ ofmDomainName }}-nodemanager.config"
     state: absent
 
-- name: Clean {{ ansible_env.HOME }}/{{ ofmDomainName }}-nodemanager.keyfile
+- name: Clean {{ ofmInstallUserHomeDir }}/{{ ofmDomainName }}-nodemanager.keyfile
   ansible.builtin.file:
-    path: "{{ ansible_env.HOME }}/{{ ofmDomainName }}-nodemanager.keyfile"
+    path: "{{ ofmInstallUserHomeDir }}/{{ ofmDomainName }}-nodemanager.keyfile"
     state: absent
 
-- name: Clean {{ ansible_env.HOME }}/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}
+- name: Clean {{ ofmInstallUserHomeDir }}/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}
   ansible.builtin.file:
-    path: "{{ ansible_env.HOME }}/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}"
+    path: "{{ ofmInstallUserHomeDir }}/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}"
     state: absent
 
-- name: Clean {{ ansible_env.HOME }}/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}.py
+- name: Clean {{ ofmInstallUserHomeDir }}/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}.py
   ansible.builtin.file:
-    path: "{{ ansible_env.HOME }}/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}.py"
+    path: "{{ ofmInstallUserHomeDir }}/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}.py"
     state: absent
 
-- name: Clean {{ ansible_env.HOME }}/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}
+- name: Clean {{ ofmInstallUserHomeDir }}/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}
   ansible.builtin.file:
-    path: "{{ ansible_env.HOME }}/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}"
+    path: "{{ ofmInstallUserHomeDir }}/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}"
     state: absent
 
-- name: Clean {{ ansible_env.HOME }}/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}.py
+- name: Clean {{ ofmInstallUserHomeDir }}/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}.py
   ansible.builtin.file:
-    path: "{{ ansible_env.HOME }}/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}.py"
+    path: "{{ ofmInstallUserHomeDir }}/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}.py"
     state: absent
