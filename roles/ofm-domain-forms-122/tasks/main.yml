@@ -16,7 +16,7 @@
 
 - name: Extending Oracle Fusion Middleware Infrastructure domain for Oracle Enterprise Manager
   when: >
-    ofmDomainHome_configured.stat.exists == True
+    ofmDomainHome_configured.stat.exists
   block:
 
     - name: Create stage folder "{{ ofmDomainStageDir }}"
@@ -29,13 +29,13 @@
       ansible.builtin.set_fact:
         ofmFRMexttemplate: "Oracle Forms"
       when: >
-        ofmRestrictedJRF == "TRUE"
+        ofmRestrictedJRF
 
     - name: Create variables for non restricted JRF extension
       ansible.builtin.set_fact:
         ofmFRMexttemplate: "Oracle Forms"
       when: >
-        ofmRestrictedJRF == "FALSE"
+        not ofmRestrictedJRF
 
     - name: Assigning default value to ofmFRMextassignexistingserver
       ansible.builtin.set_fact:
@@ -45,7 +45,7 @@
       ansible.builtin.set_fact:
         ofmFRMextassignexistingserver: "{{ ofmAdminserverName }}"
       when: >
-        ofmFRMextrequireserver == "TRUE" and ofmFRMextprovideserver == "FALSE"
+        ofmFRMextrequireserver and not ofmFRMextprovideserver
 
     - name: Defined the server name for the template provided server {{ ofmFRMextserverprefix }}0
       ansible.builtin.set_fact:

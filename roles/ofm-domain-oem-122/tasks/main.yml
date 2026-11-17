@@ -18,7 +18,7 @@
 
 - name: Extending Oracle Fusion Middleware Infrastructure domain for Oracle Enterprise Manager
   when: >
-    ofmDomainHome_configured.stat.exists == True
+    ofmDomainHome_configured.stat.exists
   block:
 
     - name: Create stage folder "{{ stageDir }}"
@@ -31,13 +31,13 @@
       ansible.builtin.set_fact:
         ofmOEMexttemplate: "Oracle Enterprise Manager-Restricted JRF"
       when: >
-        ofmRestrictedJRF == "TRUE"
+        ofmRestrictedJRF
 
     - name: Create variables for non restricted JRF extension
       ansible.builtin.set_fact:
         ofmOEMexttemplate: "Oracle Enterprise Manager"
       when: >
-        ofmRestrictedJRF == "FALSE"
+        not ofmRestrictedJRF
 
     ########################################################################################################################
     - name: Stopping {{ ofmAdminserverName }} with {{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}

@@ -16,7 +16,7 @@
 
 - name: Deinstalling Oracle Fusion Middleware
   when: >
-    oracleHome_installed.stat.exists == True
+    oracleHome_installed.stat.exists
   block:
 
 #  - name: Create stage folder "{{ stageDir }}"

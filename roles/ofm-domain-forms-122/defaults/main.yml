@@ -9,9 +9,9 @@ ofmFRMextversion: "12.2.1.2.0"
 ofmFRMextclustername: "cluster_forms"
 ofmFRMextserverprefix: "FRM_MS"
 ofmFRMextservergroups: "FORMS-MAN-SVR"
-ofmFRMextprovideserver: "TRUE"
+ofmFRMextprovideserver: true
 ofmFRMextprovidedservername: "WLS_FORMS"
-ofmFRMextrequireserver: "TRUE"
+ofmFRMextrequireserver: true
 ofmFRMextmsargs: " -Xms2000m -Xmx2000m "
 ofmFRMextmsport: "14006"
 ofmFRMextmachines: ["server21.xpto.com", "server22.xpto.com"]

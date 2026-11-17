@@ -16,7 +16,7 @@
 
 - name: Installing Oracle Fusion Middleware Infrastructure
   when: >
-    oracleHome_installed.stat.exists == False
+    not oracleHome_installed.stat.exists
   block:
     - name: Check available disk space in {{ tempBaseVolume }}
       ansible.builtin.assert:

@@ -11,7 +11,7 @@
 
 - name: Packing the domain {{ ofmDomainName }}
   when: >
-    ofmDomainHome_configured.stat.exists == False
+    not ofmDomainHome_configured.stat.exists
   block:
 
     - name: Create stage folder {{ ofmDomainStageDir }}

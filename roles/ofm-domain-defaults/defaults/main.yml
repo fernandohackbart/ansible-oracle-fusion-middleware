@@ -17,7 +17,7 @@ ofmTransBase: "{{ ofmTransactionsHome }}/domains"
 ofmTransHome: "{{ ofmTransBase }}/{{ ofmDomainName }}"
 ofmDomainStageDir: "{{ stageDir }}/{{ ofmDomainName }}"
 
-ofmRestrictedJRF: "TRUE"
+ofmRestrictedJRF: true
 ofmRCUOperation: "createRepository"
 ofmExtRCUOperation: "appendRepository"
 ofmJdbcURL: "(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=server20.xpto.com)(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=daggpunkt.xpto.com)))"

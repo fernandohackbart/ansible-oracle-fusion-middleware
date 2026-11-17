@@ -39,7 +39,7 @@
     state: directory
     mode: "{{ mode }}"
   when: >
-    oracleHome_installed.stat.exists == False
+    not oracleHome_installed.stat.exists
 
 - name: Create stage folder "{{ stageDir }}"
   ansible.builtin.file:
@@ -47,7 +47,7 @@
     state: directory
     mode: "{{ mode }}"
   when: >
-    oracleHome_installed.stat.exists == False
+    not oracleHome_installed.stat.exists
 
 - name: Create response file {{ stageDir }}/{{ ofmresponseFile }}
   ansible.builtin.template:
@@ -59,14 +59,14 @@
     path: "{{ stageDir }}/{{ ofmInstallationFile }}"
     state: absent
   when: >
-    oracleHome_installed.stat.exists == False
+    not oracleHome_installed.stat.exists
 
 - name: Download Oracle Fusion Middleware from {{ mediasURL }}/{{ ofmInstallationMedia }} to {{ stageDir }}/{{ ofmInstallationMedia }}
   ansible.builtin.get_url:
     url: "{{ mediasURL }}/{{ ofmInstallationMedia }}"
     dest: "{{ stageDir }}/{{ ofmInstallationMedia }}"
   when: >
-    mediassource == 'webserver' and oracleHome_installed.stat.exists == False
+    mediassource == 'webserver' and not oracleHome_installed.stat.exists
 
 - name: Unzip {{ stageDir }}/{{ ofmInstallationMedia }} to {{ stageDir }}
   ansible.builtin.unarchive:
@@ -75,14 +75,14 @@
     creates: "{{ stageDir }}/{{ ofmInstallationFile }}"
     remote_src: true
   when: >
-    oracleHome_installed.stat.exists == False
+    not oracleHome_installed.stat.exists
 
 - name: Removing installation media {{ stageDir }}/{{ ofmInstallationMedia }}
   ansible.builtin.file:
     path: "{{ stageDir }}/{{ ofmInstallationMedia }}"
     state: absent
   when: >
-    oracleHome_installed.stat.exists == False
+    not oracleHome_installed.stat.exists
 
 - name: Installing Oracle Fusion Middleware {{ ofmVersion }} on {{ oracleHome }}
   ansible.builtin.command: "{{ stageDir }}/{{ ofmInstallationFile }} -silent -responseFile {{ stageDir }}/{{ ofmresponseFile }} -ignoreSysPrereqs"
@@ -90,18 +90,18 @@
     JAVA_HOME: "{{ javaHome }}"
     TEMP: "{{ tempDir }}"
   when: >
-    oracleHome_installed.stat.exists == False
+    not oracleHome_installed.stat.exists
 
 - name: Post clean {{ stageDir }}/{{ ofmInstallationFile }}
   ansible.builtin.file:
     path: "{{ stageDir }}/{{ ofmInstallationFile }}"
     state: absent
   when: >
-    oracleHome_installed.stat.exists == False
+    not oracleHome_installed.stat.exists
 
 - name: Post clean {{ stageDir }}/{{ ofmresponseFile }}
   ansible.builtin.file:
     path: "{{ stageDir }}/{{ ofmresponseFile }}"
     state: absent
   when: >
-    oracleHome_installed.stat.exists == False
+    not oracleHome_installed.stat.exists

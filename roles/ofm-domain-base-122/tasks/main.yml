@@ -21,7 +21,7 @@
 
 - name: Creating Oracle Fusion Middleware Infrastructure base domain
   when: >
-    oracleHome_installed.stat.exists == True and ofmDomainHome_configured.stat.exists == False
+    oracleHome_installed.stat.exists and not ofmDomainHome_configured.stat.exists
   block:
 
     - name: Create domain stage directory {{ ofmDomainStageDir }}
@@ -59,7 +59,7 @@
     ########################################################################################################################
     - name: Create RCU schemas
       when: >
-        ofmRestrictedJRF == 'FALSE'
+        not ofmRestrictedJRF
 
       ########################################################################################################################
       block:

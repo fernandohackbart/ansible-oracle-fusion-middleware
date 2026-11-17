@@ -15,7 +15,7 @@
 
 - name: Creating Oracle Fusion Middleware Infrastructure base domain defaults
   when: >
-    oracleHome_installed.stat.exists == True and ofmDomainHome_configured.stat.exists == False
+    oracleHome_installed.stat.exists and not ofmDomainHome_configured.stat.exists
   block:
 
     - name: Create stage folder "{{ stageDir }}"
@@ -71,7 +71,7 @@
         path: "{{ ofmDomainStageDir }}"
         state: absent
       when: >
-        ofmRestrictedJRF == 'FALSE'
+        not ofmRestrictedJRF
 
     - name: Create domain stage directory {{ ofmDomainStageDir }}
       ignore_errors: true

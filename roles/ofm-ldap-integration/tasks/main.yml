@@ -16,7 +16,7 @@
 
 - name: Configuring domain for LDAP integration
   when: >
-    ofmDomainHome_configured.stat.exists == True
+    ofmDomainHome_configured.stat.exists
   block:
 
     - name: Create stage folder "{{ ofmDomainStageDir }}"

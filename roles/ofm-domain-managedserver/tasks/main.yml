@@ -16,7 +16,7 @@
 
 - name: Creating new managed servers
   when: >
-    ofmDomainHome_configured.stat.exists == True
+    ofmDomainHome_configured.stat.exists
   block:
 
     - name: Create stage folder "{{ ofmDomainStageDir }}"

@@ -18,7 +18,7 @@
 # Run RCU to clean up the schemas
 - name: Cleaning the RCU created repository
   when: >
-    ofmRestrictedJRF == 'FALSE'
+    not ofmRestrictedJRF
 
 ####################################################################################################################################
 

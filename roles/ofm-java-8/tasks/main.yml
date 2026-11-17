@@ -17,7 +17,7 @@
 
 - name: Installing Java
   when: >
-    javahome_installed.stat.exists == False
+    not javahome_installed.stat.exists
   block:
     - name: Check available disk space in {{ tempBaseVolume }}
       ansible.builtin.assert:

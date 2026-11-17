@@ -60,7 +60,7 @@
 - [x] **1.4 Replace free-form module arguments** — `stat: path=...`, `fail: msg=...` → mapping syntax.  
   _Acceptance:_ `no-free-form` lint rule is at zero.
 
-- [ ] **1.5 Normalize booleans and conditionals** — `yes`/`no` → `true`/`false`; `x == False` → `not x`; string booleans → real booleans where safe.  
+- [x] **1.5 Normalize booleans and conditionals** — `yes`/`no` → `true`/`false`; `x == False` → `not x`; string booleans → real booleans where safe.  
   _Acceptance:_ `yaml[truthy]` and `literal-compare` are at zero or documented.
 
 - [ ] **1.6 Modernize play keywords** — `user:` → `remote_user:`; `become_method: sudo` → `ansible.builtin.sudo` or default.  
@@ -198,3 +198,4 @@
 | 2026-11-17 | 1.2 collection modules | — | `archive` uses `community.general`; `remote_src: true` |
 | 2026-11-17 | 1.3 loops | — | No `with_*` remains; indexed loops use `index_var` |
 | 2026-11-17 | 1.4 free-form args | — | Completed by the formatting autofix; lint rule at zero |
+| 2026-11-17 | 1.5 booleans/conditionals | — | `yaml[truthy]` and `literal-compare` at zero |
