@@ -75,7 +75,7 @@
     dest: "{{ stageDir }}"
     src: "{{ stageDir }}/{{ ofmInstallationMedia }}"
     creates: "{{ stageDir }}/{{ ofmInstallationFile }}"
-    ansible.builtin.copy: false
+    remote_src: true
   when: >
     oracleHome_installed.stat.exists == False
 

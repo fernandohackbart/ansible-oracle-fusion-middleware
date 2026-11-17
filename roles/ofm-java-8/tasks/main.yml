@@ -69,7 +69,7 @@
         dest: "{{ stageDir }}"
         src: "{{ stageDir }}/{{ javaInstallationFile }}"
         creates: "{{ stageDir }}/jdk{{ javaVersion }}_{{ javaRelease }}"
-        ansible.builtin.copy: false
+        remote_src: true
 
     - name: Move {{ stageDir }}/jdk{{ javaVersion }}_{{ javaRelease }} to {{ javaHome }}
       ansible.builtin.command: "mv {{ stageDir }}/jdk{{ javaVersion }}_{{ javaRelease }} {{ javaHome }}"

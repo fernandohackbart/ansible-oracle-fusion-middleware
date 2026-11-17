@@ -29,7 +29,7 @@
         TEMP: "{{ tempDir }}"
 
     - name: Copying the nodemanager home from {{ ofmDomainHome }}/nodemanager to {{ ofmDomainStageDir }}/{{ ofmDomainName }}-nodemanager.tgz
-      archive:
+      community.general.archive:
         path: "{{ ofmDomainHome }}/nodemanager"
         dest: "{{ ofmDomainStageDir }}/{{ ofmDomainName }}-nodemanager.tgz"
 

@@ -51,7 +51,7 @@
 - [x] **1.1 Add FQCN to every module action** — replace short names with `ansible.builtin.*` or the correct collection FQCN.  
   _Acceptance:_ `fqcn` lint rule is at zero (excluding documented waivers).
 
-- [ ] **1.2 Fix collection modules and unarchive options** — `archive` → `community.general.archive`; `unarchive: copy: no` → `remote_src: true`; add `requirements.yml` coverage.  
+- [x] **1.2 Fix collection modules and unarchive options** — `archive` → `community.general.archive`; `unarchive: copy: no` → `remote_src: true`; add `requirements.yml` coverage.  
   _Acceptance:_ `ansible-playbook --syntax-check` passes with only `ansible-core` + pinned collections.
 
 - [ ] **1.3 Replace legacy loops** — `with_items` and `with_indexed_items` → `loop` with `loop_control.index_var` where an index is needed.  
@@ -195,3 +195,4 @@
 | 2026-11-17 | 0.7 project metadata | — | License is a proprietary placeholder pending owner decision |
 | 2026-11-17 | 0.8 file hygiene | — | `git diff --check` clean; yamllint exits 0; autofixes applied |
 | 2026-11-17 | 1.1 FQCN | — | All role task modules converted; syntax/lint pass |
+| 2026-11-17 | 1.2 collection modules | — | `archive` uses `community.general`; `remote_src: true` |

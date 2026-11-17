@@ -71,7 +71,7 @@
         dest: "{{ stageDir }}"
         src: "{{ stageDir }}/{{ ofmInstallationMedia }}"
         creates: "{{ stageDir }}/{{ ofmInstallationFile }}"
-        ansible.builtin.copy: false
+        remote_src: true
 
     - name: Removing installation media {{ stageDir }}/{{ ofmInstallationMedia }}
       ansible.builtin.file:
