@@ -58,6 +58,7 @@
         dest: "{{ ofmDomainStageDir }}/OFM-waitNodeManager.py"
         mode: "{{ secureMode }}"
 
+      no_log: true
     - name: Start nodemanager with {{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh
       ansible.builtin.command: "{{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh"
       changed_when: true

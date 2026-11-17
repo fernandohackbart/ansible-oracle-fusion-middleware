@@ -44,6 +44,7 @@
         dest: "{{ ofmDomainStageDir }}/OFM-configure-JDBC-{{ ofmJDBCDATASOURCENAME }}.py"
         mode: "{{ mode }}"
 
+      no_log: true
     - name: Configuring {{ ofmDomainName }} with JDBC datasource {{ ofmJDBCDATASOURCENAME }} jdbc:oracle:thin:@//{{ ofmJDBCURL }}
       ansible.builtin.command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-configure-JDBC-{{ ofmJDBCDATASOURCENAME }}.py"
       changed_when: true

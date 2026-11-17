@@ -70,18 +70,21 @@
             dest: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp"
             mode: "{{ mode }}"
 
+          no_log: true
         - name: Create RCU response file {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp
           ansible.builtin.template:
             src: "RCU-12.2.1.2.0-passwords.rsp"
             dest: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp"
             mode: "{{ mode }}"
 
+          no_log: true
         - name: Run RCU {{ ofmRCUOperation }} prefix {{ ofmJdbcRCUSchemaPrefix }} and components ({{ ofmRCUComponents }}) at {{ ofmJdbcURLrcu }}
           #ignore_errors: True
           ansible.builtin.shell: >-
             {{ oracleHome }}/oracle_common/bin/rcu -silent
             -responseFile {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp
             -f < {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp
+          no_log: true
           changed_when: true
           args:
             chdir: "{{ oracleHome }}/oracle_common/bin"
@@ -106,6 +109,7 @@
         dest: "{{ ofmDomainStageDir }}/OFM-12.2-createDomain.py"
         mode: "{{ mode }}"
 
+      no_log: true
     - name: Create move filestores Jython script {{ ofmDomainStageDir }}/OFM-12.2-moveFileStoresToConfig.py
       ansible.builtin.template:
         src: "OFM-12.2-moveFileStoresToConfig.py"
@@ -148,6 +152,7 @@
         dest: "{{ ofmDomainHome }}/servers/{{ ofmAdminserverName }}/security/boot.properties"
         mode: "{{ mode }}"
 
+      no_log: true
     - name: Create start admin server bash script {{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.sh
       ansible.builtin.template:
         src: "OFM-12.2-startAdminServer.sh"
@@ -160,6 +165,7 @@
         dest: "{{ ofmDomainStageDir }}/OFM-waitAdminServer.py"
         mode: "{{ mode }}"
 
+      no_log: true
     - name: Start admin server {{ ofmAdminserverName }} with {{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.sh
       ansible.builtin.command: "({{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.sh)"
       changed_when: true
@@ -205,6 +211,7 @@
         dest: "{{ ofmDomainStageDir }}/OFM-12.2-configurePersistenceStores.py"
         mode: "{{ secureMode }}"
 
+      no_log: true
     - name: Create adjust managed server Jython script {{ ofmDomainStageDir }}/OFM-12.2-adjustManagedServer-{{ ofmAdminserverName }}.py
       ansible.builtin.template:
         src: "OFM-12.2-adjustManagedServer.py"
@@ -249,24 +256,28 @@
         dest: "{{ ofmDomainStageDir }}/OFM-waitNodeManager.py"
         mode: "{{ secureMode }}"
 
+      no_log: true
     - name: Create generate boot.properties Jython script {{ ofmDomainStageDir }}/OFM-12.2-genBootProps-{{ ofmAdminserverName }}.py
       ansible.builtin.template:
         src: "OFM-12.2-genBootProps.py"
         dest: "{{ ofmDomainStageDir }}/OFM-12.2-genBootProps-{{ ofmAdminserverName }}.py"
         mode: "{{ secureMode }}"
 
+      no_log: true
     - name: Create start admin server Jython script {{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.py
       ansible.builtin.template:
         src: "OFM-12.2-startAdminServer.py"
         dest: "{{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.py"
         mode: "{{ secureMode }}"
 
+      no_log: true
     - name: Create stop admin server Jython script {{ ofmDomainStageDir }}/OFM-12.2-stopAdminServer-{{ ofmAdminserverName }}.py
       ansible.builtin.template:
         src: "OFM-12.2-stopAdminServer.py"
         dest: "{{ ofmDomainStageDir }}/OFM-12.2-stopAdminServer-{{ ofmAdminserverName }}.py"
         mode: "{{ secureMode }}"
 
+      no_log: true
     - name: Start nodemanager with {{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh
       ansible.builtin.command: "{{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh"
       changed_when: true
@@ -391,12 +402,14 @@
         dest: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}.py"
         mode: "{{ secureMode }}"
 
+      no_log: true
     - name: Create stop admin server Jython script {{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}.py
       ansible.builtin.template:
         src: "OFM-12.2-stopAdminServer.py"
         dest: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}.py"
         mode: "{{ secureMode }}"
 
+      no_log: true
     - name: Create start AdminServer bash script {{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}
       ansible.builtin.template:
         src: "OFM-startAdminServer"

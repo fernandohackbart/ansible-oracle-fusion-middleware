@@ -38,18 +38,21 @@
         dest: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp"
         mode: "{{ mode }}"
 
+      no_log: true
     - name: Create RCU response file {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp
       ansible.builtin.template:
         src: "RCU-12.2.1.2.0-passwords.rsp"
         dest: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp"
         mode: "{{ mode }}"
 
+      no_log: true
     - name: Run RCU {{ ofmRCUOperation }} prefix {{ ofmJdbcRCUSchemaPrefix }} and components ({{ ofmRCUComponents }}) at {{ ofmJdbcURLrcu }}
       ignore_errors: true
       ansible.builtin.shell: >-
         {{ oracleHome }}/oracle_common/bin/rcu -silent
         -responseFile {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp
         -f < {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp
+      no_log: true
       changed_when: true
       args:
         chdir: "{{ oracleHome }}/oracle_common/bin"
