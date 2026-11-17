@@ -1,0 +1,11 @@
+---
+ansible-navigator:
+  execution-environment:
+    image: ofm-ee:latest
+    enabled: true
+    pull:
+      policy: missing
+  playbook-artifact:
+    enable: false
+  logging:
+    level: info

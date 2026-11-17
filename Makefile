@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 PLAYBOOKS := $(wildcard OFM-*.yml)
 
-.PHONY: help setup syntax lint yamllint molecule test test-all clean
+.PHONY: help setup syntax lint yamllint molecule ee test test-all clean
 
 help:
 	@echo "Targets:"
@@ -10,6 +10,7 @@ help:
 	@echo "  lint      Run ansible-lint with the committed configuration"
 	@echo "  yamllint  Run yamllint"
 	@echo "  molecule  Run the molecule syntax scenario"
+	@echo "  ee        Build the Execution Environment image"
 	@echo "  test      syntax + lint"
 	@echo "  test-all  syntax + lint + yamllint + molecule"
 	@echo "  clean     Remove local caches and retry files"
@@ -34,6 +35,9 @@ yamllint:
 
 molecule:
 	molecule test -s syntax
+
+ee:
+	ansible-builder build -f execution-environment.yml -t ofm-ee:latest
 
 test: syntax lint
 
