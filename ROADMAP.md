@@ -38,7 +38,7 @@
 - [x] **0.6 Add `Makefile` and CI workflow** — `setup`, `syntax`, `lint`, `test`, `clean`; CI runs syntax-check, yamllint, ansible-lint.  
   _Acceptance:_ `make lint` and `make syntax` pass locally; CI workflow is syntactically valid.
 
-- [ ] **0.7 Add project metadata** — `CHANGELOG.md`, `LICENSE`, `CONTRIBUTING.md`.  
+- [x] **0.7 Add project metadata** — `CHANGELOG.md`, `LICENSE`, `CONTRIBUTING.md`.  
   _Acceptance:_ files exist and state the project’s support and contribution policy.
 
 - [ ] **0.8 Normalize file hygiene** — remove trailing whitespace, fix YAML indentation, add final newlines, remove executable bits from YAML.  
@@ -192,3 +192,4 @@
 | 2026-11-17 | 0.3 lint/format config | — | `ansible-lint` exits 0 with warnings; yamllint reports existing whitespace debt |
 | 2026-11-17 | 0.5 README rewrite | — | Includes support matrix, inventory, secrets, and playbook reference |
 | 2026-11-17 | 0.6 Makefile + CI | — | `make syntax` and `make lint` pass locally |
+| 2026-11-17 | 0.7 project metadata | — | License is a proprietary placeholder pending owner decision |
