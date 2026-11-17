@@ -1,5 +1,4 @@
 #TODO: check why it does not accept the TNS URL
-#JDBCURLRCU='{{ ofmJdbcURL }}'
 JDBCURLRCU='{{ ofmJdbcURLrcu }}'
 JDBCRCUSCHEMAPREFIX='{{ ofmJdbcRCUSchemaPrefix }}'
 JDBCRCUPASSWORD='{{ ofmJdbcRCUPassword }}'

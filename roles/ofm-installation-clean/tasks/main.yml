@@ -24,36 +24,15 @@
     path: "{{ oraclePresenceFolder }}"
   register: oracleHome_installed
 
-- name: Deinstalling Oracle Fusion Middleware
-  when: >
-    oracleHome_installed.stat.exists
+- name: Remove the Oracle Fusion Middleware installation
+  when: oracleHome_installed.stat.exists
   block:
-
-#  - name: Create stage folder "{{ stageDir }}"
-#    file:
-#      path: "{{ stageDir }}"
-#      state: directory
-#      mode: "{{ mode }}"
-
-#  - name: Create response file {{ stageDir }}/{{ ofmresponseFile }}
-#    template:
-#      src: "{{ ofmresponseFile }}"
-#      dest: "{{ stageDir }}/{{ ofmresponseFile }}"
-
-#  - name: Deinstalling Oracle Fusion Middleware {{ ofmVersion }} on {{ oracleHome }}
-#    command: "{{ oracleHome }}/oui/bin/deinstall.sh -silent -responseFile {{ stageDir }}/{{ ofmresponseFile }}"
-
-    - name: Detaching Oracle Fusion Middleware {{ ofmVersion }} on {{ oracleHome }} from central inventory
+    - name: Detach Oracle Fusion Middleware {{ ofmVersion }} from the central inventory
       ansible.builtin.command: "{{ oracleHome }}/oui/bin/detachHome.sh"
       changed_when: true
-      ignore_errors: true
+      failed_when: false
 
-#  - name: Post clean {{ stageDir }}/{{ ofmresponseFile }}
-#    file:
-#      path: "{{ stageDir }}/{{ ofmresponseFile }}"
-#      state: absent
-
-    - name: Post clean {{ oracleHome }}
+    - name: Remove the Oracle home
       ansible.builtin.file:
         path: "{{ oracleHome }}"
         state: absent

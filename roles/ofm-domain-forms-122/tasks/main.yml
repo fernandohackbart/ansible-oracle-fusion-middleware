@@ -30,17 +30,9 @@
         state: directory
         mode: "{{ mode }}"
 
-    - name: Create variables for restricted JRF extension
+    - name: Define the Forms extension template
       ansible.builtin.set_fact:
         ofmFRMexttemplate: "Oracle Forms"
-      when: >
-        ofmRestrictedJRF
-
-    - name: Create variables for non restricted JRF extension
-      ansible.builtin.set_fact:
-        ofmFRMexttemplate: "Oracle Forms"
-      when: >
-        not ofmRestrictedJRF
 
     - name: Assigning default value to ofmFRMextassignexistingserver
       ansible.builtin.set_fact:
@@ -68,7 +60,6 @@
         TEMP: "{{ tempDir }}"
 
     - name: Create extend domain Jython script {{ ofmDomainStageDir }}/OFM-12.2-extendDomain-FRM.py
-      ignore_errors: true
       ansible.builtin.template:
         src: "OFM-12.2-extendDomain-FRM.py"
         dest: "{{ ofmDomainStageDir }}/OFM-12.2-extendDomain-FRM.py"

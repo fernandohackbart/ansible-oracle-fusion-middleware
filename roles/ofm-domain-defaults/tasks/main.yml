@@ -40,42 +40,36 @@
         mode: "{{ mode }}"
 
     - name: Create domain base folder {{ ofmDomainBase }}
-      ignore_errors: true
       ansible.builtin.file:
         path: "{{ ofmDomainBase }}"
         state: directory
         mode: "{{ mode }}"
 
     - name: Create application base folder {{ ofmApplicationBase }}
-      ignore_errors: true
       ansible.builtin.file:
         path: "{{ ofmApplicationBase }}"
         state: directory
         mode: "{{ mode }}"
 
     - name: Create transations base folder {{ ofmTransBase }}
-      ignore_errors: true
       ansible.builtin.file:
         path: "{{ ofmTransBase }}"
         state: directory
         mode: "{{ mode }}"
 
     - name: Create transations home folder {{ ofmTransHome }}
-      ignore_errors: true
       ansible.builtin.file:
         path: "{{ ofmTransHome }}"
         state: directory
         mode: "{{ mode }}"
 
     - name: Create logs home folder {{ ofmDomainLogsHome }}
-      ignore_errors: true
       ansible.builtin.file:
         path: "{{ ofmDomainLogsHome }}"
         state: directory
         mode: "{{ mode }}"
 
     - name: Create user home binaries folder {{ ofmInstallUserHomeDir }}/bin
-      ignore_errors: true
       ansible.builtin.file:
         path: "{{ ofmInstallUserHomeDir }}/bin"
         state: directory
@@ -89,7 +83,6 @@
         not ofmRestrictedJRF
 
     - name: Create domain stage directory {{ ofmDomainStageDir }}
-      ignore_errors: true
       ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}"
         state: directory

@@ -26,7 +26,6 @@
         mode: "{{ mode }}"
 
     - name: Create configure LDAP Jython script {{ ofmDomainStageDir }}/OFM-12.2-extendDomain-FRM.py
-      ignore_errors: true
       ansible.builtin.template:
         src: "OFM-configure-LDAP.py"
         dest: "{{ ofmDomainStageDir }}/OFM-configure-LDAP.py"

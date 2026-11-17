@@ -124,7 +124,7 @@
 - [x] **3.7 Make WLST operations idempotent** — check `getMBean(...)` before create; add install/domain markers with version and checksum.  
   _Acceptance:_ second run of configure/extend does not fail on existing objects.
 
-- [ ] **3.8 Remove dead code and duplicates** — unused `OFM-env-domain`, unused NodeManager templates (or wire them up), unused Coherence vars, duplicate Forms `set_fact`, unused `stageRequiredSpace`.  
+- [x] **3.8 Remove dead code and duplicates** — unused `OFM-env-domain`, unused NodeManager templates (or wire them up), unused Coherence vars, duplicate Forms `set_fact`, unused `stageRequiredSpace`.  
   _Acceptance:_ no unreferenced templates/vars remain; lint is cleaner.
 
 ---
@@ -218,3 +218,4 @@
 | 2026-11-17 | 3.5 multi-host safety | — | Group targets, RCU `run_once`, serial clean/unpack, fail-fast |
 | 2026-11-17 | 3.6 tags/handlers | — | Play tags, `never` on clean, validate playbook, restart handlers |
 | 2026-11-17 | 3.7 WLST idempotency | — | MBean guards, install/domain/extension markers |
+| 2026-11-17 | 3.8 dead code | — | Removed unused vars/templates/comments; server groups implemented |

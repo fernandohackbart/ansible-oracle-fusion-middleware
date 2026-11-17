@@ -48,7 +48,6 @@
         quiet: true
 
     - name: Create base folder {{ javaBaseHome }}
-      ignore_errors: true
       ansible.builtin.file:
         path: "{{ javaBaseHome }}"
         state: directory

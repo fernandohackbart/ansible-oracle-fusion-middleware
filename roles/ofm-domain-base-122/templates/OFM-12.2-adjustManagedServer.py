@@ -84,15 +84,6 @@ if (getMBean('/Machines/'+ADJUSTSERVERMACHINE)==None):
   cd('/')
 
   #Add the machine to the coherence cluster
-  #export COHERENCE_CLUSTER_NAME=defaultCoherenceCluster
-  #export COHERENCE_UNICAST_PORT=9995
-  #export COHERENCE_CLUSTER_WKA0=${MACHINENAME}
-  #COHERENCE_CLUSTER_WKA_CREATE=COHERENCE_CLUSTER_WKA0
-  #cd('/CoherenceClusterSystemResources/'+COHERENCE_CLUSTER_NAME+'/CoherenceClusterResource/'+COHERENCE_CLUSTER_NAME+'/CoherenceClusterParams/'+COHERENCE_CLUSTER_NAME+'/CoherenceClusterWellKnownAddresses/'+COHERENCE_CLUSTER_NAME)
-  #cmo.createCoherenceClusterWellKnownAddress(COHERENCE_CLUSTER_WKA_CREATE)
-  #cd('/CoherenceClusterSystemResources/'+COHERENCE_CLUSTER_NAME+'/CoherenceClusterResource/'+COHERENCE_CLUSTER_NAME+'/CoherenceClusterParams/'+COHERENCE_CLUSTER_NAME+'/CoherenceClusterWellKnownAddresses/'+COHERENCE_CLUSTER_NAME+'/CoherenceClusterWellKnownAddresses/'+COHERENCE_CLUSTER_WKA_CREATE)
-  #cmo.setListenPort(int(COHERENCE_UNICAST_PORT))
-  #cmo.setListenAddress(COHERENCE_CLUSTER_WKA_CREATE)
 
 cd('/Servers/'+ADJUSTSERVERNAME)
 cmo.setMachine(getMBean('/Machines/'+ADJUSTSERVERMACHINE))

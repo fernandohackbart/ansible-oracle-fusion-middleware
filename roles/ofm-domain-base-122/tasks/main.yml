@@ -25,7 +25,6 @@
   block:
 
     - name: Create domain stage directory {{ ofmDomainStageDir }}
-      ignore_errors: true
       ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}"
         state: directory
@@ -60,7 +59,6 @@
         quiet: true
 
     - name: Create {{ ofmAdminserverName }} logs folder {{ ofmDomainLogsHome }}/{{ ofmAdminserverName }}
-      ignore_errors: true
       ansible.builtin.file:
         path: "{{ ofmDomainLogsHome }}/{{ ofmAdminserverName }}"
         state: directory
@@ -90,7 +88,6 @@
 
           no_log: true
         - name: Run RCU {{ ofmRCUOperation }} prefix {{ ofmJdbcRCUSchemaPrefix }} and components ({{ ofmRCUComponents }}) at {{ ofmJdbcURLrcu }}
-          #ignore_errors: True
           ansible.builtin.shell: >-
             {{ oracleHome }}/oracle_common/bin/rcu -silent
             -responseFile {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp
@@ -133,7 +130,6 @@
       changed_when: true
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
-      #creates: "{{ gatewayInstallDir }}"
       environment:
         JAVA_HOME: "{{ javaHome }}"
         JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
@@ -152,7 +148,6 @@
   ########################################################################################################################
 
     - name: Create {{ ofmAdminserverName }} security folder {{ ofmDomainHome }}/servers/{{ ofmAdminserverName }}/security
-      ignore_errors: true
       ansible.builtin.file:
         path: "{{ ofmDomainHome }}/servers/{{ ofmAdminserverName }}/security"
         state: directory
@@ -194,7 +189,6 @@
       check_mode: false
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
-      #creates: "{{ gatewayInstallDir }}"
       environment:
         JAVA_HOME: "{{ javaHome }}"
         JAVA_OPTIONS: "{{ ofmUrandomArgs }}"

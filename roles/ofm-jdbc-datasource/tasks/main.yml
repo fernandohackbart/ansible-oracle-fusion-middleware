@@ -38,7 +38,6 @@
         mode: "{{ mode }}"
 
     - name: Create configure JDBC datasource Jython script {{ ofmDomainStageDir }}/OFM-configure-JDBC-{{ ofmJDBCDATASOURCENAME }}.py
-      ignore_errors: true
       ansible.builtin.template:
         src: "OFM-configure-JDBC.py"
         dest: "{{ ofmDomainStageDir }}/OFM-configure-JDBC-{{ ofmJDBCDATASOURCENAME }}.py"

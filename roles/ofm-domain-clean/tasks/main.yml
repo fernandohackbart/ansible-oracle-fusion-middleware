@@ -28,11 +28,6 @@
     quiet: true
   when: ofm_require_domain_backup | default(true) | bool
 
-#- name: Counting the Weblogic processes for domain {{ ofmDomainName }}
-#  shell: "pgrep -f {{ ofmDomainName }} | wc -l "
-#  ignore_errors: True
-#  register: process_count
-
 - name: Check if the domain home exists
   ansible.builtin.stat:
     path: "{{ ofmDomainHome }}"
@@ -77,8 +72,6 @@
     - (ofm_remaining_processes.rc | default(1)) == 0
   changed_when: false
   failed_when: false
-#  when: >
-#    process_count > 0
 ####################################################################################################################################
 # Run RCU to clean up the schemas
 - name: Cleaning the RCU created repository
@@ -89,7 +82,6 @@
 ####################################################################################################################################
 
   block:
-  #ignore_errors: True
 
     - name: Create stage folder {{ ofmDomainStageDir }}
       ansible.builtin.file:
@@ -112,7 +104,6 @@
 
       no_log: true
     - name: Run RCU {{ ofmRCUOperation }} prefix {{ ofmJdbcRCUSchemaPrefix }} and components ({{ ofmRCUComponents }}) at {{ ofmJdbcURLrcu }}
-      ignore_errors: true
       ansible.builtin.shell: >-
         {{ oracleHome }}/oracle_common/bin/rcu -silent
         -responseFile {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp

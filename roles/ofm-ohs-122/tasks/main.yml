@@ -47,7 +47,6 @@
         quiet: true
 
     - name: Create base folder {{ oraBaseDir }}
-      ignore_errors: true
       ansible.builtin.file:
         path: "{{ oraBaseDir }}"
         state: directory
