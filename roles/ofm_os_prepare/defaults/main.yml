@@ -1,0 +1,99 @@
+---
+ofm_os_supported_major_versions: ["8", "9", "10"]
+ofm_os_manage_packages: true
+ofm_os_manage_users: true
+ofm_os_manage_limits: true
+ofm_os_manage_sysctl: true
+ofm_os_manage_directories: true
+ofm_os_manage_ora_inventory: true
+ofm_os_manage_firewall: false
+ofm_os_manage_selinux: false
+
+ofm_user: oracle
+ofm_group: oinstall
+ofm_dba_group: dba
+ofm_user_home: /home/oracle
+ofm_user_shell: /bin/bash
+
+ofm_base_dir: /u01
+ofm_ora_inventory: "{{ ofm_base_dir }}/oraInventory"
+ofm_ora_inst_loc: /etc/oraInst.loc
+ofm_directories:
+  - "{{ ofm_base_dir }}/oracle/product"
+  - "{{ ofm_base_dir }}/oracle/config"
+  - "{{ ofm_base_dir }}/oracle/log"
+  - "{{ ofm_base_dir }}/oracle/transaction"
+  - "{{ ofm_base_dir }}/oracle/stage"
+
+ofm_packages:
+  - binutils
+  - curl
+  - gcc
+  - gcc-c++
+  - glibc-devel
+  - ksh
+  - libaio
+  - libaio-devel
+  - libnsl
+  - libstdc++-devel
+  - libX11
+  - libXau
+  - libXext
+  - libXi
+  - libXtst
+  - make
+  - sysstat
+  - tar
+  - unzip
+
+ofm_sysctl:
+  kernel.shmmax: 4398046511104
+  kernel.shmall: 1073741824
+  kernel.sem: "250 32000 100 128"
+  fs.file-max: 6815744
+  net.core.rmem_default: 262144
+  net.core.rmem_max: 4194304
+  net.core.wmem_default: 262144
+  net.core.wmem_max: 1048576
+  net.ipv4.ip_local_port_range: "9000 65500"
+
+ofm_limits:
+  - domain: "{{ ofm_user }}"
+    type: soft
+    item: nofile
+    value: 65536
+  - domain: "{{ ofm_user }}"
+    type: hard
+    item: nofile
+    value: 65536
+  - domain: "{{ ofm_user }}"
+    type: soft
+    item: nproc
+    value: 16384
+  - domain: "{{ ofm_user }}"
+    type: hard
+    item: nproc
+    value: 16384
+  - domain: "{{ ofm_user }}"
+    type: soft
+    item: stack
+    value: 10240
+  - domain: "{{ ofm_user }}"
+    type: hard
+    item: stack
+    value: 32768
+  - domain: "{{ ofm_user }}"
+    type: soft
+    item: memlock
+    value: 134217728
+  - domain: "{{ ofm_user }}"
+    type: hard
+    item: memlock
+    value: 134217728
+
+ofm_firewall_ports:
+  - 12000/tcp
+  - 12001/tcp
+  - 7777/tcp
+
+ofm_selinux_state: permissive

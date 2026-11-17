@@ -131,8 +131,8 @@
 
 ## Phase 4 — Oracle platform modernization
 
-- [ ] **4.1 Add `ofm_os_prepare` role** — OS validation, packages, `oracle` user/groups, limits, sysctl, SELinux/firewalld, directories, `/etc/hosts`, `/etc/oraInst.loc`, inventory.  
-  _Acceptance:_ role is idempotent and `--check` clean on RHEL 8/9.
+- [x] **4.1 Add `ofm_os_prepare` role** — OS validation, packages, `oracle` user/groups, limits, sysctl, SELinux/firewalld, directories, `/etc/oraInst.loc`, inventory.  
+  _Acceptance:_ role is idempotent and `--check` clean on RHEL 8/9. Lab validation pending in 4.5.
 
 - [ ] **4.2 Add versioned Java role and software catalog** — JDK 8 latest for 12.2.1.4; JDK 17/21 for 14.1.2; checksums, alternatives, profile.d.  
   _Acceptance:_ Java version is a variable; no hardcoded 8u101; catalog is the single source of media names/checksums.
@@ -219,3 +219,4 @@
 | 2026-11-17 | 3.6 tags/handlers | — | Play tags, `never` on clean, validate playbook, restart handlers |
 | 2026-11-17 | 3.7 WLST idempotency | — | MBean guards, install/domain/extension markers |
 | 2026-11-17 | 3.8 dead code | — | Removed unused vars/templates/comments; server groups implemented |
+| 2026-11-17 | 4.1 OS prepare role | — | Packages, user/groups, limits, sysctl, directories, oraInst.loc |

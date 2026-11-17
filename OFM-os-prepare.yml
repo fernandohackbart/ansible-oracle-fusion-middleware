@@ -1,0 +1,12 @@
+---
+- name: Prepare Oracle Fusion Middleware OS prerequisites
+  hosts: all
+  remote_user: "{{ ansible_user | default('oracle') }}"
+  become: true
+  become_user: root
+  become_method: ansible.builtin.sudo
+  gather_facts: true
+  any_errors_fatal: true
+  tags: [prepare, os]
+  roles:
+    - ofm_os_prepare

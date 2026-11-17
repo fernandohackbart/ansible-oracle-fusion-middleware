@@ -93,6 +93,7 @@ Do not commit decrypted vault files or vault password files. `no_log` and restri
 
 | Playbook | Purpose |
 |---|---|
+| `OFM-os-prepare.yml` | Prepare OS prerequisites: packages, Oracle user/groups, limits, sysctl, directories, `oraInst.loc` |
 | `OFM-java-install.yml` | Install/manage the JDK |
 | `OFM-infrastructure-install.yml` | Install FMW Infrastructure |
 | `OFM-forms-install.yml` | Install Forms and Reports |
@@ -107,6 +108,7 @@ Do not commit decrypted vault files or vault password files. `no_log` and restri
 | `OFM-domain-unpack.yml` | Unpack a domain template on a target |
 | `OFM-domain-clean.yml` | Stop processes, drop RCU schemas, remove domain files |
 | `OFM-installation-clean.yml` | Detach/remove the Oracle home |
+| `OFM-validate.yml` | Validate the Oracle home, Java, domain, AdminServer, and NodeManager |
 
 `OFM-oem-configure.yml` is retained as a duplicate of `OFM-domain-oem.yml` during the migration and will be removed in a future release.
 

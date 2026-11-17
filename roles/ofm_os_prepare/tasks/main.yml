@@ -1,0 +1,117 @@
+---
+- name: Assert that the target OS is supported
+  ansible.builtin.assert:
+    that:
+      - ansible_facts.os_family == 'RedHat'
+      - ansible_facts.distribution_major_version in ofm_os_supported_major_versions
+    fail_msg: >-
+      Unsupported OS {{ ansible_facts.distribution }}
+      {{ ansible_facts.distribution_version }}. Supported major versions:
+      {{ ofm_os_supported_major_versions | join(', ') }}.
+    quiet: true
+
+- name: Install Oracle prerequisite packages
+  ansible.builtin.dnf:
+    name: "{{ ofm_packages }}"
+    state: present
+  when: ofm_os_manage_packages | bool
+
+- name: Create the oinstall group
+  ansible.builtin.group:
+    name: "{{ ofm_group }}"
+    state: present
+  when: ofm_os_manage_users | bool
+
+- name: Create the dba group
+  ansible.builtin.group:
+    name: "{{ ofm_dba_group }}"
+    state: present
+  when: ofm_os_manage_users | bool
+
+- name: Create the Oracle user
+  ansible.builtin.user:
+    name: "{{ ofm_user }}"
+    group: "{{ ofm_group }}"
+    groups: "{{ ofm_dba_group }}"
+    append: true
+    home: "{{ ofm_user_home }}"
+    shell: "{{ ofm_user_shell }}"
+    create_home: true
+    state: present
+  when: ofm_os_manage_users | bool
+
+- name: Configure Oracle user limits
+  community.general.pam_limits:
+    domain: "{{ item.domain }}"
+    limit_type: "{{ item.type }}"
+    limit_item: "{{ item.item }}"
+    value: "{{ item.value }}"
+  loop: "{{ ofm_limits }}"
+  when: ofm_os_manage_limits | bool
+
+- name: Configure kernel parameters
+  ansible.posix.sysctl:
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+    sysctl_file: /etc/sysctl.d/99-ofm.conf
+    state: present
+    reload: true
+  loop: "{{ ofm_sysctl | dict2items }}"
+  when: ofm_os_manage_sysctl | bool
+
+- name: Create Oracle directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ ofm_user }}"
+    group: "{{ ofm_group }}"
+    mode: "0750"
+  loop: "{{ ofm_directories }}"
+  when: ofm_os_manage_directories | bool
+
+- name: Create the central inventory directory
+  ansible.builtin.file:
+    path: "{{ ofm_ora_inventory }}"
+    state: directory
+    owner: "{{ ofm_user }}"
+    group: "{{ ofm_group }}"
+    mode: "0775"
+  when: ofm_os_manage_ora_inventory | bool
+
+- name: Create the Oracle inventory pointer
+  ansible.builtin.copy:
+    dest: "{{ ofm_ora_inst_loc }}"
+    content: |
+      inventory_loc={{ ofm_ora_inventory }}
+      inst_group={{ ofm_group }}
+    owner: root
+    group: root
+    mode: "0644"
+  when: ofm_os_manage_ora_inventory | bool
+
+- name: Open the required firewall ports
+  ansible.posix.firewalld:
+    port: "{{ item }}"
+    permanent: true
+    immediate: true
+    state: enabled
+  loop: "{{ ofm_firewall_ports }}"
+  when: ofm_os_manage_firewall | bool
+
+- name: Configure SELinux
+  ansible.posix.selinux:
+    policy: targeted
+    state: "{{ ofm_selinux_state }}"
+  when: ofm_os_manage_selinux | bool
+
+- name: Verify the Oracle user entry
+  ansible.builtin.getent:
+    database: passwd
+    key: "{{ ofm_user }}"
+  register: ofm_os_oracle_user
+
+- name: Assert that the Oracle user exists
+  ansible.builtin.assert:
+    that: ofm_os_oracle_user.ansible_facts.getent_passwd[ofm_user] is defined
+    fail_msg: "The Oracle user {{ ofm_user }} could not be found after preparation."
+    quiet: true
