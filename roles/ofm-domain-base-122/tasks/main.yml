@@ -78,8 +78,11 @@
 
         - name: Run RCU {{ ofmRCUOperation }} prefix {{ ofmJdbcRCUSchemaPrefix }} and components ({{ ofmRCUComponents }}) at {{ ofmJdbcURLrcu }}
           #ignore_errors: True
-          ansible.builtin.shell: "{{oracleHome }}/oracle_common/bin/rcu -silent -responseFile {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp -f < {{ ofmDomainStageDir
-            }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp"
+          ansible.builtin.shell: >-
+            {{ oracleHome }}/oracle_common/bin/rcu -silent
+            -responseFile {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp
+            -f < {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp
+          changed_when: true
           args:
             chdir: "{{ oracleHome }}/oracle_common/bin"
           environment:
@@ -111,6 +114,7 @@
 
     - name: Create domain {{ ofmDomainName }} at {{ ofmDomainHome }}
       ansible.builtin.command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh  {{ ofmDomainStageDir }}/OFM-12.2-createDomain.py"
+      changed_when: true
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       #creates: "{{ gatewayInstallDir }}"
@@ -158,6 +162,7 @@
 
     - name: Start admin server {{ ofmAdminserverName }} with {{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.sh
       ansible.builtin.command: "({{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.sh)"
+      changed_when: true
       args:
         chdir: "{{ ofmDomainStageDir }}"
       environment:
@@ -167,6 +172,8 @@
 
     - name: Wait the startup of admin server {{ ofmAdminserverName }} domain {{ ofmDomainName }} at {{ ofmDomainHome }}
       ansible.builtin.command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh  {{ ofmDomainStageDir }}/OFM-waitAdminServer.py"
+      changed_when: false
+      check_mode: false
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       #creates: "{{ gatewayInstallDir }}"
@@ -206,6 +213,7 @@
 
     - name: Configure domain {{ ofmDomainName }} at {{ ofmDomainHome }}
       ansible.builtin.command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh  {{ ofmDomainStageDir }}/OFM-12.2-configureDomain.py"
+      changed_when: true
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:
@@ -261,6 +269,7 @@
 
     - name: Start nodemanager with {{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh
       ansible.builtin.command: "{{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh"
+      changed_when: true
       args:
         chdir: "{{ ofmDomainStageDir }}"
       environment:
@@ -270,6 +279,8 @@
 
     - name: Wait the startup of nodemanager {{ ofmDomainName }} at {{ ofmDomainHome }}
       ansible.builtin.command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh  {{ ofmDomainStageDir }}/OFM-waitNodeManager.py"
+      changed_when: false
+      check_mode: false
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:
@@ -279,6 +290,7 @@
 
     - name: Starting {{ ofmAdminserverName }} with NodeManager {{ ofmDomainName }} at {{ ofmDomainHome }}
       ansible.builtin.command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.py"
+      changed_when: true
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:
@@ -288,6 +300,7 @@
 
     - name: Generating boot.properties for {{ ofmAdminserverName }} with NodeManager {{ ofmDomainName }} at {{ ofmDomainHome }}
       ansible.builtin.command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-genBootProps-{{ ofmAdminserverName }}.py"
+      changed_when: true
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:
@@ -297,6 +310,7 @@
 
     - name: Stopping nodemanager {{ ofmDomainName }} at {{ ofmDomainHome }}
       ansible.builtin.command: "{{ ofmDomainHome }}/bin/stopNodeManager.sh"
+      changed_when: true
       args:
         chdir: "{{ ofmDomainHome }}"
       environment:
@@ -306,6 +320,7 @@
 
     - name: Start nodemanager with {{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh
       ansible.builtin.command: "{{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh"
+      changed_when: true
       args:
         chdir: "{{ ofmDomainStageDir }}"
       environment:
@@ -315,6 +330,8 @@
 
     - name: Wait the startup of nodemanager {{ ofmDomainName }} at {{ ofmDomainHome }}
       ansible.builtin.command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh  {{ ofmDomainStageDir }}/OFM-waitNodeManager.py"
+      changed_when: false
+      check_mode: false
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:
@@ -324,6 +341,7 @@
 
     - name: Stopping {{ ofmAdminserverName }} with NodeManager {{ ofmDomainName }} at {{ ofmDomainHome }}
       ansible.builtin.command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-stopAdminServer-{{ ofmAdminserverName }}.py"
+      changed_when: true
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:
@@ -333,6 +351,7 @@
 
     - name: Starting {{ ofmAdminserverName }} with NodeManager {{ ofmDomainName }} at {{ ofmDomainHome }}
       ansible.builtin.command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.py"
+      changed_when: true
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:

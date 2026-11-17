@@ -19,8 +19,15 @@
         state: absent
 
     - name: Packing domain {{ ofmDomainName }} from {{ ofmDomainHome }} to {{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar
-      ansible.builtin.command: "{{ oracleHome }}/oracle_common/common/bin/pack.sh -domain={{ ofmDomainHome }} -template={{ ofmDomainStageDir }}/Pack-{{ ofmDomainName
-        }}.jar -template_name=Pack-{{ ofmDomainName }} -managed=true -log={{ ofmDomainLogsHome }}/Pack-{{ ofmDomainName }}.log -log_priority=info"
+      ansible.builtin.command: >-
+        {{ oracleHome }}/oracle_common/common/bin/pack.sh
+        -domain={{ ofmDomainHome }}
+        -template={{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar
+        -template_name=Pack-{{ ofmDomainName }}
+        -managed=true
+        -log={{ ofmDomainLogsHome }}/Pack-{{ ofmDomainName }}.log
+        -log_priority=info
+      changed_when: true
       args:
         chdir: "{{ oracleHome }}/oracle_common/bin"
       environment:

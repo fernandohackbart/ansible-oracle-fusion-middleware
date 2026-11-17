@@ -35,6 +35,7 @@
 
     - name: Detaching Oracle Fusion Middleware {{ ofmVersion }} on {{ oracleHome }} from central inventory
       ansible.builtin.command: "{{ oracleHome }}/oui/bin/detachHome.sh"
+      changed_when: true
       ignore_errors: true
 
 #  - name: Post clean {{ stageDir }}/{{ ofmresponseFile }}

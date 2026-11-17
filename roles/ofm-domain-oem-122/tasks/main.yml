@@ -42,6 +42,7 @@
     ########################################################################################################################
     - name: Stopping {{ ofmAdminserverName }} with {{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}
       ansible.builtin.command: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}"
+      changed_when: true
       args:
         chdir: "{{ ofmInstallUserHomeDir }}/bin"
       environment:
@@ -63,6 +64,7 @@
 
     - name: Extending {{ ofmDomainName }} with {{ ofmOEMexttemplate  }}
       ansible.builtin.command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-extendDomain-OEM.py"
+      changed_when: true
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:
@@ -72,6 +74,7 @@
 
     - name: Starting {{ ofmAdminserverName }} with {{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}
       ansible.builtin.command: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}"
+      changed_when: true
       args:
         chdir: "{{ ofmInstallUserHomeDir }}/bin"
       environment:

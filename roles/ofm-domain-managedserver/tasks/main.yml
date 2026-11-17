@@ -38,6 +38,7 @@
 
     - name: Creating managed servers {{ ofmDomainName }} with {{ ofmMGDSRVexttemplate  }}
       ansible.builtin.command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-createManagedServer-{{ ofmMGDSRVextserverprefix }}{{ index }}.py"
+      changed_when: true
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:

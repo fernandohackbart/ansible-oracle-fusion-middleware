@@ -28,9 +28,16 @@
 
 
     - name: Unpacking domain {{ ofmDomainName }} to {{ ofmDomainHome }} from {{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar
-      ansible.builtin.command: "{{ oracleHome }}/oracle_common/common/bin/unpack.sh -initialize=false -template={{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar
-        -domain={{ ofmDomainHome }} -app_dir={{ ofmApplicationHome }} -nodemanager_type=PerDomainNodeManager -log={{ ofmDomainLogsHome }}/Unpack-{{ ofmDomainName
-        }}.log -log_priority=info"
+      ansible.builtin.command: >-
+        {{ oracleHome }}/oracle_common/common/bin/unpack.sh
+        -initialize=false
+        -template={{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar
+        -domain={{ ofmDomainHome }}
+        -app_dir={{ ofmApplicationHome }}
+        -nodemanager_type=PerDomainNodeManager
+        -log={{ ofmDomainLogsHome }}/Unpack-{{ ofmDomainName }}.log
+        -log_priority=info
+      changed_when: true
       args:
         chdir: "{{ oracleHome }}/oracle_common/bin"
       environment:
@@ -53,6 +60,7 @@
 
     - name: Start nodemanager with {{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh
       ansible.builtin.command: "{{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh"
+      changed_when: true
       args:
         chdir: "{{ ofmDomainStageDir }}"
       environment:
@@ -63,6 +71,8 @@
 
     - name: Wait the startup of nodemanager {{ ofmDomainName }} at {{ ofmDomainHome }}
       ansible.builtin.command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh  {{ ofmDomainStageDir }}/OFM-waitNodeManager.py"
+      changed_when: false
+      check_mode: false
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:

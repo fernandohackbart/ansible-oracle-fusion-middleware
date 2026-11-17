@@ -11,6 +11,7 @@
 
 - name: Killing the Weblogic processes for domain {{ ofmDomainName }} (may raise errors)
   ansible.builtin.shell: "pkill -9 -f {{ ofmDomainName }} || true "
+  changed_when: false
   ignore_errors: true
 #  when: >
 #    process_count > 0
@@ -45,8 +46,11 @@
 
     - name: Run RCU {{ ofmRCUOperation }} prefix {{ ofmJdbcRCUSchemaPrefix }} and components ({{ ofmRCUComponents }}) at {{ ofmJdbcURLrcu }}
       ignore_errors: true
-      ansible.builtin.shell: "{{oracleHome }}/oracle_common/bin/rcu -silent -responseFile {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp -f < {{ ofmDomainStageDir
-        }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp"
+      ansible.builtin.shell: >-
+        {{ oracleHome }}/oracle_common/bin/rcu -silent
+        -responseFile {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp
+        -f < {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp
+      changed_when: true
       args:
         chdir: "{{ oracleHome }}/oracle_common/bin"
       environment:

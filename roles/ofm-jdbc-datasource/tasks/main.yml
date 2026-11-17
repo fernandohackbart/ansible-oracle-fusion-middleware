@@ -34,6 +34,7 @@
 
     - name: Configuring {{ ofmDomainName }} with JDBC datasource {{ ofmJDBCDATASOURCENAME }} jdbc:oracle:thin:@//{{ ofmJDBCURL }}
       ansible.builtin.command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-configure-JDBC-{{ ofmJDBCDATASOURCENAME }}.py"
+      changed_when: true
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:
@@ -56,6 +57,7 @@
 
     - name: Targeting the JDBC datasource {{ ofmJDBCDATASOURCENAME }} to managed servers {{ ofmJDBCManagedServerTargets }}
       ansible.builtin.command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-add-JDBC-MS-target-{{ item }}.py"
+      changed_when: true
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:
@@ -80,6 +82,7 @@
 
     - name: Targeting the JDBC datasource {{ ofmJDBCDATASOURCENAME }} to managed servers {{ ofmJDBCClusterTargets }}
       ansible.builtin.command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-add-JDBC-CLUSTER-target-{{ item }}.py"
+      changed_when: true
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:

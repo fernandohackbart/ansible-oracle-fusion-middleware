@@ -78,6 +78,7 @@
 
     - name: Installing Oracle Fusion Middleware {{ ofmVersion }} on {{ oracleHome }}
       ansible.builtin.command: "{{ stageDir }}/{{ ofmInstallationFile }} -silent -responseFile {{ stageDir }}/{{ ofmresponseFile }} -ignoreSysPrereqs"
+      changed_when: true
       environment:
         JAVA_HOME: "{{ javaHome }}"
         TEMP: "{{ tempDir }}"
