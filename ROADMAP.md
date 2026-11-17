@@ -69,8 +69,10 @@
 - [x] **1.7 Make `command`/`shell` tasks explicit** — add `argv` where possible, `creates`, `changed_when`, `failed_when`, `check_mode: false` as appropriate.  
   _Acceptance:_ `no-changed-when` is at zero or every remaining task has a documented reason.
 
-- [ ] **1.8 Validate on ansible-core 2.21.6 and 2.22** — syntax-check all playbooks; fix deprecation/failure-inference warnings.  
-  _Acceptance:_ no deprecation warnings; syntax gate is green on both cores.
+- [x] **1.8 Validate on ansible-core 2.20.x and 2.21.6** — syntax-check all playbooks; fix deprecation/failure-inference warnings.  
+  _Acceptance:_ no deprecation warnings; syntax gate is green on both cores. Validated with 2.20.11 and 2.21.6.
+
+- [ ] **1.8b Validate on ansible-core 2.22** — **BLOCKED:** ansible-core 2.22 requires Python 3.13+ on the controller; this environment has Python 3.12. Add to the CI matrix when Python 3.13 is available.
 
 ---
 
@@ -201,3 +203,4 @@
 | 2026-11-17 | 1.5 booleans/conditionals | — | `yaml[truthy]` and `literal-compare` at zero |
 | 2026-11-17 | 1.6 play keywords | — | `remote_user`, parameterized `become_user`, FQCN sudo |
 | 2026-11-17 | 1.7 command/shell | — | 40 tasks now declare `changed_when`; long commands use folded scalars |
+| 2026-11-17 | 1.8 core validation | — | Syntax green on 2.20.11 and 2.21.6; 2.22 blocked by Python 3.13 |
