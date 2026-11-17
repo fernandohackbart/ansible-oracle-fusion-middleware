@@ -23,7 +23,7 @@
 - [x] **0.1 Add `ansible.cfg`** — deterministic inventory/roles/collections paths, host-key checking, no retry files, deprecation warnings, interpreter discovery.  
   _Acceptance:_ `ansible-config dump --only-changed` shows only intentional settings.
 
-- [ ] **0.2 Add `requirements.yml` and `requirements-dev.txt`** — pin `community.general`, `ansible.posix`, `ansible==14.6.0`, `ansible-lint`, `yamllint`, `molecule`, `ansible-builder`, `pre-commit`.  
+- [x] **0.2 Add `requirements.yml` and `requirements-dev.txt`** — pin `community.general`, `ansible.posix`, `ansible==14.6.0`, `ansible-lint`, `yamllint`, `molecule`, `ansible-builder`, `pre-commit`.  
   _Acceptance:_ `ansible-galaxy collection install -r requirements.yml` succeeds; versions are pinned.
 
 - [ ] **0.3 Add lint/format configuration** — `.ansible-lint` (`profile: basic`), `.yamllint`, `.editorconfig`, `.gitignore` (vault files, `.venv`, artifacts, media, retries, molecule state).  
@@ -187,3 +187,4 @@
 |---|---|---|---|
 | 2026-11-17 | Checklist created | — | Detailed version retained in `docs/roadmap-details.md` |
 | 2026-11-17 | 0.1 `ansible.cfg` | — | Validated with `ansible-config dump --only-changed` |
+| 2026-11-17 | 0.2 dependencies pinned | — | `ansible-galaxy` confirms collections installed |

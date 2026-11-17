@@ -1,0 +1,8 @@
+---
+# Collections required by the playbooks.
+# Keep these pinned to versions validated with ansible-core in requirements-dev.txt.
+collections:
+  - name: community.general
+    version: "==14.0.1"
+  - name: ansible.posix
+    version: "==2.2.2"
