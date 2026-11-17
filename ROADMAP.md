@@ -35,7 +35,7 @@
 - [x] **0.5 Rewrite `README.md`** — purpose, support matrix, prerequisites, quick start, inventory, variables, secrets, validation, links.  
   _Acceptance:_ a new engineer can run the example inventory by following the README only.
 
-- [ ] **0.6 Add `Makefile` and CI workflow** — `setup`, `syntax`, `lint`, `test`, `clean`; CI runs syntax-check, yamllint, ansible-lint.  
+- [x] **0.6 Add `Makefile` and CI workflow** — `setup`, `syntax`, `lint`, `test`, `clean`; CI runs syntax-check, yamllint, ansible-lint.  
   _Acceptance:_ `make lint` and `make syntax` pass locally; CI workflow is syntactically valid.
 
 - [ ] **0.7 Add project metadata** — `CHANGELOG.md`, `LICENSE`, `CONTRIBUTING.md`.  
@@ -191,3 +191,4 @@
 | 2026-11-17 | 0.4 example inventory | — | 15/15 playbooks pass `--syntax-check` without extra vars |
 | 2026-11-17 | 0.3 lint/format config | — | `ansible-lint` exits 0 with warnings; yamllint reports existing whitespace debt |
 | 2026-11-17 | 0.5 README rewrite | — | Includes support matrix, inventory, secrets, and playbook reference |
+| 2026-11-17 | 0.6 Makefile + CI | — | `make syntax` and `make lint` pass locally |
