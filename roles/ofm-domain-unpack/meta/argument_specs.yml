@@ -1,0 +1,11 @@
+---
+argument_specs:
+  main:
+    short_description: Unpack a domain and restore its NodeManager home
+    options:
+      ofmDomainName:
+        type: str
+        required: false
+      ofm_domain_artifact_dir:
+        type: str
+        required: false

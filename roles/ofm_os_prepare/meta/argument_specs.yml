@@ -1,0 +1,30 @@
+---
+argument_specs:
+  main:
+    short_description: Prepare Oracle Fusion Middleware OS prerequisites
+    options:
+      ofm_user:
+        type: str
+        required: false
+      ofm_group:
+        type: str
+        required: false
+      ofm_dba_group:
+        type: str
+        required: false
+      ofm_base_dir:
+        type: str
+        required: false
+      ofm_os_manage_packages:
+        type: bool
+        required: false
+      ofm_os_manage_firewall:
+        type: bool
+        required: false
+      ofm_os_manage_selinux:
+        type: bool
+        required: false
+      ofm_os_supported_major_versions:
+        type: list
+        required: false
+        elements: str

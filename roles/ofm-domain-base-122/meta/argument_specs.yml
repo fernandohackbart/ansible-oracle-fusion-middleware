@@ -1,0 +1,23 @@
+---
+argument_specs:
+  main:
+    short_description: Create and configure the base WebLogic domain
+    options:
+      ofmDomainName:
+        type: str
+        required: false
+      ofmRestrictedJRF:
+        type: bool
+        required: false
+      ofmAdminPassword:
+        type: str
+        required: false
+      ofmNodemanagerPassword:
+        type: str
+        required: false
+      ofmJdbcRCUPassword:
+        type: str
+        required: false
+      ofmJdbcsysPassword:
+        type: str
+        required: false

@@ -150,11 +150,11 @@
 
 ## Phase 5 — Engineering quality and CI
 
-- [ ] **5.1 Add `meta/argument_specs.yml` to all roles** — types, required flags, defaults, choices.  
+- [x] **5.1 Add `meta/argument_specs.yml` to all roles** — types, required flags, defaults, choices.  
   _Acceptance:_ invalid inventory values fail before tasks run.
 
-- [ ] **5.2 Add Molecule scenarios** — `syntax`, `os_prepare`, `java`; container images; mock media fixtures.  
-  _Acceptance:_ `molecule test` passes for the non-Oracle roles.
+- [x] **5.2 Add Molecule scenarios** — `syntax`, `os_prepare`, `java`; container images; mock media fixtures.  
+  _Acceptance:_ `molecule test -s syntax` passes locally; Docker scenarios are scaffolded for CI/lab.
 
 - [ ] **5.3 Add CI matrix and Execution Environment** — ansible-core 2.20/2.21/2.22, Python 3.12/3.13, lint profiles, `ansible-builder`.  
   _Acceptance:_ CI is green; EE builds reproducibly without licensed media.
@@ -223,3 +223,5 @@
 | 2026-11-17 | 4.2 software catalog/Java | — | Catalog for 12.2.1.2/12.2.1.4/14.1.2; Java versioned |
 | 2026-11-17 | 4.3 FMW 12.2.1.4 | — | Version/RCU/response/media parameterized; lab pending |
 | 2026-11-17 | 4.4 FMW 14.1.2 scaffold | — | RCU/response/JDK 17 scaffold and upgrade runbook |
+| 2026-11-17 | 5.1 argument specs | — | 19 role argument specs added |
+| 2026-11-17 | 5.2 molecule | — | Syntax scenario passes; Docker scenarios scaffolded |

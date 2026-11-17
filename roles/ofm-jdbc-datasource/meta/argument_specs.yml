@@ -1,0 +1,17 @@
+---
+argument_specs:
+  main:
+    short_description: Configure a JDBC datasource in the domain
+    options:
+      ofmJDBCDATASOURCENAME:
+        type: str
+        required: false
+      ofmJDBCURL:
+        type: str
+        required: false
+      ofmJDBCSchema:
+        type: str
+        required: false
+      ofmJDBCPassword:
+        type: str
+        required: false

@@ -1,0 +1,20 @@
+---
+argument_specs:
+  main:
+    short_description: Install Oracle HTTP Server
+    options:
+      ofmInstallationMedia:
+        type: str
+        required: false
+      ofmInstallationFile:
+        type: str
+        required: false
+      ofmresponseFile:
+        type: str
+        required: false
+      ofmInstallationMediaChecksum:
+        type: str
+        required: false
+      ofmInstallRequiredSpace:
+        type: int
+        required: false

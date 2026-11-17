@@ -1,0 +1,11 @@
+---
+argument_specs:
+  main:
+    short_description: Remove the Oracle home after confirmation
+    options:
+      ofm_confirm_destroy:
+        type: bool
+        required: false
+      ofm_confirm_destroy_prod:
+        type: bool
+        required: false

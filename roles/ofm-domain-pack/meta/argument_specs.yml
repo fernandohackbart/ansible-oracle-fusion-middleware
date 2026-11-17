@@ -1,0 +1,14 @@
+---
+argument_specs:
+  main:
+    short_description: Pack a domain and its NodeManager home
+    options:
+      ofmDomainName:
+        type: str
+        required: false
+      ofmDomainHome:
+        type: str
+        required: false
+      ofm_artifacts_dir:
+        type: str
+        required: false

@@ -1,0 +1,21 @@
+---
+argument_specs:
+  main:
+    short_description: Shared installation defaults and software catalog
+    options:
+      ofm_release:
+        type: str
+        required: false
+        choices:
+          - "12.2.1.2"
+          - "12.2.1.4"
+          - "14.1.2"
+      ofm_validate_certs:
+        type: bool
+        required: false
+      ofm_decline_security_updates:
+        type: bool
+        required: false
+      ofm_ignore_sys_prereqs:
+        type: bool
+        required: false

@@ -1,0 +1,15 @@
+---
+argument_specs:
+  main:
+    short_description: Create WebLogic managed servers
+    options:
+      ofmMGDSRVextserverprefix:
+        type: str
+        required: false
+      ofmMGDSRVextmachines:
+        type: list
+        required: false
+        elements: str
+      ofmMGDSRVextmsport:
+        type: int
+        required: false

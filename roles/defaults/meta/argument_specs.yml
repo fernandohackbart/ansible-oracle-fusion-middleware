@@ -1,0 +1,17 @@
+---
+argument_specs:
+  main:
+    short_description: Legacy shared defaults
+    options:
+      mode:
+        type: str
+        required: false
+      secureMode:
+        type: str
+        required: false
+      mediassource:
+        type: str
+        required: false
+      mediasURL:
+        type: str
+        required: false

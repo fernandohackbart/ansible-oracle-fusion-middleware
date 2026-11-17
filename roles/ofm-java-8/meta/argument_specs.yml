@@ -1,0 +1,20 @@
+---
+argument_specs:
+  main:
+    short_description: Install and validate the JDK used by Oracle Fusion Middleware
+    options:
+      javaVersion:
+        type: str
+        required: false
+      javaRelease:
+        type: str
+        required: false
+      javaInstallationFile:
+        type: str
+        required: false
+      javaInstallationFileChecksum:
+        type: str
+        required: false
+      javaHome:
+        type: str
+        required: false

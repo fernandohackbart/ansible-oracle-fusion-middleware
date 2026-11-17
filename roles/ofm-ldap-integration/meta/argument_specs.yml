@@ -1,0 +1,17 @@
+---
+argument_specs:
+  main:
+    short_description: Configure LDAP authentication in the domain
+    options:
+      ofmLDAPProviderName:
+        type: str
+        required: false
+      ofmLDAPHostName:
+        type: str
+        required: false
+      ofmLDAPHostPort:
+        type: int
+        required: false
+      ofmLDAPBaseDN:
+        type: str
+        required: false

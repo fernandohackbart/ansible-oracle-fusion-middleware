@@ -1,0 +1,17 @@
+---
+argument_specs:
+  main:
+    short_description: Validate the installation, domain, and listening services
+    options:
+      ofm_validate_admin_port:
+        type: int
+        required: false
+      ofm_validate_nodemanager_port:
+        type: int
+        required: false
+      ofm_validate_check_ohs:
+        type: bool
+        required: false
+      ofm_validate_ohs_port:
+        type: int
+        required: false

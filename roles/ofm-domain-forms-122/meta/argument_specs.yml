@@ -1,0 +1,15 @@
+---
+argument_specs:
+  main:
+    short_description: Extend the domain with Oracle Forms and Reports
+    options:
+      ofmFRMexttemplate:
+        type: str
+        required: false
+      ofmFRMextmachines:
+        type: list
+        required: false
+        elements: str
+      ofmFRMextmsport:
+        type: int
+        required: false

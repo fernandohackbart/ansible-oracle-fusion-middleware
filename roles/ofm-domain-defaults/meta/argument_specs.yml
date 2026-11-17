@@ -1,0 +1,38 @@
+---
+argument_specs:
+  main:
+    short_description: Create the shared Oracle Fusion Middleware domain directories and defaults
+    options:
+      ofmDomainName:
+        type: str
+        required: false
+      ofmDomainHome:
+        type: str
+        required: false
+      ofmAdminPassword:
+        type: str
+        required: false
+      ofmNodemanagerPassword:
+        type: str
+        required: false
+      ofmJdbcRCUPassword:
+        type: str
+        required: false
+      ofmJdbcsysPassword:
+        type: str
+        required: false
+      ofmJdbcRCUSchemaPrefix:
+        type: str
+        required: false
+      ofmRestrictedJRF:
+        type: bool
+        required: false
+      ofmAdminserverMachine:
+        type: str
+        required: false
+      ofmAdminserverPort:
+        type: int
+        required: false
+      ofmNodemgrPort:
+        type: int
+        required: false
