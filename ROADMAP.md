@@ -93,7 +93,7 @@
 - [x] **2.5 Harden downloads** — SHA256 checksums, `timeout`, `retries`, `until`, explicit `validate_certs`/`ca_path`; gate `-ignoreSysPrereqs` and `DECLINE_SECURITY_UPDATES`.  
   _Acceptance:_ every `get_url` has a checksum variable and retry policy; bypass flags are opt-in.
 
-- [ ] **2.6 Guard destructive operations** — `ofm_confirm_destroy` assertion, production environment guard, backup before clean, remove `pkill -9 -f`.  
+- [x] **2.6 Guard destructive operations** — `ofm_confirm_destroy` assertion, production environment guard, backup before clean, remove `pkill -9 -f`.  
   _Acceptance:_ clean playbooks refuse to run without confirmation; no broad `pkill -9`.
 
 - [ ] **2.7 Harden generated wrappers** — `umask 077`, `0600` logs, no plaintext passwords in `OFM-env-domain`/wrapper scripts; remove dead secret-bearing templates.  
@@ -209,3 +209,4 @@
 | 2026-11-17 | 2.3 no_log coverage | — | Secret-bearing templates and RCU tasks marked `no_log` |
 | 2026-11-17 | 2.4 secret modes/cleanup | — | RCU/boot/WLST credentials secured; RCU cleanup in `always` |
 | 2026-11-17 | 2.5 download hardening | — | Checksum variable, retries/until, TLS options, opt-in bypass flags |
+| 2026-11-17 | 2.6 destructive guards | — | Confirmation/prod guards, backup check, graceful process stop |

@@ -26,3 +26,8 @@ ofm_validate_certs: true
 ofm_decline_security_updates: true
 ofm_decline_auto_updates: true
 ofm_ignore_sys_prereqs: false
+
+# Destructive-operation guards. These are intentionally false by default.
+ofm_confirm_destroy: false
+ofm_confirm_destroy_prod: false
+ofm_require_domain_backup: true

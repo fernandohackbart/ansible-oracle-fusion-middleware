@@ -3,6 +3,16 @@
 # Developed by Fernando Hackbart (fhackbart@gmail.com)
 # Lisbon 2017-12-28
 ---
+- name: Assert Oracle home removal is explicitly confirmed
+  ansible.builtin.assert:
+    that:
+      - ofm_confirm_destroy | default(false) | bool
+      - ofm_environment not in ['ppe', 'prod'] or ofm_confirm_destroy_prod | default(false) | bool
+    fail_msg: >-
+      Refusing to remove the Oracle home. Set ofm_confirm_destroy=true. For
+      ppe/prod, also set ofm_confirm_destroy_prod=true.
+    quiet: true
+
 - name: Checking serverEnvironment = {{ serverEnvironment }}
   ansible.builtin.fail:
     msg: "serverEnvironment = {{ serverEnvironment }} not valid!"
