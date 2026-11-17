@@ -103,7 +103,7 @@
 
 ## Phase 3 — Correctness, idempotency, and reliability
 
-- [ ] **3.1 Fix simple verified defects** — undefined `ofmMGDSRVexttemplate`, OEM stage-dir mismatch, trailing space in wait-script cleanup, duplicate OEM playbooks.  
+- [x] **3.1 Fix simple verified defects** — undefined `ofmMGDSRVexttemplate`, OEM stage-dir mismatch, trailing space in wait-script cleanup, duplicate OEM playbooks.  
   _Acceptance:_ syntax/lint pass; the affected tasks reference defined variables and paths.
 
 - [ ] **3.2 Fix execution-context assumptions** — replace `ansible_env.HOME` with a defined Oracle user home; replace hardcoded `ofmAdminserverMachine` with inventory-derived values.  
@@ -211,3 +211,4 @@
 | 2026-11-17 | 2.5 download hardening | — | Checksum variable, retries/until, TLS options, opt-in bypass flags |
 | 2026-11-17 | 2.6 destructive guards | — | Confirmation/prod guards, backup check, graceful process stop |
 | 2026-11-17 | 2.7 wrapper hardening | — | `umask 077`, boot.properties secured, dead secret templates removed |
+| 2026-11-17 | 3.1 simple defects | — | Undefined var, OEM stage dir, trailing path, OEM alias fixed |

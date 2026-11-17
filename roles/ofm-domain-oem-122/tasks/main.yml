@@ -21,9 +21,9 @@
     ofmDomainHome_configured.stat.exists
   block:
 
-    - name: Create stage folder "{{ stageDir }}"
+    - name: Create stage folder "{{ ofmDomainStageDir }}"
       ansible.builtin.file:
-        path: "{{ stageDir }}"
+        path: "{{ ofmDomainStageDir }}"
         state: directory
         mode: "{{ mode }}"
 

@@ -36,7 +36,7 @@
       loop_control:
         index_var: index
 
-    - name: Creating managed servers {{ ofmDomainName }} with {{ ofmMGDSRVexttemplate  }}
+    - name: Creating managed servers {{ ofmDomainName }} with prefix {{ ofmMGDSRVextserverprefix }}
       ansible.builtin.command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-createManagedServer-{{ ofmMGDSRVextserverprefix }}{{ index }}.py"
       changed_when: true
       args:

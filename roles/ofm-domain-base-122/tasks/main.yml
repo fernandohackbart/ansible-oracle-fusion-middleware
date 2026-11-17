@@ -378,7 +378,7 @@
 
     - name: Post clean {{ ofmDomainStageDir }}/OFM-waitNodeManager.py
       ansible.builtin.file:
-        path: "{{ ofmDomainStageDir }}/OFM-waitNodeManager.py "
+        path: "{{ ofmDomainStageDir }}/OFM-waitNodeManager.py"
         state: absent
 
     - name: Post clean {{ ofmDomainStageDir }}/OFM-12.2-genBootProps-{{ ofmAdminserverName }}.py
