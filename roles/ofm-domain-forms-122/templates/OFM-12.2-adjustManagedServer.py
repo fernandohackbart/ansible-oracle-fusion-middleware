@@ -22,12 +22,12 @@ JDBCRCUSCHEMAPREFIX='{{ ofmJdbcRCUSchemaPrefix }}'
 
 
 if ADMINSERVERNAME!=ADJUSTSERVERNAME:
-  connect(userConfigFile=USERHOMEDIR+'/bin/'+DOMAINNAME+'-cred.secure',userKeyFile=USERHOMEDIR+'/bin/'+DOMAINNAME+'-key.secure',url='t3://'+ADMINSERVERMACHINE+':'+ADMINSERVERPORT) 
+  connect(userConfigFile=USERHOMEDIR+'/bin/'+DOMAINNAME+'-cred.secure',userKeyFile=USERHOMEDIR+'/bin/'+DOMAINNAME+'-key.secure',url='t3://'+ADMINSERVERMACHINE+':'+ADMINSERVERPORT)
   edit()
   startEdit()
 
 cd('/Servers/'+ADJUSTSERVERNAME)
- 
+
 cd('/Servers/'+ADJUSTSERVERNAME+'/Log/'+ADJUSTSERVERNAME)
 cmo.setFileName(ADJUSTSERVERLOGDIR+'/'+ADJUSTSERVERNAME+'.log')
 cd('/Servers/'+ADJUSTSERVERNAME+'/WebServer/'+ADJUSTSERVERNAME+'/WebServerLog/'+ADJUSTSERVERNAME)

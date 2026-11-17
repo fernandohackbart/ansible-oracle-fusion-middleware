@@ -14,7 +14,7 @@ JDBCPASSWORD='{{ ofmJDBCPassword }}'
 JDBCGLOBALTRANSACTIONSPROTOCOL='{{ ofmJDBCGlobalTransactionsProtocol }}'
 
 print 'Connecting to the '+ADMINSERVERNAME
-connect(userConfigFile=USERHOMEDIR+'/bin/'+DOMAINNAME+'-cred.secure',userKeyFile=USERHOMEDIR+'/bin/'+DOMAINNAME+'-key.secure',url='t3://'+ADMINSERVERMACHINE+':'+ADMINSERVERPORT) 
+connect(userConfigFile=USERHOMEDIR+'/bin/'+DOMAINNAME+'-cred.secure',userKeyFile=USERHOMEDIR+'/bin/'+DOMAINNAME+'-key.secure',url='t3://'+ADMINSERVERMACHINE+':'+ADMINSERVERPORT)
 edit()
 startEdit()
 try:

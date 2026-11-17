@@ -13,4 +13,3 @@ except Exception:
   print 'Admin Server '+ADMINSERVERNAME+' is already running, continuing...'
 nmDisconnect()
 exit()
-

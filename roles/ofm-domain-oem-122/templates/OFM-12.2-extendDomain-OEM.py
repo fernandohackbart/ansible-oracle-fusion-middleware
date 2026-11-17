@@ -21,5 +21,3 @@ if RESTRICTEDJRF.lower()=='false':
 print 'Updating '+DOMAINHOME+' domain...'
 updateDomain()
 closeDomain()
-
-

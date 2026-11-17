@@ -1,26 +1,26 @@
-##################################################################################################################################        
-# Oracle Fusion Middleware 12.2 Infrastructure installation playbook 
+##################################################################################################################################
+# Oracle Fusion Middleware 12.2 Infrastructure installation playbook
 # Developed by Fernando Hackbart (fhackbart@gmail.com)
 # Lisbon 2017-12-28
----  
+---
 # Create stagedir for domain
 - name: Check if OFM domain {{ ofmDomainName }} exists at {{ ofmDomainHome }}
-  stat: 
+  stat:
     path: "{{ ofmDomainHome }}"
-  register: ofmDomainHome_configured   
-  
+  register: ofmDomainHome_configured
+
 - name: Packing the domain {{ ofmDomainName }}
   block:
-  
+
   - name: Create stage folder {{ ofmDomainStageDir }}
     file:
       path: "{{ ofmDomainStageDir }}"
       state: directory
       mode: "{{ mode }}"
-      
-   
+
+
   - name: Copying the packed domain from the Ansible server to {{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar
-    copy: 
+    copy:
       src: "{{ ofmAdminserverMachine }}/{{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar"
       dest: "{{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar"
 
@@ -34,17 +34,17 @@
       JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
       ORACLE_HOME: "{{ oracleHome }}"
       TEMP: "{{ tempDir }}"
-         
+
   - name: Create start nodemanager bash script {{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh
-    template: 
+    template:
       src: "OFM-12.2-startNodeManager.sh"
-      dest: "{{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh"    
+      dest: "{{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh"
       mode: "{{ secureMode }}"
-      
+
   - name: Create wait nodemanager Jython script {{ ofmDomainStageDir }}/OFM-waitNodeManager.py
-    template: 
+    template:
       src: "OFM-waitNodeManager.py"
-      dest: "{{ ofmDomainStageDir }}/OFM-waitNodeManager.py"    
+      dest: "{{ ofmDomainStageDir }}/OFM-waitNodeManager.py"
       mode: "{{ secureMode }}"
 
   - name: Start nodemanager with {{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh
@@ -54,9 +54,9 @@
     environment:
       JAVA_HOME: "{{ javaHome }}"
       JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
-      NODEMGR_HOME: "{{ ofmDomainHome }}/nodemanager"      
+      NODEMGR_HOME: "{{ ofmDomainHome }}/nodemanager"
       TEMP: "{{ tempDir }}"
-         
+
   - name: Wait the startup of nodemanager {{ ofmDomainName }} at {{ ofmDomainHome }}
     command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh  {{ ofmDomainStageDir }}/OFM-waitNodeManager.py"
     args:
@@ -65,6 +65,6 @@
       JAVA_HOME: "{{ javaHome }}"
       JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
       TEMP: "{{ tempDir }}"
-    
+
   when: >
     ofmDomainHome_configured.stat.exists == False

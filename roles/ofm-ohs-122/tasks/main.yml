@@ -1,15 +1,15 @@
-##################################################################################################################################        
-# Oracle Fusion Middleware 12.2 Infrastructure installation playbook 
+##################################################################################################################################
+# Oracle Fusion Middleware 12.2 Infrastructure installation playbook
 # Developed by Fernando Hackbart (fhackbart@gmail.com)
 # Lisbon 2017-12-28
----  
+---
 - name: Checking serverEnvironment = {{ serverEnvironment }}
   fail:
     msg: "serverEnvironment = {{ serverEnvironment }} not valid!"
-  when: > 
+  when: >
          ((not (serverEnvironment in highenvs)) and (not(serverEnvironment in lowenvs)))
-         
-- name: Check if OFM home {{ oraclePresenceFolder }} is already installed 
+
+- name: Check if OFM home {{ oraclePresenceFolder }} is already installed
   stat: path={{ oraclePresenceFolder }}
   register: oracleHome_installed
 
@@ -17,9 +17,9 @@
   block:
   - name: Check available disk space in {{ tempBaseVolume }}
     assert:
-      that: 
+      that:
         -  item.size_available > tempRequiredSpace
-    with_items: 
+    with_items:
       - "{{ ansible_mounts }}"
     when: >
       item.mount == tempBaseVolume
@@ -27,13 +27,13 @@
 
   - name: Check available disk space in {{ oraBaseVolume }}
     assert:
-      that: 
+      that:
         -  item.size_available > ofmInstallRequiredSpace
-    with_items: 
+    with_items:
       - "{{ ansible_mounts }}"
     when: >
-      item.mount == oraBaseVolume    
-    register: install_free 
+      item.mount == oraBaseVolume
+    register: install_free
 
   - name: Create base folder {{ oraBaseDir }}
     ignore_errors: yes
@@ -41,7 +41,7 @@
       path: "{{ oraBaseDir }}"
       state: directory
       mode: "{{ mode }}"
-    
+
   - name: Create stage folder "{{ stageDir }}"
     file:
       path: "{{ stageDir }}"
@@ -49,46 +49,46 @@
       mode: "{{ mode }}"
 
   - name: Create response file {{ stageDir }}/{{ ofmresponseFile }}
-    template: 
+    template:
       src: "{{ ofmresponseFile }}"
       dest: "{{ stageDir }}/{{ ofmresponseFile }}"
-   
+
   - name: Pre clean {{ stageDir }}/{{ ofmInstallationFile }}
-    file: 
-      path: "{{ stageDir }}/{{ ofmInstallationFile }}" 
+    file:
+      path: "{{ stageDir }}/{{ ofmInstallationFile }}"
       state: absent
-    
+
   - name: Download OHS from {{ mediasURL }}/{{ ofmInstallationMedia }} to {{ stageDir }}/{{ ofmInstallationMedia }}
-    get_url: 
+    get_url:
       url: "{{ mediasURL }}/{{ ofmInstallationMedia }}"
       dest: "{{ stageDir }}/{{ ofmInstallationMedia }}"
 
   - name: Unzip {{ stageDir }}/{{ ofmInstallationMedia }} to {{ stageDir }}
-    unarchive: 
+    unarchive:
       dest: "{{ stageDir }}"
       src: "{{ stageDir }}/{{ ofmInstallationMedia }}"
       creates: "{{ stageDir }}/{{ ofmInstallationFile }}"
       copy: no
-    
+
   - name: Removing installation media {{ stageDir }}/{{ ofmInstallationMedia }}
-    file: 
-      path: "{{ stageDir }}/{{ ofmInstallationMedia }}" 
+    file:
+      path: "{{ stageDir }}/{{ ofmInstallationMedia }}"
       state: absent
-    
+
   - name: Installing Oracle Fusion Middleware {{ ofmVersion }} on {{ oracleHome }}
     command: "{{ stageDir }}/{{ ofmInstallationFile }} -silent -responseFile {{ stageDir }}/{{ ofmresponseFile }} -ignoreSysPrereqs"
     environment:
       JAVA_HOME: "{{ javaHome }}"
       TEMP: "{{ tempDir }}"
-  
+
   - name: Post clean {{ stageDir }}/{{ ofmInstallationFile }}
-    file: 
-      path: "{{ stageDir }}/{{ ofmInstallationFile }}" 
+    file:
+      path: "{{ stageDir }}/{{ ofmInstallationFile }}"
       state: absent
-  
+
   - name: Post clean {{ stageDir }}/{{ ofmresponseFile }}
-    file: 
-      path: "{{ stageDir }}/{{ ofmresponseFile }}" 
-      state: absent    
+    file:
+      path: "{{ stageDir }}/{{ ofmresponseFile }}"
+      state: absent
   when: >
-    oracleHome_installed.stat.exists == False      
+    oracleHome_installed.stat.exists == False

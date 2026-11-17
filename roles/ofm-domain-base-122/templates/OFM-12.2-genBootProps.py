@@ -11,7 +11,7 @@ NODEMGRPASSWORD='{{ ofmNodemgrPassword }}'
 
 
 nmConnect(NODEMGRUSERNAME,NODEMGRPASSWORD,ADMINSERVERMACHINE,NODEMGRPORT,DOMAINNAME,DOMAINHOME,'SSL')
-connect(userConfigFile=USERHOMEDIR+'/bin/'+DOMAINNAME+'-cred.secure',userKeyFile=USERHOMEDIR+'/bin/'+DOMAINNAME+'-key.secure',url='t3://'+ADMINSERVERMACHINE+':'+ADMINSERVERPORT) 
+connect(userConfigFile=USERHOMEDIR+'/bin/'+DOMAINNAME+'-cred.secure',userKeyFile=USERHOMEDIR+'/bin/'+DOMAINNAME+'-key.secure',url='t3://'+ADMINSERVERMACHINE+':'+ADMINSERVERPORT)
 nmGenBootStartupProps(ADMINSERVERNAME)
 nmDisconnect()
 exit()

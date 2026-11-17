@@ -1,75 +1,75 @@
-##################################################################################################################################        
-# Oracle Fusion Middleware 12.2 Infrastructure installation playbook 
+##################################################################################################################################
+# Oracle Fusion Middleware 12.2 Infrastructure installation playbook
 # Developed by Fernando Hackbart (fhackbart@gmail.com)
 # Lisbon 2017-12-28
----  
+---
 - name: Checking serverEnvironment = {{ serverEnvironment }}
   fail:
     msg: "serverEnvironment = {{ serverEnvironment }} not valid!"
-  when: > 
+  when: >
          ((not (serverEnvironment in highenvs)) and (not(serverEnvironment in lowenvs)))
-         
-- name: Check if OFM home {{ oraclePresenceFolder }} is already installed 
+
+- name: Check if OFM home {{ oraclePresenceFolder }} is already installed
   stat: path={{ oraclePresenceFolder }}
   register: oracleHome_installed
-  
+
 - name: Check if OFM domain {{ ofmDomainName }} exists at {{ ofmDomainHome }}
   stat: path={{ ofmDomainHome }}
-  register: ofmDomainHome_configured   
+  register: ofmDomainHome_configured
 
 - name: Creating Oracle Fusion Middleware Infrastructure base domain
   block:
-  
+
   - name: Create domain stage directory {{ ofmDomainStageDir }}
     ignore_errors: yes
     file:
       path: "{{ ofmDomainStageDir }}"
       state: directory
       mode: "{{ mode }}"
-      
+
   - name: Check available disk space in {{ tempBaseVolume }}
     assert:
-      that: 
+      that:
         -  item.size_available > tempRequiredSpace
-    with_items: 
+    with_items:
       - "{{ ansible_mounts }}"
     when: >
       item.mount == tempBaseVolume
     register: tmp_free
-  
+
   - name: Check available disk space in {{ ofmConfigHome }}
     assert:
-      that: 
+      that:
         -  item.size_available > ofmConfigRequiredSpace
-    with_items: 
+    with_items:
       - "{{ ansible_mounts }}"
     when: >
-      item.mount == oraBaseVolume    
-    register: config_free 
-    
+      item.mount == oraBaseVolume
+    register: config_free
+
   - name: Create {{ ofmAdminserverName }} logs folder {{ ofmDomainLogsHome }}/{{ ofmAdminserverName }}
     ignore_errors: yes
     file:
       path: "{{ ofmDomainLogsHome }}/{{ ofmAdminserverName }}"
       state: directory
       mode: "{{ mode }}"
-        
+
   ########################################################################################################################
   - name: Create RCU schemas
     block:
-    
+
     - name: Create RCU response file {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp
-      template: 
+      template:
         src: "RCU-12.2.1.2.0-generic.rsp"
-        dest: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp"    
+        dest: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp"
         mode: "{{ mode }}"
-        
+
     - name: Create RCU response file {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp
-      template: 
+      template:
         src: "RCU-12.2.1.2.0-passwords.rsp"
-        dest: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp"    
+        dest: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp"
         mode: "{{ mode }}"
-        
+
     - name: Run RCU {{ ofmRCUOperation }} prefix {{ ofmJdbcRCUSchemaPrefix }} and components ({{ ofmRCUComponents }}) at {{ ofmJdbcURLrcu }}
       #ignore_errors: True
       shell: "{{oracleHome }}/oracle_common/bin/rcu -silent -responseFile {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp -f < {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp"
@@ -79,33 +79,33 @@
         JAVA_HOME: "{{ javaHome }}"
         ORACLE_HOME: "{{ oracleHome }}"
         TEMP: "{{ tempDir }}"
-        
+
     - name: Post clean {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp
-      file: 
-        path: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp" 
+      file:
+        path: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp"
         state: absent
-   
+
     - name: Post clean {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp
-      file: 
-        path: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp" 
+      file:
+        path: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp"
         state: absent
-        
+
     when: >
-      ofmRestrictedJRF == 'FALSE'   
-        
-  ########################################################################################################################    
+      ofmRestrictedJRF == 'FALSE'
+
+  ########################################################################################################################
   - name: Create create domain Jython script {{ ofmDomainStageDir }}/OFM-12.2-createDomain.py
-    template: 
+    template:
       src: "OFM-12.2-createDomain.py"
-      dest: "{{ ofmDomainStageDir }}/OFM-12.2-createDomain.py"    
+      dest: "{{ ofmDomainStageDir }}/OFM-12.2-createDomain.py"
       mode: "{{ mode }}"
-      
+
   - name: Create move filestores Jython script {{ ofmDomainStageDir }}/OFM-12.2-moveFileStoresToConfig.py
-    template: 
+    template:
       src: "OFM-12.2-moveFileStoresToConfig.py"
-      dest: "{{ ofmDomainStageDir }}/OFM-12.2-moveFileStoresToConfig.py"    
+      dest: "{{ ofmDomainStageDir }}/OFM-12.2-moveFileStoresToConfig.py"
       mode: "{{ mode }}"
-      
+
   - name: Create domain {{ ofmDomainName }} at {{ ofmDomainHome }}
     command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh  {{ ofmDomainStageDir }}/OFM-12.2-createDomain.py"
     args:
@@ -115,44 +115,44 @@
       JAVA_HOME: "{{ javaHome }}"
       JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
       TEMP: "{{ tempDir }}"
-      
+
   - name: Post clean {{ ofmDomainStageDir }}/OFM-12.2-createDomain.py
-    file: 
-      path: "{{ ofmDomainStageDir }}/OFM-12.2-createDomain.py" 
-      state: absent 
-  
-  - name: Post clean {{ ofmDomainStageDir }}/OFM-12.2-moveFileStoresToConfig.py
-    file: 
-      path: "{{ ofmDomainStageDir }}/OFM-12.2-moveFileStoresToConfig.py" 
+    file:
+      path: "{{ ofmDomainStageDir }}/OFM-12.2-createDomain.py"
       state: absent
-      
-  ########################################################################################################################   
-     
+
+  - name: Post clean {{ ofmDomainStageDir }}/OFM-12.2-moveFileStoresToConfig.py
+    file:
+      path: "{{ ofmDomainStageDir }}/OFM-12.2-moveFileStoresToConfig.py"
+      state: absent
+
+  ########################################################################################################################
+
   - name: Create {{ ofmAdminserverName }} security folder {{ ofmDomainHome }}/servers/{{ ofmAdminserverName }}/security
     ignore_errors: yes
     file:
       path: "{{ ofmDomainHome }}/servers/{{ ofmAdminserverName }}/security"
       state: directory
       mode: "{{ mode }}"
-      
+
   - name: Create boot.properties file {{ ofmDomainHome }}/servers/{{ ofmAdminserverName }}/security/boot.properties
-    template: 
+    template:
       src: "boot.properties"
-      dest: "{{ ofmDomainHome }}/servers/{{ ofmAdminserverName }}/security/boot.properties"    
-      mode: "{{ mode }}" 
-      
+      dest: "{{ ofmDomainHome }}/servers/{{ ofmAdminserverName }}/security/boot.properties"
+      mode: "{{ mode }}"
+
   - name: Create start admin server bash script {{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.sh
-    template: 
+    template:
       src: "OFM-12.2-startAdminServer.sh"
-      dest: "{{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.sh"    
-      mode: "{{ mode }}"  
-      
+      dest: "{{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.sh"
+      mode: "{{ mode }}"
+
   - name: Create wait admin server Jython script {{ ofmDomainStageDir }}/OFM-waitAdminServer.py
-    template: 
+    template:
       src: "OFM-waitAdminServer.py"
-      dest: "{{ ofmDomainStageDir }}/OFM-waitAdminServer.py"    
-      mode: "{{ mode }}" 
-  
+      dest: "{{ ofmDomainStageDir }}/OFM-waitAdminServer.py"
+      mode: "{{ mode }}"
+
   - name: Start admin server {{ ofmAdminserverName }} with {{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.sh
     shell: "({{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.sh)"
     args:
@@ -161,7 +161,7 @@
       JAVA_HOME: "{{ javaHome }}"
       JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
       TEMP: "{{ tempDir }}"
-      
+
   - name: Wait the startup of admin server {{ ofmAdminserverName }} domain {{ ofmDomainName }} at {{ ofmDomainHome }}
     command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh  {{ ofmDomainStageDir }}/OFM-waitAdminServer.py"
     args:
@@ -171,36 +171,36 @@
       JAVA_HOME: "{{ javaHome }}"
       JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
       TEMP: "{{ tempDir }}"
-      
+
   - name: Post clean {{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.sh
-    file: 
-      path: "{{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.sh" 
-      state: absent   
-  
-  - name: Post clean {{ ofmDomainStageDir }}/OFM-waitAdminServer.py
-    file: 
-      path: "{{ ofmDomainStageDir }}/OFM-waitAdminServer.py" 
+    file:
+      path: "{{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.sh"
       state: absent
-      
-  ########################################################################################################################   
+
+  - name: Post clean {{ ofmDomainStageDir }}/OFM-waitAdminServer.py
+    file:
+      path: "{{ ofmDomainStageDir }}/OFM-waitAdminServer.py"
+      state: absent
+
+  ########################################################################################################################
   - name: Create configure domain Jython script {{ ofmDomainStageDir }}/OFM-12.2-configureDomain.py
-    template: 
+    template:
       src: "OFM-12.2-configureDomain.py"
-      dest: "{{ ofmDomainStageDir }}/OFM-12.2-configureDomain.py"    
+      dest: "{{ ofmDomainStageDir }}/OFM-12.2-configureDomain.py"
       mode: "{{ secureMode }}"
-      
+
   - name: Create configure persistent stores Jython script {{ ofmDomainStageDir }}/OFM-12.2-configurePersistenceStores.py
-    template: 
+    template:
       src: "OFM-12.2-configurePersistenceStores.py"
-      dest: "{{ ofmDomainStageDir }}/OFM-12.2-configurePersistenceStores.py"    
+      dest: "{{ ofmDomainStageDir }}/OFM-12.2-configurePersistenceStores.py"
       mode: "{{ secureMode }}"
-  
+
   - name: Create adjust managed server Jython script {{ ofmDomainStageDir }}/OFM-12.2-adjustManagedServer-{{ ofmAdminserverName }}.py
-    template: 
+    template:
       src: "OFM-12.2-adjustManagedServer.py"
-      dest: "{{ ofmDomainStageDir }}/OFM-12.2-adjustManagedServer-{{ ofmAdminserverName }}.py"    
+      dest: "{{ ofmDomainStageDir }}/OFM-12.2-adjustManagedServer-{{ ofmAdminserverName }}.py"
       mode: "{{ secureMode }}"
-      
+
   - name: Configure domain {{ ofmDomainName }} at {{ ofmDomainHome }}
     command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh  {{ ofmDomainStageDir }}/OFM-12.2-configureDomain.py"
     args:
@@ -209,53 +209,53 @@
       JAVA_HOME: "{{ javaHome }}"
       JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
       TEMP: "{{ tempDir }}"
-      
+
   - name: Post clean {{ ofmDomainStageDir }}/OFM-12.2-configureDomain.py
-    file: 
-      path: "{{ ofmDomainStageDir }}/OFM-12.2-configureDomain.py" 
+    file:
+      path: "{{ ofmDomainStageDir }}/OFM-12.2-configureDomain.py"
       state: absent
-      
+
   - name: Post clean {{ ofmDomainStageDir }}/OFM-12.2-adjustManagedServer-{{ ofmAdminserverName }}.py
-    file: 
-      path: "{{ ofmDomainStageDir }}/OFM-12.2-adjustManagedServer-{{ ofmAdminserverName }}.py" 
+    file:
+      path: "{{ ofmDomainStageDir }}/OFM-12.2-adjustManagedServer-{{ ofmAdminserverName }}.py"
       state: absent
-  
+
   - name: Post clean {{ ofmDomainStageDir }}/OFM-12.2-configurePersistenceStores.py
-    file: 
-      path: "{{ ofmDomainStageDir }}/OFM-12.2-configurePersistenceStores.py" 
+    file:
+      path: "{{ ofmDomainStageDir }}/OFM-12.2-configurePersistenceStores.py"
       state: absent
-      
-  ########################################################################################################################       
+
+  ########################################################################################################################
   - name: Create start nodemanager bash script {{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh
-    template: 
+    template:
       src: "OFM-12.2-startNodeManager.sh"
-      dest: "{{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh"    
+      dest: "{{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh"
       mode: "{{ secureMode }}"
-      
+
   - name: Create wait nodemanager Jython script {{ ofmDomainStageDir }}/OFM-waitNodeManager.py
-    template: 
+    template:
       src: "OFM-waitNodeManager.py"
-      dest: "{{ ofmDomainStageDir }}/OFM-waitNodeManager.py"    
+      dest: "{{ ofmDomainStageDir }}/OFM-waitNodeManager.py"
       mode: "{{ secureMode }}"
-      
+
   - name: Create generate boot.properties Jython script {{ ofmDomainStageDir }}/OFM-12.2-genBootProps-{{ ofmAdminserverName }}.py
-    template: 
+    template:
       src: "OFM-12.2-genBootProps.py"
-      dest: "{{ ofmDomainStageDir }}/OFM-12.2-genBootProps-{{ ofmAdminserverName }}.py"    
-      mode: "{{ secureMode }}" 
-      
+      dest: "{{ ofmDomainStageDir }}/OFM-12.2-genBootProps-{{ ofmAdminserverName }}.py"
+      mode: "{{ secureMode }}"
+
   - name: Create start admin server Jython script {{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.py
-    template: 
+    template:
       src: "OFM-12.2-startAdminServer.py"
-      dest: "{{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.py"    
-      mode: "{{ secureMode }}" 
-   
+      dest: "{{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.py"
+      mode: "{{ secureMode }}"
+
   - name: Create stop admin server Jython script {{ ofmDomainStageDir }}/OFM-12.2-stopAdminServer-{{ ofmAdminserverName }}.py
-    template: 
+    template:
       src: "OFM-12.2-stopAdminServer.py"
-      dest: "{{ ofmDomainStageDir }}/OFM-12.2-stopAdminServer-{{ ofmAdminserverName }}.py"    
-      mode: "{{ secureMode }}"     
-  
+      dest: "{{ ofmDomainStageDir }}/OFM-12.2-stopAdminServer-{{ ofmAdminserverName }}.py"
+      mode: "{{ secureMode }}"
+
   - name: Start nodemanager with {{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh
     command: "{{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh"
     args:
@@ -264,7 +264,7 @@
       JAVA_HOME: "{{ javaHome }}"
       JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
       TEMP: "{{ tempDir }}"
-      
+
   - name: Wait the startup of nodemanager {{ ofmDomainName }} at {{ ofmDomainHome }}
     command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh  {{ ofmDomainStageDir }}/OFM-waitNodeManager.py"
     args:
@@ -272,8 +272,8 @@
     environment:
       JAVA_HOME: "{{ javaHome }}"
       JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
-      TEMP: "{{ tempDir }}"    
-  
+      TEMP: "{{ tempDir }}"
+
   - name: Starting {{ ofmAdminserverName }} with NodeManager {{ ofmDomainName }} at {{ ofmDomainHome }}
     command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.py"
     args:
@@ -282,7 +282,7 @@
       JAVA_HOME: "{{ javaHome }}"
       JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
       TEMP: "{{ tempDir }}"
-  
+
   - name: Generating boot.properties for {{ ofmAdminserverName }} with NodeManager {{ ofmDomainName }} at {{ ofmDomainHome }}
     command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-genBootProps-{{ ofmAdminserverName }}.py"
     args:
@@ -291,7 +291,7 @@
       JAVA_HOME: "{{ javaHome }}"
       JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
       TEMP: "{{ tempDir }}"
-  
+
   - name: Stopping nodemanager {{ ofmDomainName }} at {{ ofmDomainHome }}
     command: "{{ ofmDomainHome }}/bin/stopNodeManager.sh"
     args:
@@ -300,7 +300,7 @@
       JAVA_HOME: "{{ javaHome }}"
       JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
       TEMP: "{{ tempDir }}"
-      
+
   - name: Start nodemanager with {{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh
     command: "{{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh"
     args:
@@ -309,7 +309,7 @@
       JAVA_HOME: "{{ javaHome }}"
       JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
       TEMP: "{{ tempDir }}"
-  
+
   - name: Wait the startup of nodemanager {{ ofmDomainName }} at {{ ofmDomainHome }}
     command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh  {{ ofmDomainStageDir }}/OFM-waitNodeManager.py"
     args:
@@ -318,7 +318,7 @@
       JAVA_HOME: "{{ javaHome }}"
       JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
       TEMP: "{{ tempDir }}"
-      
+
   - name: Stopping {{ ofmAdminserverName }} with NodeManager {{ ofmDomainName }} at {{ ofmDomainHome }}
     command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-stopAdminServer-{{ ofmAdminserverName }}.py"
     args:
@@ -327,7 +327,7 @@
       JAVA_HOME: "{{ javaHome }}"
       JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
       TEMP: "{{ tempDir }}"
-  
+
   - name: Starting {{ ofmAdminserverName }} with NodeManager {{ ofmDomainName }} at {{ ofmDomainHome }}
     command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.py"
     args:
@@ -336,56 +336,56 @@
       JAVA_HOME: "{{ javaHome }}"
       JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
       TEMP: "{{ tempDir }}"
-          
+
   - name: Post clean {{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh
-    file: 
-      path: "{{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh" 
-      state: absent  
-  
+    file:
+      path: "{{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh"
+      state: absent
+
   - name: Post clean {{ ofmDomainStageDir }}/OFM-waitNodeManager.py
-    file: 
-      path: "{{ ofmDomainStageDir }}/OFM-waitNodeManager.py " 
-      state: absent 
-  
+    file:
+      path: "{{ ofmDomainStageDir }}/OFM-waitNodeManager.py "
+      state: absent
+
   - name: Post clean {{ ofmDomainStageDir }}/OFM-12.2-genBootProps-{{ ofmAdminserverName }}.py
-    file: 
-      path: "{{ ofmDomainStageDir }}/OFM-12.2-genBootProps-{{ ofmAdminserverName }}.py" 
+    file:
+      path: "{{ ofmDomainStageDir }}/OFM-12.2-genBootProps-{{ ofmAdminserverName }}.py"
       state: absent
-  
+
   - name: Post clean {{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.py
-    file: 
-      path: "{{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.py" 
+    file:
+      path: "{{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.py"
       state: absent
-  
+
   - name: Post clean {{ ofmDomainStageDir }}/OFM-12.2-stopAdminServer-{{ ofmAdminserverName }}.py
-    file: 
-      path: "{{ ofmDomainStageDir }}/OFM-12.2-stopAdminServer-{{ ofmAdminserverName }}.py" 
+    file:
+      path: "{{ ofmDomainStageDir }}/OFM-12.2-stopAdminServer-{{ ofmAdminserverName }}.py"
       state: absent
-      
-  ########################################################################################################################      
+
+  ########################################################################################################################
   - name: Create start admin server Jython script {{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}.py
-    template: 
+    template:
       src: "OFM-12.2-startAdminServerNoCredentials.py"
-      dest: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}.py"    
-      mode: "{{ secureMode }}" 
-   
+      dest: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}.py"
+      mode: "{{ secureMode }}"
+
   - name: Create stop admin server Jython script {{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}.py
-    template: 
+    template:
       src: "OFM-12.2-stopAdminServer.py"
-      dest: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}.py"    
-      mode: "{{ secureMode }}"    
-    
+      dest: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}.py"
+      mode: "{{ secureMode }}"
+
   - name: Create start AdminServer bash script {{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}
-    template: 
+    template:
       src: "OFM-startAdminServer"
-      dest: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}"    
-      mode: "{{ secureMode }}"    
-    
+      dest: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}"
+      mode: "{{ secureMode }}"
+
   - name: Create stop AdminServer bash script {{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}
-    template: 
+    template:
       src: "OFM-stopAdminServer"
-      dest: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}"    
-      mode: "{{ secureMode }}"    
-  ######################################################################################################################## 
+      dest: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}"
+      mode: "{{ secureMode }}"
+  ########################################################################################################################
   when: >
-    oracleHome_installed.stat.exists == True and ofmDomainHome_configured.stat.exists == False       
+    oracleHome_installed.stat.exists == True and ofmDomainHome_configured.stat.exists == False

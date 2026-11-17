@@ -1,4 +1,4 @@
-#TODO: check why it does not accept the TNS URL 
+#TODO: check why it does not accept the TNS URL
 #JDBCURLRCU='{{ ofmJdbcURL }}'
 JDBCURLRCU='{{ ofmJdbcURLrcu }}'
 JDBCRCUSCHEMAPREFIX='{{ ofmJdbcRCUSchemaPrefix }}'
@@ -24,6 +24,3 @@ cd('/JDBCSystemResources/'+JDBCRCUSCHEMAPREFIX+'_WLS-DS/JDBCResource/'+JDBCRCUSC
 cmo.setValue(JDBCRCUSCHEMAPREFIX+'_WLS')
 cd('/JDBCSystemResources/'+JDBCRCUSCHEMAPREFIX+'_WLS-DS/JDBCResource/'+JDBCRCUSCHEMAPREFIX+'_WLS-DS/JDBCDataSourceParams/'+JDBCRCUSCHEMAPREFIX+'_WLS-DS')
 cmo.setGlobalTransactionsProtocol('None')
-
-
-

@@ -10,7 +10,7 @@ DOMAINNAME='{{ ofmDomainName }}'
 RESTRICTEDJRF='{{ ofmRestrictedJRF }}'
 
 print 'Connecting to the '+ADMINSERVERNAME
-connect(userConfigFile=USERHOMEDIR+'/bin/'+DOMAINNAME+'-cred.secure',userKeyFile=USERHOMEDIR+'/bin/'+DOMAINNAME+'-key.secure',url='t3://'+ADMINSERVERMACHINE+':'+ADMINSERVERPORT) 
+connect(userConfigFile=USERHOMEDIR+'/bin/'+DOMAINNAME+'-cred.secure',userKeyFile=USERHOMEDIR+'/bin/'+DOMAINNAME+'-key.secure',url='t3://'+ADMINSERVERMACHINE+':'+ADMINSERVERPORT)
 edit()
 startEdit()
 
@@ -28,4 +28,3 @@ print 'Done, activating and shutting down'
 activate()
 shutdown()
 exit()
-

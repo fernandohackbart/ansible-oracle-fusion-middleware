@@ -31,16 +31,16 @@ if EXTCLUSTERNAME!='':
   except Exception, e:
     print e
     print 'Cluster '+EXTCLUSTERNAME+' already exists! Ignoring'
-	
+
 if EXTPROVIDESERVER.lower()=='true':
   print 'Rename '+EXTPROVIDEDSERVERNAME+' to '+EXTSERVERNAME
-  cd('/Servers/'+EXTPROVIDEDSERVERNAME) 
+  cd('/Servers/'+EXTPROVIDEDSERVERNAME)
   cmo.setName(EXTSERVERNAME)
   assign('Server',EXTSERVERNAME,'Cluster',EXTCLUSTERNAME)
   if EXTSERVERGROUPS != '':
     setServerGroups(EXTSERVERNAME,EXTSERVERGROUPS.split(','))
 
-if EXTASSIGNEXISTINGSERVER!='':	
+if EXTASSIGNEXISTINGSERVER!='':
   if EXTSERVERGROUPS !='':
     setServerGroups(EXTASSIGNEXISTINGSERVER,EXTSERVERGROUPS.split(','))
 
@@ -51,5 +51,3 @@ if RESTRICTEDJRF.lower()=='false':
 print 'Updating '+DOMAINHOME+' domain...'
 updateDomain()
 closeDomain()
-
-

@@ -20,4 +20,3 @@ while ADMINSERVER_UP!="true":
     ADMINSERVER_UP="true"
   except Exception:
     print 'Admin Server '+ADMINSERVERNAME+' not available at: t3://'+ADMINSERVERMACHINE+':'+ADMINSERVERPORT+' sleeping for 10s.'
-    
