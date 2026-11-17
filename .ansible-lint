@@ -1,0 +1,27 @@
+---
+# Start from the basic profile and raise it as the migration progresses.
+# Warnings are temporarily non-fatal for rules scheduled in Phase 1/3.
+profile: basic
+exclude_paths:
+  - .cache/
+  - .git/
+  - .venv/
+  - artifacts/
+  - collections/
+  - docs/
+  - molecule/
+warn_list:
+  - yaml
+  - name[template]
+  - var-naming
+  - role-name
+  - no-changed-when
+  - ignore-errors
+  - no-free-form
+  - risky-file-permissions
+  - literal-compare
+  - fqcn
+  - jinja[spacing]
+  - schema[playbook]
+  - key-order
+  - command-instead-of-shell
