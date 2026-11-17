@@ -123,6 +123,18 @@ make test     # syntax + lint + yamllint
 
 The current `ansible-lint` configuration starts at profile `basic` and temporarily warns on rules scheduled for Phase 1/3. See [ROADMAP.md](ROADMAP.md) for the target profile and exit criteria.
 
+## Documentation
+
+- [Architecture](docs/architecture.md)
+- [Prerequisites](docs/prerequisites.md)
+- [Inventory](docs/inventory.md)
+- [Variables](docs/variables.md)
+- [Secrets](docs/secrets.md)
+- [Runbooks](docs/runbooks.md)
+- [Troubleshooting](docs/troubleshooting.md)
+- [Upgrade 12c to 14.1.2](docs/upgrade-12c-to-14c.md)
+- [Execution Environment](docs/execution-environment.md)
+
 ## Roadmap
 
 The implementation checklist, prioritized backlog, known defects, and Oracle lifecycle notes are in [ROADMAP.md](ROADMAP.md). The detailed assessment is in [docs/roadmap-details.md](docs/roadmap-details.md).

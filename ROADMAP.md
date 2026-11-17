@@ -159,7 +159,7 @@
 - [x] **5.3 Add CI matrix and Execution Environment** — ansible-core 2.20/2.21/2.22, Python 3.12/3.13, lint profiles, `ansible-builder`.  
   _Acceptance:_ CI matrix and EE definition are committed; EE build validation is pending Docker/registry access.
 
-- [ ] **5.4 Add documentation set** — architecture, prerequisites, inventory, variables, secrets, runbooks, troubleshooting, 12c→14c upgrade.  
+- [x] **5.4 Add documentation set** — architecture, prerequisites, inventory, variables, secrets, runbooks, troubleshooting, 12c→14c upgrade.  
   _Acceptance:_ docs match the implemented roles and variables.
 
 - [ ] **5.5 Add release/deprecation policy** — SemVer tags, changelog rules, one-major-release alias window.  
@@ -226,3 +226,4 @@
 | 2026-11-17 | 5.1 argument specs | — | 19 role argument specs added |
 | 2026-11-17 | 5.2 molecule | — | Syntax scenario passes; Docker scenarios scaffolded |
 | 2026-11-17 | 5.3 CI matrix/EE | — | 2.20/2.21/2.22 matrix, EE and navigator config |
+| 2026-11-17 | 5.4 documentation | — | Architecture, prerequisites, inventory, variables, runbooks, troubleshooting |
