@@ -57,7 +57,7 @@
 - [x] **1.3 Replace legacy loops** — `with_items` and `with_indexed_items` → `loop` with `loop_control.index_var` where an index is needed.  
   _Acceptance:_ no `with_*` loop keys remain.
 
-- [ ] **1.4 Replace free-form module arguments** — `stat: path=...`, `fail: msg=...` → mapping syntax.  
+- [x] **1.4 Replace free-form module arguments** — `stat: path=...`, `fail: msg=...` → mapping syntax.  
   _Acceptance:_ `no-free-form` lint rule is at zero.
 
 - [ ] **1.5 Normalize booleans and conditionals** — `yes`/`no` → `true`/`false`; `x == False` → `not x`; string booleans → real booleans where safe.  
@@ -197,3 +197,4 @@
 | 2026-11-17 | 1.1 FQCN | — | All role task modules converted; syntax/lint pass |
 | 2026-11-17 | 1.2 collection modules | — | `archive` uses `community.general`; `remote_src: true` |
 | 2026-11-17 | 1.3 loops | — | No `with_*` remains; indexed loops use `index_var` |
+| 2026-11-17 | 1.4 free-form args | — | Completed by the formatting autofix; lint rule at zero |
