@@ -5,9 +5,9 @@
 ---
 - name: Oracle Fusion Middleware 12.2 domain clean
   hosts: all
-  user: "{{ targetUser }}"
+  remote_user: "{{ ansible_user | default('oracle') }}"
   become: true
-  become_user: oracle
-  become_method: sudo
+  become_user: "{{ ofm_user | default('oracle') }}"
+  become_method: ansible.builtin.sudo
   roles:
     - ofm-domain-clean

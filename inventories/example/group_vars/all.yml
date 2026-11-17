@@ -1,6 +1,8 @@
 ---
 # Shared example variables. Do not put real secrets here.
 ofm_environment: dev
+ofm_user: oracle
+ofm_user_home: /home/oracle
 ofm_media_source: webserver
 ofm_media_url: "https://medias.example.com/medias"
 ofm_dir_mode: "0750"

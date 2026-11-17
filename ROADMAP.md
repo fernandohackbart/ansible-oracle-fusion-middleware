@@ -63,7 +63,7 @@
 - [x] **1.5 Normalize booleans and conditionals** — `yes`/`no` → `true`/`false`; `x == False` → `not x`; string booleans → real booleans where safe.  
   _Acceptance:_ `yaml[truthy]` and `literal-compare` are at zero or documented.
 
-- [ ] **1.6 Modernize play keywords** — `user:` → `remote_user:`; `become_method: sudo` → `ansible.builtin.sudo` or default.  
+- [x] **1.6 Modernize play keywords** — `user:` → `remote_user:`; `become_method: sudo` → `ansible.builtin.sudo` or default.  
   _Acceptance:_ no `user:` play keyword remains; schema lint passes for playbooks.
 
 - [ ] **1.7 Make `command`/`shell` tasks explicit** — add `argv` where possible, `creates`, `changed_when`, `failed_when`, `check_mode: false` as appropriate.  
@@ -199,3 +199,4 @@
 | 2026-11-17 | 1.3 loops | — | No `with_*` remains; indexed loops use `index_var` |
 | 2026-11-17 | 1.4 free-form args | — | Completed by the formatting autofix; lint rule at zero |
 | 2026-11-17 | 1.5 booleans/conditionals | — | `yaml[truthy]` and `literal-compare` at zero |
+| 2026-11-17 | 1.6 play keywords | — | `remote_user`, parameterized `become_user`, FQCN sudo |
