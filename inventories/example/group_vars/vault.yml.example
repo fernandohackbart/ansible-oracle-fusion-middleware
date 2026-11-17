@@ -4,6 +4,11 @@
 #   ansible-vault encrypt group_vars/prod/vault.yml
 #
 # Never commit a plaintext vault file. The values below are placeholders only.
+#
+# External secret manager example (requires an additional collection):
+#   ofmAdminPassword: "{{ lookup('community.hashi_vault.vault_kv2_get', 'ofm/admin', field='password') }}"
+#
+# See docs/secrets.md for the full workflow.
 ofmAdminPassword: "CHANGE_ME"
 ofmNodemanagerPassword: "CHANGE_ME"
 ofmJdbcRCUPassword: "CHANGE_ME"

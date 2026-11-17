@@ -81,7 +81,7 @@
 - [x] **2.1 Remove hardcoded passwords** — delete the default passwords; require `ofmAdminPassword`, `ofmNodemanagerPassword`, `ofmJdbcRCUPassword`, `ofmJdbcsysPassword`, `ofmJDBCPassword`.  
   _Acceptance:_ no hardcoded default password remains in roles/templates; missing secrets fail with a clear message. Names will be normalized in Phase 5.
 
-- [ ] **2.2 Add vaulted-secret example** — documented `group_vars/<env>/vault.yml`, vault password handling, and `.gitignore` protections.  
+- [x] **2.2 Add vaulted-secret example** — documented `group_vars/<env>/vault.yml`, vault password handling, and `.gitignore` protections.  
   _Acceptance:_ example uses `!vault` or a documented external secret lookup; no real secret is committed.
 
 - [ ] **2.3 Add `no_log` coverage** — every task that templates, copies, or consumes a secret.  
@@ -205,3 +205,4 @@
 | 2026-11-17 | 1.7 command/shell | — | 40 tasks now declare `changed_when`; long commands use folded scalars |
 | 2026-11-17 | 1.8 core validation | — | Syntax green on 2.20.11 and 2.21.6; 2.22 blocked by Python 3.13 |
 | 2026-11-17 | 2.1 hardcoded passwords | — | Defaults empty; domain/JDBC asserts fail with guidance |
+| 2026-11-17 | 2.2 vault example | — | `docs/secrets.md`, vault example, ignore rules |

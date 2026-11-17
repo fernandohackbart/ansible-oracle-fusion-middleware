@@ -87,7 +87,7 @@ The expected secret variables are:
 - `ofmJdbcsysPassword`
 - `ofmJDBCPassword`
 
-Do not commit decrypted vault files or vault password files. `no_log` and restrictive file modes are required for every task that handles these values.
+Do not commit decrypted vault files or vault password files. `no_log` and restrictive file modes are required for every task that handles these values. See [docs/secrets.md](docs/secrets.md) for the full workflow.
 
 ## Playbooks
 
