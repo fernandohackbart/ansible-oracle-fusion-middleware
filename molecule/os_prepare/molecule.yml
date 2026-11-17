@@ -1,0 +1,32 @@
+---
+dependency:
+  name: galaxy
+  enabled: false
+driver:
+  name: docker
+platforms:
+  - name: ofm-os-prepare
+    image: rockylinux:9
+    pre_build_image: true
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    command: /usr/sbin/init
+provisioner:
+  name: ansible
+  inventory:
+    hosts:
+      all:
+        hosts:
+          ofm-os-prepare:
+            ansible_connection: docker
+scenario:
+  test_sequence:
+    - dependency
+    - destroy
+    - syntax
+    - create
+    - prepare
+    - converge
+    - verify
+    - destroy

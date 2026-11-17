@@ -1,0 +1,21 @@
+---
+- name: Verify OS prerequisites
+  hosts: all
+  become: true
+  become_user: root
+  gather_facts: false
+  tasks:
+    - name: Check the Oracle user
+      ansible.builtin.getent:
+        database: passwd
+        key: oracle
+
+    - name: Check the inventory pointer
+      ansible.builtin.stat:
+        path: /etc/oraInst.loc
+      register: ofm_molecule_ora_inst
+
+    - name: Assert the inventory pointer exists
+      ansible.builtin.assert:
+        that: ofm_molecule_ora_inst.stat.exists
+        quiet: true

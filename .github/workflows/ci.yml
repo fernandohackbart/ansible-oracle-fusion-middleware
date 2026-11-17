@@ -31,3 +31,6 @@ jobs:
 
       - name: YAML lint
         run: make yamllint
+
+      - name: Molecule syntax scenario
+        run: make molecule

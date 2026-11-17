@@ -1,0 +1,2 @@
+---
+- import_playbook: ../../OFM-os-prepare.yml

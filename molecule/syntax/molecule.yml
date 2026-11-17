@@ -1,0 +1,19 @@
+---
+dependency:
+  name: galaxy
+  enabled: false
+driver:
+  name: default
+platforms:
+  - name: localhost
+provisioner:
+  name: ansible
+  inventory:
+    hosts:
+      all:
+        hosts:
+          localhost:
+            ansible_connection: local
+scenario:
+  test_sequence:
+    - syntax
