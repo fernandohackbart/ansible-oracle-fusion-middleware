@@ -5,9 +5,11 @@
 ---
 - name: Oracle Fusion Middleware 12.2 Infrastructure deinstallation
   hosts: all
+  serial: 1
   remote_user: "{{ ansible_user | default('oracle') }}"
   become: true
   become_user: "{{ ofm_user | default('oracle') }}"
   become_method: ansible.builtin.sudo
+  any_errors_fatal: true
   roles:
     - ofm-installation-clean

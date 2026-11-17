@@ -5,10 +5,12 @@
 ---
 - name: Oracle Fusion Middleware 12.2 domain unpack
   hosts: ofm_managed
+  serial: 1
   remote_user: "{{ ansible_user | default('oracle') }}"
   become: true
   become_user: "{{ ofm_user | default('oracle') }}"
   become_method: ansible.builtin.sudo
+  any_errors_fatal: true
   roles:
     - ofm-infra-122
     - ofm-domain-unpack

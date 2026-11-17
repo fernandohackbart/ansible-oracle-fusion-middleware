@@ -84,6 +84,7 @@
 - name: Cleaning the RCU created repository
   when: >
     not ofmRestrictedJRF
+  run_once: true
 
 ####################################################################################################################################
 

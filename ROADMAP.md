@@ -115,7 +115,7 @@
 - [x] **3.4 Bound waits and fix disk checks** — WLST wait loops exit non-zero after a maximum; disk assertions fail when a mount is absent; realistic space values.  
   _Acceptance:_ no infinite loop; missing mount produces a clear failure.
 
-- [ ] **3.5 Make multi-host runs safe** — inventory groups, `run_once`/`delegate_to` for RCU and domain creation, `serial` for rolling changes, `any_errors_fatal` where appropriate.  
+- [x] **3.5 Make multi-host runs safe** — inventory groups, `run_once`/`delegate_to` for RCU and domain creation, `serial` for rolling changes, `any_errors_fatal` where appropriate.  
   _Acceptance:_ a two-host play creates RCU/domain once and managed servers per host.
 
 - [ ] **3.6 Add tags and handlers** — `install`, `configure`, `extend`, `pack`, `unpack`, `clean`, `validate`; `never` on destructive tasks; restart handlers.  
@@ -215,3 +215,4 @@
 | 2026-11-17 | 3.2 execution context | — | Oracle home variable and inventory-derived admin host |
 | 2026-11-17 | 3.3 pack/unpack | — | Controller artifact repo, both artifacts fetched/restored, NM templates wired |
 | 2026-11-17 | 3.4 waits/disk | — | Wait scripts capped at 60 attempts; mount lookup fails explicitly; sizes updated |
+| 2026-11-17 | 3.5 multi-host safety | — | Group targets, RCU `run_once`, serial clean/unpack, fail-fast |
