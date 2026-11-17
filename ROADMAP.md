@@ -112,7 +112,7 @@
 - [x] **3.3 Fix pack/unpack** — controller-side artifact directory, fetch both JAR and NodeManager tarball, restore and template NodeManager files, validate unpack.  
   _Acceptance:_ pack → fetch → unpack → start round trip is documented and code-complete.
 
-- [ ] **3.4 Bound waits and fix disk checks** — WLST wait loops exit non-zero after a maximum; disk assertions fail when a mount is absent; realistic space values.  
+- [x] **3.4 Bound waits and fix disk checks** — WLST wait loops exit non-zero after a maximum; disk assertions fail when a mount is absent; realistic space values.  
   _Acceptance:_ no infinite loop; missing mount produces a clear failure.
 
 - [ ] **3.5 Make multi-host runs safe** — inventory groups, `run_once`/`delegate_to` for RCU and domain creation, `serial` for rolling changes, `any_errors_fatal` where appropriate.  
@@ -214,3 +214,4 @@
 | 2026-11-17 | 3.1 simple defects | — | Undefined var, OEM stage dir, trailing path, OEM alias fixed |
 | 2026-11-17 | 3.2 execution context | — | Oracle home variable and inventory-derived admin host |
 | 2026-11-17 | 3.3 pack/unpack | — | Controller artifact repo, both artifacts fetched/restored, NM templates wired |
+| 2026-11-17 | 3.4 waits/disk | — | Wait scripts capped at 60 attempts; mount lookup fails explicitly; sizes updated |

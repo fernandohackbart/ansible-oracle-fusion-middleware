@@ -11,3 +11,6 @@ oraclePresenceFolder: "{{ oracleHome }}/ohs"
 
 # Full checksum string, for example: "sha256:0123..."
 # ofmInstallationMediaChecksum: ""
+
+# OHS is smaller than the Infrastructure baseline.
+ofmInstallRequiredSpace: 4294967296

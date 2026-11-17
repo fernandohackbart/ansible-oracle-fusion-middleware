@@ -120,3 +120,4 @@
         JAVA_HOME: "{{ javaHome }}"
         JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
         TEMP: "{{ tempDir }}"
+      timeout: 900

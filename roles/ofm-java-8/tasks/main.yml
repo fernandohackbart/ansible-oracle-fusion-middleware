@@ -19,23 +19,33 @@
   when: >
     not javahome_installed.stat.exists
   block:
-    - name: Check available disk space in {{ tempBaseVolume }}
-      ansible.builtin.assert:
-        that:
-          - item.size_available > tempRequiredSpace
-      loop: "{{ ansible_mounts }}"
-      when: >
-        item.mount == tempBaseVolume
-      register: tmp_free
+    - name: Find the mount for {{ tempBaseVolume }}
+      ansible.builtin.set_fact:
+        ofm_temp_mount: "{{ ansible_facts.mounts | selectattr('mount', 'equalto', tempBaseVolume) | list | first | default({}) }}"
 
-    - name: Check available disk space in {{ javaBaseVolume }}
+    - name: Assert sufficient space on {{ tempBaseVolume }}
       ansible.builtin.assert:
         that:
-          - item.size_available > javaRequiredSpace
-      loop: "{{ ansible_mounts }}"
-      when: >
-        item.mount == javaBaseVolume
-      register: install_free
+          - ofm_temp_mount | length > 0
+          - ofm_temp_mount.size_available | default(0) > tempRequiredSpace
+        fail_msg: >-
+          Mount {{ tempBaseVolume }} was not found or has less than
+          {{ tempRequiredSpace }} bytes available.
+        quiet: true
+
+    - name: Find the mount for {{ javaBaseVolume }}
+      ansible.builtin.set_fact:
+        ofm_java_mount: "{{ ansible_facts.mounts | selectattr('mount', 'equalto', javaBaseVolume) | list | first | default({}) }}"
+
+    - name: Assert sufficient space on {{ javaBaseVolume }}
+      ansible.builtin.assert:
+        that:
+          - ofm_java_mount | length > 0
+          - ofm_java_mount.size_available | default(0) > javaRequiredSpace
+        fail_msg: >-
+          Mount {{ javaBaseVolume }} was not found or has less than
+          {{ javaRequiredSpace }} bytes available.
+        quiet: true
 
     - name: Create base folder {{ javaBaseHome }}
       ignore_errors: true

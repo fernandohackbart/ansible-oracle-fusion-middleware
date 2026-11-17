@@ -31,23 +31,33 @@
         state: directory
         mode: "{{ mode }}"
 
-    - name: Check available disk space in {{ tempBaseVolume }}
-      ansible.builtin.assert:
-        that:
-          - item.size_available > tempRequiredSpace
-      loop: "{{ ansible_mounts }}"
-      when: >
-        item.mount == tempBaseVolume
-      register: tmp_free
+    - name: Find the mount for {{ tempBaseVolume }}
+      ansible.builtin.set_fact:
+        ofm_temp_mount: "{{ ansible_facts.mounts | selectattr('mount', 'equalto', tempBaseVolume) | list | first | default({}) }}"
 
-    - name: Check available disk space in {{ ofmConfigHome }}
+    - name: Assert sufficient space on {{ tempBaseVolume }}
       ansible.builtin.assert:
         that:
-          - item.size_available > ofmConfigRequiredSpace
-      loop: "{{ ansible_mounts }}"
-      when: >
-        item.mount == oraBaseVolume
-      register: config_free
+          - ofm_temp_mount | length > 0
+          - ofm_temp_mount.size_available | default(0) > tempRequiredSpace
+        fail_msg: >-
+          Mount {{ tempBaseVolume }} was not found or has less than
+          {{ tempRequiredSpace }} bytes available.
+        quiet: true
+
+    - name: Find the mount for {{ oraBaseVolume }}
+      ansible.builtin.set_fact:
+        ofm_config_mount: "{{ ansible_facts.mounts | selectattr('mount', 'equalto', oraBaseVolume) | list | first | default({}) }}"
+
+    - name: Assert sufficient space on {{ oraBaseVolume }}
+      ansible.builtin.assert:
+        that:
+          - ofm_config_mount | length > 0
+          - ofm_config_mount.size_available | default(0) > ofmConfigRequiredSpace
+        fail_msg: >-
+          Mount {{ oraBaseVolume }} was not found or has less than
+          {{ ofmConfigRequiredSpace }} bytes available.
+        quiet: true
 
     - name: Create {{ ofmAdminserverName }} logs folder {{ ofmDomainLogsHome }}/{{ ofmAdminserverName }}
       ignore_errors: true
@@ -189,6 +199,7 @@
         JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
         TEMP: "{{ tempDir }}"
 
+      timeout: 900
     - name: Post clean {{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.sh
       ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.sh"
@@ -300,6 +311,7 @@
         JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
         TEMP: "{{ tempDir }}"
 
+      timeout: 900
     - name: Starting {{ ofmAdminserverName }} with NodeManager {{ ofmDomainName }} at {{ ofmDomainHome }}
       ansible.builtin.command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.py"
       changed_when: true
@@ -351,6 +363,7 @@
         JAVA_OPTIONS: "{{ ofmUrandomArgs }}"
         TEMP: "{{ tempDir }}"
 
+      timeout: 900
     - name: Stopping {{ ofmAdminserverName }} with NodeManager {{ ofmDomainName }} at {{ ofmDomainHome }}
       ansible.builtin.command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-stopAdminServer-{{ ofmAdminserverName }}.py"
       changed_when: true

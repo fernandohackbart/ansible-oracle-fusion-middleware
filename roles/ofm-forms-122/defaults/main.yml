@@ -11,3 +11,6 @@ oraclePresenceFolder: "{{ oracleHome }}/forms"
 
 # Full checksum string, for example: "sha256:0123..."
 # ofmInstallationMediaChecksum: ""
+
+# Forms needs more space than the Infrastructure baseline.
+ofmInstallRequiredSpace: 16106127360

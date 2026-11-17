@@ -5,11 +5,11 @@
 ---
 tempBaseVolume: "/tmp"
 tempDir: "/tmp"
-tempRequiredSpace: 1073741824
+tempRequiredSpace: 5368709120
 
 oraBaseVolume: "/u01"
 oraBaseDir: "{{ oraBaseVolume }}/oracle/product"
-ofmInstallRequiredSpace: 2095005696
+ofmInstallRequiredSpace: 10737418240
 
 oraInvPointer: "/etc/oraInst.loc"
 orainvPointerTemplate: "oraInst.loc"

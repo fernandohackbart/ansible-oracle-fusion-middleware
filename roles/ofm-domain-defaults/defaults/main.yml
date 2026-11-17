@@ -7,7 +7,7 @@ ofmDomainName: "XPTO001"
 ofmLogHome: "/u01/oracle/log"
 ofmDomainLogsHome: "{{ ofmLogHome }}/domains/{{ ofmDomainName }}"
 ofmConfigHome: "/u01/oracle/config"
-ofmConfigRequiredSpace: 2095005696
+ofmConfigRequiredSpace: 5368709120
 ofmDomainBase: "{{ ofmConfigHome }}/domains"
 ofmDomainHome: "{{ ofmDomainBase }}/{{ ofmDomainName }}"
 ofmApplicationBase: "{{ ofmConfigHome }}/applications"

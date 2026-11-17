@@ -10,7 +10,7 @@ javaInstallationFile: "jdk-8u{{ javaRelease }}-linux-x64.tar.gz"
 javaBaseHome: "{{ javaBaseVolume }}/oracle/product/{{ javaVersion }}/{{ javaRelease }}"
 javaHome: "{{ javaBaseHome }}/jdk"
 javaExecutable: "{{ javaHome }}/bin/java"
-javaRequiredSpace: 300000000
+javaRequiredSpace: 1073741824
 
 # Full checksum string, for example: "sha256:0123..."
 # javaInstallationFileChecksum: ""
