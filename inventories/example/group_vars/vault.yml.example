@@ -4,8 +4,8 @@
 #   ansible-vault encrypt group_vars/prod/vault.yml
 #
 # Never commit a plaintext vault file. The values below are placeholders only.
-ofm_admin_password: "CHANGE_ME"
-ofm_nodemanager_password: "CHANGE_ME"
-ofm_rcu_schema_password: "CHANGE_ME"
-ofm_db_sys_password: "CHANGE_ME"
-ofm_jdbc_password: "CHANGE_ME"
+ofmAdminPassword: "CHANGE_ME"
+ofmNodemanagerPassword: "CHANGE_ME"
+ofmJdbcRCUPassword: "CHANGE_ME"
+ofmJdbcsysPassword: "CHANGE_ME"
+ofmJDBCPassword: "CHANGE_ME"

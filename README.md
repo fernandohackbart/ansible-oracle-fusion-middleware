@@ -81,11 +81,11 @@ ansible-playbook OFM-domain-configure.yml --ask-vault-pass
 
 The expected secret variables are:
 
-- `ofm_admin_password`
-- `ofm_nodemanager_password`
-- `ofm_rcu_schema_password`
-- `ofm_db_sys_password`
-- `ofm_jdbc_password`
+- `ofmAdminPassword`
+- `ofmNodemanagerPassword`
+- `ofmJdbcRCUPassword`
+- `ofmJdbcsysPassword`
+- `ofmJDBCPassword`
 
 Do not commit decrypted vault files or vault password files. `no_log` and restrictive file modes are required for every task that handles these values.
 

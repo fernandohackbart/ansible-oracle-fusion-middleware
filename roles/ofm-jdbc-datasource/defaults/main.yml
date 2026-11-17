@@ -8,7 +8,7 @@ ofmJDBCURL: "server20.xpto.com:1521/daggpunkt.xpto.com"
 ofmJDBCDriver: "oracle.jdbc.OracleDriver"
 ofmJDBCJNDI: "jndi/TestDataSource"
 ofmJDBCSchema: "XPTO001_WLS"
-ofmJDBCPassword: "Welcome1"
+ofmJDBCPassword: ""
 ofmJDBCGlobalTransactionsProtocol: "None"
 ofmJDBCManagedServerTargets: ["FRM_MS0", "FRM_MS1"]
 ofmJDBCClusterTargets: ["cluster_forms"]

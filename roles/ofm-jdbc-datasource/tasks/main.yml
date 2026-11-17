@@ -3,6 +3,18 @@
 # Developed by Fernando Hackbart (fhackbart@gmail.com)
 # Lisbon 2017-12-28
 ---
+- name: Assert JDBC datasource settings are provided
+  ansible.builtin.assert:
+    that:
+      - ofmJDBCPassword | default('') | length > 0
+      - ofmJDBCURL | default('') | length > 0
+      - ofmJDBCSchema | default('') | length > 0
+    fail_msg: >-
+      Provide ofmJDBCPassword through Ansible Vault and set ofmJDBCURL and
+      ofmJDBCSchema for the target datasource.
+    quiet: true
+  no_log: true
+
 - name: Checking serverEnvironment = {{ serverEnvironment }}
   ansible.builtin.fail:
     msg: "serverEnvironment = {{ serverEnvironment }} not valid!"

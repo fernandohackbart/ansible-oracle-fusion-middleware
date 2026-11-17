@@ -3,6 +3,21 @@
 # Developed by Fernando Hackbart (fhackbart@gmail.com)
 # Lisbon 2017-12-28
 ---
+- name: Assert required domain secrets are provided
+  ansible.builtin.assert:
+    that:
+      - ofmAdminPassword | default('') | length > 0
+      - ofmNodemgrPassword | default('') | length > 0
+      - ofmJdbcRCUPassword | default('') | length > 0
+      - ofmJdbcsysPassword | default('') | length > 0
+      - ofmJdbcRCUSchemaPrefix | default('') | length > 0
+    fail_msg: >-
+      Provide the domain secrets through Ansible Vault or an external secret
+      manager: ofmAdminPassword, ofmNodemgrPassword, ofmJdbcRCUPassword,
+      ofmJdbcsysPassword. See inventories/example/group_vars/vault.yml.example.
+    quiet: true
+  no_log: true
+
 - name: Check if OFM home {{ oraclePresenceFolder }} is already installed
   ansible.builtin.stat:
     path: "{{ oraclePresenceFolder }}"

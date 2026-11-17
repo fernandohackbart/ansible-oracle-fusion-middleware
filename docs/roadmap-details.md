@@ -30,7 +30,7 @@
 | JDK | 8u101 (2016) | Below the 8u211 minimum for 12.2.1.4; security risk |
 | Target OS | RHEL 7 or equivalent | RHEL 7 reached EOL in June 2024 |
 | Ansible style | 2017-era Ansible 2.x | `with_*`, short module names, free-form args |
-| Secrets | Plaintext defaults and templates | 5 hardcoded `Welcome1` values |
+| Secrets | Plaintext defaults and templates | 5 hardcoded `the old default password` values |
 | Inventory | None | `targetHosts` / `unpackHosts` must be passed as extra vars |
 | Tests / CI | None | No syntax, lint, molecule, or integration gate |
 | Config | No `ansible.cfg`, `requirements.yml`, `.ansible-lint` | Behavior depends on the operator's environment |
@@ -183,8 +183,8 @@ Acceptance:
 
 Current exposure:
 
-- `roles/ofm-domain-defaults/defaults/main.yml` hardcodes `Welcome1` for the SYS password, RCU password, NodeManager password, and AdminServer password.
-- `roles/ofm-jdbc-datasource/defaults/main.yml` hardcodes `Welcome1`.
+- `roles/ofm-domain-defaults/defaults/main.yml` hardcodes `the old default password` for the SYS password, RCU password, NodeManager password, and AdminServer password.
+- `roles/ofm-jdbc-datasource/defaults/main.yml` hardcodes `the old default password`.
 - `boot.properties` renders the AdminServer password.
 - RCU password files and `boot.properties` are created with `mode: "{{ mode }}"` (**0755**).
 - Zero `no_log` tasks.
@@ -226,7 +226,7 @@ Work items:
 
 Acceptance:
 
-- `grep -R "Welcome1"` returns nothing.
+- `grep -R "the old default password"` returns nothing.
 - `grep -R "no_log" roles` shows coverage for every secret-bearing task.
 - A `-vvv` run does not print passwords.
 - `ansible-lint` `safety` profile passes (or waivers are documented).
@@ -485,7 +485,7 @@ Timing assumes lab access, licensed media, and one engineer. Add 30–50% if the
 
 | ID | Severity | Location | Issue | Fix | Phase |
 |---|---|---|---|---|---|
-| D-01 | Critical | `roles/ofm-domain-defaults/defaults/main.yml:28,30,34,42`; `roles/ofm-jdbc-datasource/defaults/main.yml:11` | Hardcoded `Welcome1` passwords | Required vaulted vars; fail in prod if unset | 2 |
+| D-01 | Critical | `roles/ofm-domain-defaults/defaults/main.yml:28,30,34,42`; `roles/ofm-jdbc-datasource/defaults/main.yml:11` | Hardcoded `the old default password` passwords | Required vaulted vars; fail in prod if unset | 2 |
 | D-02 | Critical | `roles/ofm-domain-base-122/tasks/main.yml:67–71,138–142`; `roles/ofm-domain-clean/tasks/main.yml:35–39` | RCU password files and `boot.properties` created `0755` | `0600`/`0700`, `no_log`, `block/always` cleanup | 2 |
 | D-03 | Critical | All roles | Zero `no_log` tasks | Add to every secret task | 2 |
 | D-04 | Critical | `roles/ofm-domain-pack/tasks/main.yml:29` | `archive` is unresolved without `community.general` | Pin collection or use FQCN | 1 |
