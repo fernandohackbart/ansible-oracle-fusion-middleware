@@ -4,7 +4,7 @@
 # Lisbon 2017-12-28
 
 - name: Oracle Fusion Middleware 12.2 Forms installation 
-  hosts: "{{ targetHosts }}"
+  hosts: ofm_forms
   user: "{{ targetUser }}"
   become: true
   become_user: oracle

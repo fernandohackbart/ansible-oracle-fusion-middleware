@@ -29,7 +29,7 @@
 - [ ] **0.3 Add lint/format configuration** — `.ansible-lint` (`profile: basic`), `.yamllint`, `.editorconfig`, `.gitignore` (vault files, `.venv`, artifacts, media, retries, molecule state).  
   _Acceptance:_ `ansible-lint` and `yamllint` run with the committed config and no missing-file errors.
 
-- [ ] **0.4 Add example inventory and group vars** — `inventories/example/hosts.yml`, `group_vars/all.yml`, `group_vars/vault.yml.example`; define `ofm_admin`, `ofm_managed`, `ofm_ohs`, `ofm_forms`.  
+- [x] **0.4 Add example inventory and group vars** — `inventories/example/hosts.yml`, `group_vars/all.yml`, `group_vars/vault.yml.example`; define `ofm_admin`, `ofm_managed`, `ofm_ohs`, `ofm_forms`.  
   _Acceptance:_ playbook syntax-check works without `-e targetHosts=...`.
 
 - [ ] **0.5 Rewrite `README.md`** — purpose, support matrix, prerequisites, quick start, inventory, variables, secrets, validation, links.  
@@ -188,3 +188,4 @@
 | 2026-11-17 | Checklist created | — | Detailed version retained in `docs/roadmap-details.md` |
 | 2026-11-17 | 0.1 `ansible.cfg` | — | Validated with `ansible-config dump --only-changed` |
 | 2026-11-17 | 0.2 dependencies pinned | — | `ansible-galaxy` confirms collections installed |
+| 2026-11-17 | 0.4 example inventory | — | 15/15 playbooks pass `--syntax-check` without extra vars |

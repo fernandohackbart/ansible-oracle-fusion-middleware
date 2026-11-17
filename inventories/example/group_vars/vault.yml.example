@@ -1,0 +1,11 @@
+---
+# Copy this file to group_vars/<environment>/vault.yml and encrypt it:
+#
+#   ansible-vault encrypt group_vars/prod/vault.yml
+#
+# Never commit a plaintext vault file. The values below are placeholders only.
+ofm_admin_password: "CHANGE_ME"
+ofm_nodemanager_password: "CHANGE_ME"
+ofm_rcu_schema_password: "CHANGE_ME"
+ofm_db_sys_password: "CHANGE_ME"
+ofm_jdbc_password: "CHANGE_ME"

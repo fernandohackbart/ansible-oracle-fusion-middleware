@@ -4,7 +4,7 @@
 # Lisbon 2017-12-28
 
 - name: Oracle Fusion Middleware 12.2 OHS installation 
-  hosts: "{{ targetHosts }}"
+  hosts: ofm_ohs
   user: "{{ targetUser }}"
   become: true
   become_user: oracle

@@ -1,0 +1,22 @@
+---
+# Shared example variables. Do not put real secrets here.
+ofm_environment: dev
+ofm_media_source: webserver
+ofm_media_url: "https://medias.example.com/medias"
+ofm_dir_mode: "0750"
+ofm_secure_mode: "0700"
+
+# Admin host used by domain creation and NodeManager connections.
+ofm_admin_host: "{{ groups['ofm_admin'][0] }}"
+ofm_admin_fqdn: "{{ hostvars[groups['ofm_admin'][0]].ansible_host | default(groups['ofm_admin'][0]) }}"
+
+# Legacy variable aliases kept while the roles are migrated in Phase 1/3.
+serverEnvironment: "{{ ofm_environment }}"
+targetUser: "{{ ansible_user }}"
+targetHosts: all
+unpackHosts: ofm_managed
+mode: "{{ ofm_dir_mode }}"
+secureMode: "{{ ofm_secure_mode }}"
+mediassource: "{{ ofm_media_source }}"
+mediasURL: "{{ ofm_media_url }}"
+ofmAdminserverMachine: "{{ ofm_admin_fqdn }}"
