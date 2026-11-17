@@ -10,7 +10,7 @@
 #  register: process_count
 
 - name: Killing the Weblogic processes for domain {{ ofmDomainName }} (may raise errors)
-  shell: "pkill -9 -f {{ ofmDomainName }} || true "
+  ansible.builtin.shell: "pkill -9 -f {{ ofmDomainName }} || true "
   ignore_errors: true
 #  when: >
 #    process_count > 0
@@ -26,26 +26,26 @@
   #ignore_errors: True
 
     - name: Create stage folder {{ ofmDomainStageDir }}
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}"
         state: directory
         mode: "{{ mode }}"
 
     - name: Create RCU response file {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp
-      template:
+      ansible.builtin.template:
         src: "RCU-12.2.1.2.0-generic.rsp"
         dest: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp"
         mode: "{{ mode }}"
 
     - name: Create RCU response file {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp
-      template:
+      ansible.builtin.template:
         src: "RCU-12.2.1.2.0-passwords.rsp"
         dest: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp"
         mode: "{{ mode }}"
 
     - name: Run RCU {{ ofmRCUOperation }} prefix {{ ofmJdbcRCUSchemaPrefix }} and components ({{ ofmRCUComponents }}) at {{ ofmJdbcURLrcu }}
       ignore_errors: true
-      shell: "{{oracleHome }}/oracle_common/bin/rcu -silent -responseFile {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp -f < {{ ofmDomainStageDir
+      ansible.builtin.shell: "{{oracleHome }}/oracle_common/bin/rcu -silent -responseFile {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp -f < {{ ofmDomainStageDir
         }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp"
       args:
         chdir: "{{ oracleHome }}/oracle_common/bin"
@@ -55,76 +55,76 @@
         TEMP: "{{ tempDir }}"
 
     - name: Post clean {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp"
         state: absent
 
     - name: Post clean {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp"
         state: absent
 
 - name: Clean {{ ofmDomainLogsHome }}
-  file:
+  ansible.builtin.file:
     path: "{{ ofmDomainLogsHome }}"
     state: absent
 
 - name: Clean {{ ofmDomainHome }}
-  file:
+  ansible.builtin.file:
     path: "{{ ofmDomainHome }}"
     state: absent
 
 - name: Clean {{ ofmTransHome }}
-  file:
+  ansible.builtin.file:
     path: "{{ ofmTransHome }}"
     state: absent
 
 - name: Clean {{ ofmApplicationHome }}
-  file:
+  ansible.builtin.file:
     path: "{{ ofmApplicationHome }}"
     state: absent
 
 - name: Clean {{ ofmDomainStageDir }}
-  file:
+  ansible.builtin.file:
     path: "{{ ofmDomainStageDir }}"
     state: absent
 
 - name: Clean {{ ansible_env.HOME }}/{{ ofmDomainName }}-cred.secure
-  file:
+  ansible.builtin.file:
     path: "{{ ansible_env.HOME }}/{{ ofmDomainName }}-cred.secure"
     state: absent
 
 - name: Clean {{ ansible_env.HOME }}/{{ ofmDomainName }}-key.secure
-  file:
+  ansible.builtin.file:
     path: "{{ ansible_env.HOME }}/{{ ofmDomainName }}-key.secure"
     state: absent
 
 - name: Clean {{ ansible_env.HOME }}/{{ ofmDomainName }}-nodemanager.config
-  file:
+  ansible.builtin.file:
     path: "{{ ansible_env.HOME }}/{{ ofmDomainName }}-nodemanager.config"
     state: absent
 
 - name: Clean {{ ansible_env.HOME }}/{{ ofmDomainName }}-nodemanager.keyfile
-  file:
+  ansible.builtin.file:
     path: "{{ ansible_env.HOME }}/{{ ofmDomainName }}-nodemanager.keyfile"
     state: absent
 
 - name: Clean {{ ansible_env.HOME }}/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}
-  file:
+  ansible.builtin.file:
     path: "{{ ansible_env.HOME }}/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}"
     state: absent
 
 - name: Clean {{ ansible_env.HOME }}/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}.py
-  file:
+  ansible.builtin.file:
     path: "{{ ansible_env.HOME }}/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}.py"
     state: absent
 
 - name: Clean {{ ansible_env.HOME }}/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}
-  file:
+  ansible.builtin.file:
     path: "{{ ansible_env.HOME }}/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}"
     state: absent
 
 - name: Clean {{ ansible_env.HOME }}/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}.py
-  file:
+  ansible.builtin.file:
     path: "{{ ansible_env.HOME }}/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}.py"
     state: absent

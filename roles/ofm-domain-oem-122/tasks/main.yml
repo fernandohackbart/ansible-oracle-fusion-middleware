@@ -4,13 +4,13 @@
 # Lisbon 2017-12-28
 ---
 - name: Checking serverEnvironment = {{ serverEnvironment }}
-  fail:
+  ansible.builtin.fail:
     msg: "serverEnvironment = {{ serverEnvironment }} not valid!"
   when: >
     ((not (serverEnvironment in highenvs)) and (not(serverEnvironment in lowenvs)))
 
 - name: Check if domain {{ ofmDomainName }} exists at {{ ofmDomainHome }}
-  stat:
+  ansible.builtin.stat:
     path: "{{ ofmDomainHome }}"
   register: ofmDomainHome_configured
 
@@ -22,26 +22,26 @@
   block:
 
     - name: Create stage folder "{{ stageDir }}"
-      file:
+      ansible.builtin.file:
         path: "{{ stageDir }}"
         state: directory
         mode: "{{ mode }}"
 
     - name: Create variables for restricted JRF extension
-      set_fact:
+      ansible.builtin.set_fact:
         ofmOEMexttemplate: "Oracle Enterprise Manager-Restricted JRF"
       when: >
         ofmRestrictedJRF == "TRUE"
 
     - name: Create variables for non restricted JRF extension
-      set_fact:
+      ansible.builtin.set_fact:
         ofmOEMexttemplate: "Oracle Enterprise Manager"
       when: >
         ofmRestrictedJRF == "FALSE"
 
     ########################################################################################################################
     - name: Stopping {{ ofmAdminserverName }} with {{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}
-      command: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}"
+      ansible.builtin.command: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}"
       args:
         chdir: "{{ ofmInstallUserHomeDir }}/bin"
       environment:
@@ -50,19 +50,19 @@
         TEMP: "{{ tempDir }}"
 
     - name: Create extend domain Jython script {{ ofmDomainStageDir }}/OFM-12.2-extendDomain-OEM.py
-      template:
+      ansible.builtin.template:
         src: "OFM-12.2-extendDomain-OEM.py"
         dest: "{{ ofmDomainStageDir }}/OFM-12.2-extendDomain-OEM.py"
         mode: "{{ mode }}"
 
     - name: Create move filestores Jython script {{ ofmDomainStageDir }}/OFM-12.2-moveFileStoresToConfig.py
-      template:
+      ansible.builtin.template:
         src: "OFM-12.2-moveFileStoresToConfig.py"
         dest: "{{ ofmDomainStageDir }}/OFM-12.2-moveFileStoresToConfig.py"
         mode: "{{ mode }}"
 
     - name: Extending {{ ofmDomainName }} with {{ ofmOEMexttemplate  }}
-      command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-extendDomain-OEM.py"
+      ansible.builtin.command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-extendDomain-OEM.py"
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:
@@ -71,7 +71,7 @@
         TEMP: "{{ tempDir }}"
 
     - name: Starting {{ ofmAdminserverName }} with {{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}
-      command: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}"
+      ansible.builtin.command: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}"
       args:
         chdir: "{{ ofmInstallUserHomeDir }}/bin"
       environment:
@@ -80,7 +80,7 @@
         TEMP: "{{ tempDir }}"
 
     - name: Clean {{ ofmDomainStageDir }}/OFM-12.2-extendDomain-OEM.py
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}/OFM-12.2-extendDomain-OEM.py"
         state: absent
   ########################################################################################################################

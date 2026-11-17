@@ -4,18 +4,18 @@
 # Lisbon 2017-12-28
 ---
 - name: Checking serverEnvironment = {{ serverEnvironment }}
-  fail:
+  ansible.builtin.fail:
     msg: "serverEnvironment = {{ serverEnvironment }} not valid!"
   when: >
     ((not (serverEnvironment in highenvs)) and (not(serverEnvironment in lowenvs)))
 
 - name: Check if OFM home {{ oraclePresenceFolder }} is already installed
-  stat:
+  ansible.builtin.stat:
     path: "{{ oraclePresenceFolder }}"
   register: oracleHome_installed
 
 - name: Check available disk space in {{ tempBaseVolume }}
-  assert:
+  ansible.builtin.assert:
     that:
       - item.size_available > tempRequiredSpace
   with_items:
@@ -25,7 +25,7 @@
   register: tmp_free
 
 - name: Check available disk space in {{ oraBaseVolume }}
-  assert:
+  ansible.builtin.assert:
     that:
       - item.size_available > ofmInstallRequiredSpace
   with_items:
@@ -36,7 +36,7 @@
 
 - name: Create base folder {{ oraBaseDir }}
   ignore_errors: true
-  file:
+  ansible.builtin.file:
     path: "{{ oraBaseDir }}"
     state: directory
     mode: "{{ mode }}"
@@ -44,7 +44,7 @@
     oracleHome_installed.stat.exists == False
 
 - name: Create stage folder "{{ stageDir }}"
-  file:
+  ansible.builtin.file:
     path: "{{ stageDir }}"
     state: directory
     mode: "{{ mode }}"
@@ -52,42 +52,42 @@
     oracleHome_installed.stat.exists == False
 
 - name: Create response file {{ stageDir }}/{{ ofmresponseFile }}
-  template:
+  ansible.builtin.template:
     src: "{{ ofmresponseFile }}"
     dest: "{{ stageDir }}/{{ ofmresponseFile }}"
 
 - name: Pre clean {{ stageDir }}/{{ ofmInstallationFile }}
-  file:
+  ansible.builtin.file:
     path: "{{ stageDir }}/{{ ofmInstallationFile }}"
     state: absent
   when: >
     oracleHome_installed.stat.exists == False
 
 - name: Download Oracle Fusion Middleware from {{ mediasURL }}/{{ ofmInstallationMedia }} to {{ stageDir }}/{{ ofmInstallationMedia }}
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ mediasURL }}/{{ ofmInstallationMedia }}"
     dest: "{{ stageDir }}/{{ ofmInstallationMedia }}"
   when: >
     mediassource == 'webserver' and oracleHome_installed.stat.exists == False
 
 - name: Unzip {{ stageDir }}/{{ ofmInstallationMedia }} to {{ stageDir }}
-  unarchive:
+  ansible.builtin.unarchive:
     dest: "{{ stageDir }}"
     src: "{{ stageDir }}/{{ ofmInstallationMedia }}"
     creates: "{{ stageDir }}/{{ ofmInstallationFile }}"
-    copy: false
+    ansible.builtin.copy: false
   when: >
     oracleHome_installed.stat.exists == False
 
 - name: Removing installation media {{ stageDir }}/{{ ofmInstallationMedia }}
-  file:
+  ansible.builtin.file:
     path: "{{ stageDir }}/{{ ofmInstallationMedia }}"
     state: absent
   when: >
     oracleHome_installed.stat.exists == False
 
 - name: Installing Oracle Fusion Middleware {{ ofmVersion }} on {{ oracleHome }}
-  command: "{{ stageDir }}/{{ ofmInstallationFile }} -silent -responseFile {{ stageDir }}/{{ ofmresponseFile }} -ignoreSysPrereqs"
+  ansible.builtin.command: "{{ stageDir }}/{{ ofmInstallationFile }} -silent -responseFile {{ stageDir }}/{{ ofmresponseFile }} -ignoreSysPrereqs"
   environment:
     JAVA_HOME: "{{ javaHome }}"
     TEMP: "{{ tempDir }}"
@@ -95,14 +95,14 @@
     oracleHome_installed.stat.exists == False
 
 - name: Post clean {{ stageDir }}/{{ ofmInstallationFile }}
-  file:
+  ansible.builtin.file:
     path: "{{ stageDir }}/{{ ofmInstallationFile }}"
     state: absent
   when: >
     oracleHome_installed.stat.exists == False
 
 - name: Post clean {{ stageDir }}/{{ ofmresponseFile }}
-  file:
+  ansible.builtin.file:
     path: "{{ stageDir }}/{{ ofmresponseFile }}"
     state: absent
   when: >

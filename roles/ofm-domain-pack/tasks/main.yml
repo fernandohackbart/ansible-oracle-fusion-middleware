@@ -4,7 +4,7 @@
 # Lisbon 2017-12-28
 ---
 - name: Check if OFM domain {{ ofmDomainName }} exists at {{ ofmDomainHome }}
-  stat:
+  ansible.builtin.stat:
     path: "{{ ofmDomainHome }}"
   register: ofmDomainHome_configured
 
@@ -14,7 +14,7 @@
   block:
 
     - name: Clean {{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar"
         state: absent
 
@@ -34,7 +34,7 @@
         dest: "{{ ofmDomainStageDir }}/{{ ofmDomainName }}-nodemanager.tgz"
 
     - name: Fetching the packed domain to the Ansible server from {{ ofmAdminserverMachine }}:{{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar
-      fetch:
+      ansible.builtin.fetch:
         src: "{{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar"
         dest: "{{ ofmAdminserverMachine }}/{{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar"
         flat: true

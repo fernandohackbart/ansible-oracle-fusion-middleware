@@ -4,18 +4,18 @@
 # Lisbon 2017-12-28
 ---
 - name: Checking serverEnvironment = {{ serverEnvironment }}
-  fail:
+  ansible.builtin.fail:
     msg: "serverEnvironment = {{ serverEnvironment }} not valid!"
   when: >
     ((not (serverEnvironment in highenvs)) and (not(serverEnvironment in lowenvs)))
 
 - name: Check if OFM home {{ oraclePresenceFolder }} is already installed
-  stat:
+  ansible.builtin.stat:
     path: "{{ oraclePresenceFolder }}"
   register: oracleHome_installed
 
 - name: Check if OFM domain {{ ofmDomainName }} exists at {{ ofmDomainHome }}
-  stat:
+  ansible.builtin.stat:
     path: "{{ ofmDomainHome }}"
   register: ofmDomainHome_configured
 
@@ -26,13 +26,13 @@
 
     - name: Create domain stage directory {{ ofmDomainStageDir }}
       ignore_errors: true
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}"
         state: directory
         mode: "{{ mode }}"
 
     - name: Check available disk space in {{ tempBaseVolume }}
-      assert:
+      ansible.builtin.assert:
         that:
           - item.size_available > tempRequiredSpace
       with_items:
@@ -42,7 +42,7 @@
       register: tmp_free
 
     - name: Check available disk space in {{ ofmConfigHome }}
-      assert:
+      ansible.builtin.assert:
         that:
           - item.size_available > ofmConfigRequiredSpace
       with_items:
@@ -53,7 +53,7 @@
 
     - name: Create {{ ofmAdminserverName }} logs folder {{ ofmDomainLogsHome }}/{{ ofmAdminserverName }}
       ignore_errors: true
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainLogsHome }}/{{ ofmAdminserverName }}"
         state: directory
         mode: "{{ mode }}"
@@ -67,20 +67,20 @@
       block:
 
         - name: Create RCU response file {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp
-          template:
+          ansible.builtin.template:
             src: "RCU-12.2.1.2.0-generic.rsp"
             dest: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp"
             mode: "{{ mode }}"
 
         - name: Create RCU response file {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp
-          template:
+          ansible.builtin.template:
             src: "RCU-12.2.1.2.0-passwords.rsp"
             dest: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp"
             mode: "{{ mode }}"
 
         - name: Run RCU {{ ofmRCUOperation }} prefix {{ ofmJdbcRCUSchemaPrefix }} and components ({{ ofmRCUComponents }}) at {{ ofmJdbcURLrcu }}
           #ignore_errors: True
-          shell: "{{oracleHome }}/oracle_common/bin/rcu -silent -responseFile {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp -f < {{ ofmDomainStageDir
+          ansible.builtin.shell: "{{oracleHome }}/oracle_common/bin/rcu -silent -responseFile {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp -f < {{ ofmDomainStageDir
             }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp"
           args:
             chdir: "{{ oracleHome }}/oracle_common/bin"
@@ -90,29 +90,29 @@
             TEMP: "{{ tempDir }}"
 
         - name: Post clean {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp
-          file:
+          ansible.builtin.file:
             path: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}.rsp"
             state: absent
 
         - name: Post clean {{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp
-          file:
+          ansible.builtin.file:
             path: "{{ ofmDomainStageDir }}/RCU-12.2.1.2.0-{{ ofmDomainName }}-passwords.rsp"
             state: absent
 
     - name: Create create domain Jython script {{ ofmDomainStageDir }}/OFM-12.2-createDomain.py
-      template:
+      ansible.builtin.template:
         src: "OFM-12.2-createDomain.py"
         dest: "{{ ofmDomainStageDir }}/OFM-12.2-createDomain.py"
         mode: "{{ mode }}"
 
     - name: Create move filestores Jython script {{ ofmDomainStageDir }}/OFM-12.2-moveFileStoresToConfig.py
-      template:
+      ansible.builtin.template:
         src: "OFM-12.2-moveFileStoresToConfig.py"
         dest: "{{ ofmDomainStageDir }}/OFM-12.2-moveFileStoresToConfig.py"
         mode: "{{ mode }}"
 
     - name: Create domain {{ ofmDomainName }} at {{ ofmDomainHome }}
-      command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh  {{ ofmDomainStageDir }}/OFM-12.2-createDomain.py"
+      ansible.builtin.command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh  {{ ofmDomainStageDir }}/OFM-12.2-createDomain.py"
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       #creates: "{{ gatewayInstallDir }}"
@@ -122,12 +122,12 @@
         TEMP: "{{ tempDir }}"
 
     - name: Post clean {{ ofmDomainStageDir }}/OFM-12.2-createDomain.py
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}/OFM-12.2-createDomain.py"
         state: absent
 
     - name: Post clean {{ ofmDomainStageDir }}/OFM-12.2-moveFileStoresToConfig.py
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}/OFM-12.2-moveFileStoresToConfig.py"
         state: absent
 
@@ -135,25 +135,25 @@
 
     - name: Create {{ ofmAdminserverName }} security folder {{ ofmDomainHome }}/servers/{{ ofmAdminserverName }}/security
       ignore_errors: true
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainHome }}/servers/{{ ofmAdminserverName }}/security"
         state: directory
         mode: "{{ mode }}"
 
     - name: Create boot.properties file {{ ofmDomainHome }}/servers/{{ ofmAdminserverName }}/security/boot.properties
-      template:
+      ansible.builtin.template:
         src: "boot.properties"
         dest: "{{ ofmDomainHome }}/servers/{{ ofmAdminserverName }}/security/boot.properties"
         mode: "{{ mode }}"
 
     - name: Create start admin server bash script {{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.sh
-      template:
+      ansible.builtin.template:
         src: "OFM-12.2-startAdminServer.sh"
         dest: "{{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.sh"
         mode: "{{ mode }}"
 
     - name: Create wait admin server Jython script {{ ofmDomainStageDir }}/OFM-waitAdminServer.py
-      template:
+      ansible.builtin.template:
         src: "OFM-waitAdminServer.py"
         dest: "{{ ofmDomainStageDir }}/OFM-waitAdminServer.py"
         mode: "{{ mode }}"
@@ -168,7 +168,7 @@
         TEMP: "{{ tempDir }}"
 
     - name: Wait the startup of admin server {{ ofmAdminserverName }} domain {{ ofmDomainName }} at {{ ofmDomainHome }}
-      command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh  {{ ofmDomainStageDir }}/OFM-waitAdminServer.py"
+      ansible.builtin.command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh  {{ ofmDomainStageDir }}/OFM-waitAdminServer.py"
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       #creates: "{{ gatewayInstallDir }}"
@@ -178,36 +178,36 @@
         TEMP: "{{ tempDir }}"
 
     - name: Post clean {{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.sh
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.sh"
         state: absent
 
     - name: Post clean {{ ofmDomainStageDir }}/OFM-waitAdminServer.py
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}/OFM-waitAdminServer.py"
         state: absent
 
     ########################################################################################################################
     - name: Create configure domain Jython script {{ ofmDomainStageDir }}/OFM-12.2-configureDomain.py
-      template:
+      ansible.builtin.template:
         src: "OFM-12.2-configureDomain.py"
         dest: "{{ ofmDomainStageDir }}/OFM-12.2-configureDomain.py"
         mode: "{{ secureMode }}"
 
     - name: Create configure persistent stores Jython script {{ ofmDomainStageDir }}/OFM-12.2-configurePersistenceStores.py
-      template:
+      ansible.builtin.template:
         src: "OFM-12.2-configurePersistenceStores.py"
         dest: "{{ ofmDomainStageDir }}/OFM-12.2-configurePersistenceStores.py"
         mode: "{{ secureMode }}"
 
     - name: Create adjust managed server Jython script {{ ofmDomainStageDir }}/OFM-12.2-adjustManagedServer-{{ ofmAdminserverName }}.py
-      template:
+      ansible.builtin.template:
         src: "OFM-12.2-adjustManagedServer.py"
         dest: "{{ ofmDomainStageDir }}/OFM-12.2-adjustManagedServer-{{ ofmAdminserverName }}.py"
         mode: "{{ secureMode }}"
 
     - name: Configure domain {{ ofmDomainName }} at {{ ofmDomainHome }}
-      command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh  {{ ofmDomainStageDir }}/OFM-12.2-configureDomain.py"
+      ansible.builtin.command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh  {{ ofmDomainStageDir }}/OFM-12.2-configureDomain.py"
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:
@@ -216,53 +216,53 @@
         TEMP: "{{ tempDir }}"
 
     - name: Post clean {{ ofmDomainStageDir }}/OFM-12.2-configureDomain.py
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}/OFM-12.2-configureDomain.py"
         state: absent
 
     - name: Post clean {{ ofmDomainStageDir }}/OFM-12.2-adjustManagedServer-{{ ofmAdminserverName }}.py
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}/OFM-12.2-adjustManagedServer-{{ ofmAdminserverName }}.py"
         state: absent
 
     - name: Post clean {{ ofmDomainStageDir }}/OFM-12.2-configurePersistenceStores.py
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}/OFM-12.2-configurePersistenceStores.py"
         state: absent
 
     ########################################################################################################################
     - name: Create start nodemanager bash script {{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh
-      template:
+      ansible.builtin.template:
         src: "OFM-12.2-startNodeManager.sh"
         dest: "{{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh"
         mode: "{{ secureMode }}"
 
     - name: Create wait nodemanager Jython script {{ ofmDomainStageDir }}/OFM-waitNodeManager.py
-      template:
+      ansible.builtin.template:
         src: "OFM-waitNodeManager.py"
         dest: "{{ ofmDomainStageDir }}/OFM-waitNodeManager.py"
         mode: "{{ secureMode }}"
 
     - name: Create generate boot.properties Jython script {{ ofmDomainStageDir }}/OFM-12.2-genBootProps-{{ ofmAdminserverName }}.py
-      template:
+      ansible.builtin.template:
         src: "OFM-12.2-genBootProps.py"
         dest: "{{ ofmDomainStageDir }}/OFM-12.2-genBootProps-{{ ofmAdminserverName }}.py"
         mode: "{{ secureMode }}"
 
     - name: Create start admin server Jython script {{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.py
-      template:
+      ansible.builtin.template:
         src: "OFM-12.2-startAdminServer.py"
         dest: "{{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.py"
         mode: "{{ secureMode }}"
 
     - name: Create stop admin server Jython script {{ ofmDomainStageDir }}/OFM-12.2-stopAdminServer-{{ ofmAdminserverName }}.py
-      template:
+      ansible.builtin.template:
         src: "OFM-12.2-stopAdminServer.py"
         dest: "{{ ofmDomainStageDir }}/OFM-12.2-stopAdminServer-{{ ofmAdminserverName }}.py"
         mode: "{{ secureMode }}"
 
     - name: Start nodemanager with {{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh
-      command: "{{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh"
+      ansible.builtin.command: "{{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh"
       args:
         chdir: "{{ ofmDomainStageDir }}"
       environment:
@@ -271,7 +271,7 @@
         TEMP: "{{ tempDir }}"
 
     - name: Wait the startup of nodemanager {{ ofmDomainName }} at {{ ofmDomainHome }}
-      command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh  {{ ofmDomainStageDir }}/OFM-waitNodeManager.py"
+      ansible.builtin.command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh  {{ ofmDomainStageDir }}/OFM-waitNodeManager.py"
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:
@@ -280,7 +280,7 @@
         TEMP: "{{ tempDir }}"
 
     - name: Starting {{ ofmAdminserverName }} with NodeManager {{ ofmDomainName }} at {{ ofmDomainHome }}
-      command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.py"
+      ansible.builtin.command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.py"
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:
@@ -289,7 +289,7 @@
         TEMP: "{{ tempDir }}"
 
     - name: Generating boot.properties for {{ ofmAdminserverName }} with NodeManager {{ ofmDomainName }} at {{ ofmDomainHome }}
-      command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-genBootProps-{{ ofmAdminserverName }}.py"
+      ansible.builtin.command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-genBootProps-{{ ofmAdminserverName }}.py"
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:
@@ -298,7 +298,7 @@
         TEMP: "{{ tempDir }}"
 
     - name: Stopping nodemanager {{ ofmDomainName }} at {{ ofmDomainHome }}
-      command: "{{ ofmDomainHome }}/bin/stopNodeManager.sh"
+      ansible.builtin.command: "{{ ofmDomainHome }}/bin/stopNodeManager.sh"
       args:
         chdir: "{{ ofmDomainHome }}"
       environment:
@@ -307,7 +307,7 @@
         TEMP: "{{ tempDir }}"
 
     - name: Start nodemanager with {{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh
-      command: "{{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh"
+      ansible.builtin.command: "{{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh"
       args:
         chdir: "{{ ofmDomainStageDir }}"
       environment:
@@ -316,7 +316,7 @@
         TEMP: "{{ tempDir }}"
 
     - name: Wait the startup of nodemanager {{ ofmDomainName }} at {{ ofmDomainHome }}
-      command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh  {{ ofmDomainStageDir }}/OFM-waitNodeManager.py"
+      ansible.builtin.command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh  {{ ofmDomainStageDir }}/OFM-waitNodeManager.py"
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:
@@ -325,7 +325,7 @@
         TEMP: "{{ tempDir }}"
 
     - name: Stopping {{ ofmAdminserverName }} with NodeManager {{ ofmDomainName }} at {{ ofmDomainHome }}
-      command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-stopAdminServer-{{ ofmAdminserverName }}.py"
+      ansible.builtin.command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-stopAdminServer-{{ ofmAdminserverName }}.py"
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:
@@ -334,7 +334,7 @@
         TEMP: "{{ tempDir }}"
 
     - name: Starting {{ ofmAdminserverName }} with NodeManager {{ ofmDomainName }} at {{ ofmDomainHome }}
-      command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.py"
+      ansible.builtin.command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.py"
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:
@@ -343,51 +343,51 @@
         TEMP: "{{ tempDir }}"
 
     - name: Post clean {{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh"
         state: absent
 
     - name: Post clean {{ ofmDomainStageDir }}/OFM-waitNodeManager.py
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}/OFM-waitNodeManager.py "
         state: absent
 
     - name: Post clean {{ ofmDomainStageDir }}/OFM-12.2-genBootProps-{{ ofmAdminserverName }}.py
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}/OFM-12.2-genBootProps-{{ ofmAdminserverName }}.py"
         state: absent
 
     - name: Post clean {{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.py
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}/OFM-12.2-startAdminServer-{{ ofmAdminserverName }}.py"
         state: absent
 
     - name: Post clean {{ ofmDomainStageDir }}/OFM-12.2-stopAdminServer-{{ ofmAdminserverName }}.py
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}/OFM-12.2-stopAdminServer-{{ ofmAdminserverName }}.py"
         state: absent
 
     ########################################################################################################################
     - name: Create start admin server Jython script {{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}.py
-      template:
+      ansible.builtin.template:
         src: "OFM-12.2-startAdminServerNoCredentials.py"
         dest: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}.py"
         mode: "{{ secureMode }}"
 
     - name: Create stop admin server Jython script {{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}.py
-      template:
+      ansible.builtin.template:
         src: "OFM-12.2-stopAdminServer.py"
         dest: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}.py"
         mode: "{{ secureMode }}"
 
     - name: Create start AdminServer bash script {{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}
-      template:
+      ansible.builtin.template:
         src: "OFM-startAdminServer"
         dest: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}"
         mode: "{{ secureMode }}"
 
     - name: Create stop AdminServer bash script {{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}
-      template:
+      ansible.builtin.template:
         src: "OFM-stopAdminServer"
         dest: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}"
         mode: "{{ secureMode }}"

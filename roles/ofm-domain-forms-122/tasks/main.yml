@@ -4,13 +4,13 @@
 # Lisbon 2017-12-28
 ---
 - name: Checking serverEnvironment = {{ serverEnvironment }}
-  fail:
+  ansible.builtin.fail:
     msg: "serverEnvironment = {{ serverEnvironment }} not valid!"
   when: >
     ((not (serverEnvironment in highenvs)) and (not(serverEnvironment in lowenvs)))
 
 - name: Check if OFM domain {{ ofmDomainName }} exists at {{ ofmDomainHome }}
-  stat:
+  ansible.builtin.stat:
     path: "{{ ofmDomainHome }}"
   register: ofmDomainHome_configured
 
@@ -20,40 +20,40 @@
   block:
 
     - name: Create stage folder "{{ ofmDomainStageDir }}"
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}"
         state: directory
         mode: "{{ mode }}"
 
     - name: Create variables for restricted JRF extension
-      set_fact:
+      ansible.builtin.set_fact:
         ofmFRMexttemplate: "Oracle Forms"
       when: >
         ofmRestrictedJRF == "TRUE"
 
     - name: Create variables for non restricted JRF extension
-      set_fact:
+      ansible.builtin.set_fact:
         ofmFRMexttemplate: "Oracle Forms"
       when: >
         ofmRestrictedJRF == "FALSE"
 
     - name: Assigning default value to ofmFRMextassignexistingserver
-      set_fact:
+      ansible.builtin.set_fact:
         ofmFRMextassignexistingserver: ""
 
     - name: Check if the template requires a server to be assigned to
-      set_fact:
+      ansible.builtin.set_fact:
         ofmFRMextassignexistingserver: "{{ ofmAdminserverName }}"
       when: >
         ofmFRMextrequireserver == "TRUE" and ofmFRMextprovideserver == "FALSE"
 
     - name: Defined the server name for the template provided server {{ ofmFRMextserverprefix }}0
-      set_fact:
+      ansible.builtin.set_fact:
         ofmFRMextservername: "{{ ofmFRMextserverprefix }}0"
 
     ########################################################################################################################
     - name: Stopping {{ ofmAdminserverName }} with {{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}
-      command: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}"
+      ansible.builtin.command: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}"
       args:
         chdir: "{{ ofmInstallUserHomeDir }}/bin"
       environment:
@@ -63,19 +63,19 @@
 
     - name: Create extend domain Jython script {{ ofmDomainStageDir }}/OFM-12.2-extendDomain-FRM.py
       ignore_errors: true
-      template:
+      ansible.builtin.template:
         src: "OFM-12.2-extendDomain-FRM.py"
         dest: "{{ ofmDomainStageDir }}/OFM-12.2-extendDomain-FRM.py"
         mode: "{{ mode }}"
 
     - name: Create move filestores Jython script {{ ofmDomainStageDir }}/OFM-12.2-moveFileStoresToConfig.py
-      template:
+      ansible.builtin.template:
         src: "OFM-12.2-moveFileStoresToConfig.py"
         dest: "{{ ofmDomainStageDir }}/OFM-12.2-moveFileStoresToConfig.py"
         mode: "{{ mode }}"
 
     - name: Extending {{ ofmDomainName }} with {{ ofmFRMexttemplate  }}
-      command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-extendDomain-FRM.py"
+      ansible.builtin.command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-extendDomain-FRM.py"
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:
@@ -86,7 +86,7 @@
   ########################################################################################################################
 
     - name: Creating create managed servers Jython script {{ ofmDomainStageDir }}/OFM-12.2-createManagedServer-{{ ofmFRMextserverprefix }}{{ item.0 }}.py
-      template:
+      ansible.builtin.template:
         src: "OFM-12.2-createManagedServer.py"
         dest: "{{ ofmDomainStageDir }}/OFM-12.2-createManagedServer-{{ ofmFRMextserverprefix }}{{ item.0 }}.py"
         mode: "{{ mode }}"
@@ -96,7 +96,7 @@
         - "{{ ofmFRMextmachines }}"
 
     - name: Creating managed servers {{ ofmDomainName }} with {{ ofmFRMexttemplate  }}
-      command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-createManagedServer-{{ ofmFRMextserverprefix }}{{ item.0 }}.py"
+      ansible.builtin.command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-createManagedServer-{{ ofmFRMextserverprefix }}{{ item.0 }}.py"
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:
@@ -110,7 +110,7 @@
 
     ########################################################################################################################
     - name: Starting {{ ofmAdminserverName }} with {{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}
-      command: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}"
+      ansible.builtin.command: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}"
       args:
         chdir: "{{ ofmInstallUserHomeDir }}/bin"
       environment:
@@ -121,7 +121,7 @@
   ########################################################################################################################
 
     - name: Creating adjust managed servers Jython script {{ ofmDomainStageDir }}/OFM-12.2-createManagedServer-{{ ofmFRMextserverprefix }}{{ item.0 }}.py
-      template:
+      ansible.builtin.template:
         src: "OFM-12.2-adjustManagedServer.py"
         dest: "{{ ofmDomainStageDir }}/OFM-12.2-adjustManagedServer-{{ ofmFRMextserverprefix }}{{ item.0 }}.py"
         mode: "{{ mode }}"
@@ -129,7 +129,7 @@
         - "{{ ofmFRMextmachines }}"
 
     - name: Adjusting managed servers {{ ofmDomainName }} with {{ ofmFRMexttemplate  }}
-      command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-adjustManagedServer-{{ ofmFRMextserverprefix }}{{ item.0 }}.py"
+      ansible.builtin.command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-12.2-adjustManagedServer-{{ ofmFRMextserverprefix }}{{ item.0 }}.py"
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:
@@ -141,7 +141,7 @@
 
     ########################################################################################################################
     - name: Clean {{ ofmDomainStageDir }}/OFM-12.2-extendDomain-FRM.py
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}/OFM-12.2-extendDomain-FRM.py"
         state: absent
 

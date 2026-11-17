@@ -4,13 +4,13 @@
 # Lisbon 2017-12-28
 ---
 - name: Checking serverEnvironment = {{ serverEnvironment }}
-  fail:
+  ansible.builtin.fail:
     msg: "serverEnvironment = {{ serverEnvironment }} not valid!"
   when: >
     ((not (serverEnvironment in highenvs)) and (not(serverEnvironment in lowenvs)))
 
 - name: Check if OFM domain {{ ofmDomainName }} exists at {{ ofmDomainHome }}
-  stat:
+  ansible.builtin.stat:
     path: "{{ ofmDomainHome }}"
   register: ofmDomainHome_configured
 
@@ -20,20 +20,20 @@
   block:
 
     - name: Create stage folder "{{ ofmDomainStageDir }}"
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}"
         state: directory
         mode: "{{ mode }}"
 
     - name: Create configure LDAP Jython script {{ ofmDomainStageDir }}/OFM-12.2-extendDomain-FRM.py
       ignore_errors: true
-      template:
+      ansible.builtin.template:
         src: "OFM-configure-LDAP.py"
         dest: "{{ ofmDomainStageDir }}/OFM-configure-LDAP.py"
         mode: "{{ mode }}"
 
     - name: Configuring {{ ofmDomainName }} with LDAP provider {{ ofmLDAPProviderName }}
-      command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-configure-LDAP.py"
+      ansible.builtin.command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-configure-LDAP.py"
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:
@@ -42,7 +42,7 @@
         TEMP: "{{ tempDir }}"
 
     - name: Stopping {{ ofmAdminserverName }} with {{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}
-      command: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}"
+      ansible.builtin.command: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-stopAdminServer-{{ ofmAdminserverName }}"
       args:
         chdir: "{{ ofmInstallUserHomeDir }}/bin"
       environment:
@@ -51,7 +51,7 @@
         TEMP: "{{ tempDir }}"
 
     - name: Starting {{ ofmAdminserverName }} with {{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}
-      command: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}"
+      ansible.builtin.command: "{{ ofmInstallUserHomeDir }}/bin/{{ ofmDomainName }}-startAdminServer-{{ ofmAdminserverName }}"
       args:
         chdir: "{{ ofmInstallUserHomeDir }}/bin"
       environment:
@@ -60,7 +60,7 @@
         TEMP: "{{ tempDir }}"
     ########################################################################################################################
     - name: Clean {{ ofmDomainStageDir }}/OFM-configure-LDAP.py
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}/OFM-configure-LDAP.py"
         state: absent
 

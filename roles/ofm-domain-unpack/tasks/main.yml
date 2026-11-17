@@ -5,7 +5,7 @@
 ---
 # Create stagedir for domain
 - name: Check if OFM domain {{ ofmDomainName }} exists at {{ ofmDomainHome }}
-  stat:
+  ansible.builtin.stat:
     path: "{{ ofmDomainHome }}"
   register: ofmDomainHome_configured
 
@@ -15,14 +15,14 @@
   block:
 
     - name: Create stage folder {{ ofmDomainStageDir }}
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}"
         state: directory
         mode: "{{ mode }}"
 
 
     - name: Copying the packed domain from the Ansible server to {{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar
-      copy:
+      ansible.builtin.copy:
         src: "{{ ofmAdminserverMachine }}/{{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar"
         dest: "{{ ofmDomainStageDir }}/Pack-{{ ofmDomainName }}.jar"
 
@@ -40,19 +40,19 @@
         TEMP: "{{ tempDir }}"
 
     - name: Create start nodemanager bash script {{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh
-      template:
+      ansible.builtin.template:
         src: "OFM-12.2-startNodeManager.sh"
         dest: "{{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh"
         mode: "{{ secureMode }}"
 
     - name: Create wait nodemanager Jython script {{ ofmDomainStageDir }}/OFM-waitNodeManager.py
-      template:
+      ansible.builtin.template:
         src: "OFM-waitNodeManager.py"
         dest: "{{ ofmDomainStageDir }}/OFM-waitNodeManager.py"
         mode: "{{ secureMode }}"
 
     - name: Start nodemanager with {{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh
-      command: "{{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh"
+      ansible.builtin.command: "{{ ofmDomainStageDir }}/OFM-12.2-startNodeManager.sh"
       args:
         chdir: "{{ ofmDomainStageDir }}"
       environment:
@@ -62,7 +62,7 @@
         TEMP: "{{ tempDir }}"
 
     - name: Wait the startup of nodemanager {{ ofmDomainName }} at {{ ofmDomainHome }}
-      command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh  {{ ofmDomainStageDir }}/OFM-waitNodeManager.py"
+      ansible.builtin.command: "{{oracleHome }}/oracle_common/common/bin/wlst.sh  {{ ofmDomainStageDir }}/OFM-waitNodeManager.py"
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:

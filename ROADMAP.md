@@ -48,7 +48,7 @@
 
 ## Phase 1 — Ansible 14 compatibility
 
-- [ ] **1.1 Add FQCN to every module action** — replace short names with `ansible.builtin.*` or the correct collection FQCN.  
+- [x] **1.1 Add FQCN to every module action** — replace short names with `ansible.builtin.*` or the correct collection FQCN.  
   _Acceptance:_ `fqcn` lint rule is at zero (excluding documented waivers).
 
 - [ ] **1.2 Fix collection modules and unarchive options** — `archive` → `community.general.archive`; `unarchive: copy: no` → `remote_src: true`; add `requirements.yml` coverage.  
@@ -194,3 +194,4 @@
 | 2026-11-17 | 0.6 Makefile + CI | — | `make syntax` and `make lint` pass locally |
 | 2026-11-17 | 0.7 project metadata | — | License is a proprietary placeholder pending owner decision |
 | 2026-11-17 | 0.8 file hygiene | — | `git diff --check` clean; yamllint exits 0; autofixes applied |
+| 2026-11-17 | 1.1 FQCN | — | All role task modules converted; syntax/lint pass |

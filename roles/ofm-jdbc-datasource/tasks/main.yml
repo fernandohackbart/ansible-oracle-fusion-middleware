@@ -4,13 +4,13 @@
 # Lisbon 2017-12-28
 ---
 - name: Checking serverEnvironment = {{ serverEnvironment }}
-  fail:
+  ansible.builtin.fail:
     msg: "serverEnvironment = {{ serverEnvironment }} not valid!"
   when: >
     ((not (serverEnvironment in highenvs)) and (not(serverEnvironment in lowenvs)))
 
 - name: Check if OFM domain {{ ofmDomainName }} exists at {{ ofmDomainHome }}
-  stat:
+  ansible.builtin.stat:
     path: "{{ ofmDomainHome }}"
   register: ofmDomainHome_configured
 
@@ -20,20 +20,20 @@
   block:
 
     - name: Create stage folder "{{ ofmDomainStageDir }}"
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}"
         state: directory
         mode: "{{ mode }}"
 
     - name: Create configure JDBC datasource Jython script {{ ofmDomainStageDir }}/OFM-configure-JDBC-{{ ofmJDBCDATASOURCENAME }}.py
       ignore_errors: true
-      template:
+      ansible.builtin.template:
         src: "OFM-configure-JDBC.py"
         dest: "{{ ofmDomainStageDir }}/OFM-configure-JDBC-{{ ofmJDBCDATASOURCENAME }}.py"
         mode: "{{ mode }}"
 
     - name: Configuring {{ ofmDomainName }} with JDBC datasource {{ ofmJDBCDATASOURCENAME }} jdbc:oracle:thin:@//{{ ofmJDBCURL }}
-      command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-configure-JDBC-{{ ofmJDBCDATASOURCENAME }}.py"
+      ansible.builtin.command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-configure-JDBC-{{ ofmJDBCDATASOURCENAME }}.py"
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:
@@ -42,20 +42,20 @@
         TEMP: "{{ tempDir }}"
 
     - name: Clean {{ ofmDomainStageDir }}/OFM-configure-JDBC-{{ ofmJDBCDATASOURCENAME }}.py
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}/OFM-configure-JDBC-{{ ofmJDBCDATASOURCENAME }}.py"
         state: absent
 
     ########################################################################################################################
     - name: Creating JDBC managed server target Jython script {{ ofmDomainStageDir }}/OFM-add-JDBC-MS-target.py
-      template:
+      ansible.builtin.template:
         src: "OFM-add-JDBC-MS-target.py"
         dest: "{{ ofmDomainStageDir }}/OFM-add-JDBC-MS-target-{{ item }}.py"
         mode: "{{ mode }}"
       with_items: "{{ ofmJDBCManagedServerTargets }}"
 
     - name: Targeting the JDBC datasource {{ ofmJDBCDATASOURCENAME }} to managed servers {{ ofmJDBCManagedServerTargets }}
-      command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-add-JDBC-MS-target-{{ item }}.py"
+      ansible.builtin.command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-add-JDBC-MS-target-{{ item }}.py"
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:
@@ -65,21 +65,21 @@
       with_items: "{{ ofmJDBCManagedServerTargets }}"
 
     - name: Clean {{ ofmDomainStageDir }}/OFM-add-JDBC-MS-target.py
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}/OFM-add-JDBC-MS-target-{{ item }}.py"
         state: absent
       with_items: "{{ ofmJDBCManagedServerTargets }}"
 
     ########################################################################################################################
     - name: Creating JDBC cluster target Jython script {{ ofmDomainStageDir }}/OFM-add-JDBC-CLUSTER-target.py
-      template:
+      ansible.builtin.template:
         src: "OFM-add-JDBC-CLUSTER-target.py"
         dest: "{{ ofmDomainStageDir }}/OFM-add-JDBC-CLUSTER-target-{{ item }}.py"
         mode: "{{ mode }}"
       with_items: "{{ ofmJDBCClusterTargets }}"
 
     - name: Targeting the JDBC datasource {{ ofmJDBCDATASOURCENAME }} to managed servers {{ ofmJDBCClusterTargets }}
-      command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-add-JDBC-CLUSTER-target-{{ item }}.py"
+      ansible.builtin.command: "{{ oracleHome }}/oracle_common/common/bin/wlst.sh {{ ofmDomainStageDir }}/OFM-add-JDBC-CLUSTER-target-{{ item }}.py"
       args:
         chdir: "{{ oracleHome }}/oracle_common/common/bin"
       environment:
@@ -89,7 +89,7 @@
       with_items: "{{ ofmJDBCClusterTargets }}"
 
     - name: Clean {{ ofmDomainStageDir }}/OFM-add-JDBC-CLUSTER-target.py
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}/OFM-add-JDBC-CLUSTER-target-{{ item }}.py"
         state: absent
       with_items: "{{ ofmJDBCClusterTargets }}"

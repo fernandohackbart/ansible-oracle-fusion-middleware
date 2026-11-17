@@ -4,12 +4,12 @@
 # Lisbon 2017-12-28
 ---
 - name: Check if OFM home {{ oraclePresenceFolder }} is already installed
-  stat:
+  ansible.builtin.stat:
     path: "{{ oraclePresenceFolder }}"
   register: oracleHome_installed
 
 - name: Check if OFM domain {{ ofmDomainName }} exists at {{ ofmDomainHome }}
-  stat:
+  ansible.builtin.stat:
     path: "{{ ofmDomainHome }}"
   register: ofmDomainHome_configured
 
@@ -19,55 +19,55 @@
   block:
 
     - name: Create stage folder "{{ stageDir }}"
-      file:
+      ansible.builtin.file:
         path: "{{ stageDir }}"
         state: directory
         mode: "{{ mode }}"
 
     - name: Create domain base folder {{ ofmDomainBase }}
       ignore_errors: true
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainBase }}"
         state: directory
         mode: "{{ mode }}"
 
     - name: Create application base folder {{ ofmApplicationBase }}
       ignore_errors: true
-      file:
+      ansible.builtin.file:
         path: "{{ ofmApplicationBase }}"
         state: directory
         mode: "{{ mode }}"
 
     - name: Create transations base folder {{ ofmTransBase }}
       ignore_errors: true
-      file:
+      ansible.builtin.file:
         path: "{{ ofmTransBase }}"
         state: directory
         mode: "{{ mode }}"
 
     - name: Create transations home folder {{ ofmTransHome }}
       ignore_errors: true
-      file:
+      ansible.builtin.file:
         path: "{{ ofmTransHome }}"
         state: directory
         mode: "{{ mode }}"
 
     - name: Create logs home folder {{ ofmDomainLogsHome }}
       ignore_errors: true
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainLogsHome }}"
         state: directory
         mode: "{{ mode }}"
 
     - name: Create user home binaries folder {{ ofmInstallUserHomeDir }}/bin
       ignore_errors: true
-      file:
+      ansible.builtin.file:
         path: "{{ ofmInstallUserHomeDir }}/bin"
         state: directory
         mode: "{{ mode }}"
 
     - name: Pre clean {{ ofmDomainStageDir }}
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}"
         state: absent
       when: >
@@ -75,7 +75,7 @@
 
     - name: Create domain stage directory {{ ofmDomainStageDir }}
       ignore_errors: true
-      file:
+      ansible.builtin.file:
         path: "{{ ofmDomainStageDir }}"
         state: directory
         mode: "{{ mode }}"
