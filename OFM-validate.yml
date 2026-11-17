@@ -1,0 +1,12 @@
+---
+- name: Validate Oracle Fusion Middleware installation and domain
+  hosts: all
+  remote_user: "{{ ansible_user | default('oracle') }}"
+  become: true
+  become_user: "{{ ofm_user | default('oracle') }}"
+  become_method: ansible.builtin.sudo
+  gather_facts: true
+  any_errors_fatal: true
+  tags: [validate]
+  roles:
+    - ofm_validate

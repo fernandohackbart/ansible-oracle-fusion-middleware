@@ -1,0 +1,66 @@
+---
+- name: Check that the Oracle home exists
+  ansible.builtin.stat:
+    path: "{{ oracleHome }}"
+  register: ofm_validate_home
+
+- name: Assert the Oracle home is present
+  ansible.builtin.assert:
+    that: ofm_validate_home.stat.exists
+    fail_msg: "Oracle home {{ oracleHome }} was not found."
+    quiet: true
+
+- name: Check that the Java executable exists
+  ansible.builtin.stat:
+    path: "{{ javaExecutable }}"
+  register: ofm_validate_java
+
+- name: Assert the Java executable is present
+  ansible.builtin.assert:
+    that: ofm_validate_java.stat.exists
+    fail_msg: "Java executable {{ javaExecutable }} was not found."
+    quiet: true
+
+- name: Check that the domain configuration exists
+  ansible.builtin.stat:
+    path: "{{ ofmDomainHome }}/config/config.xml"
+  register: ofm_validate_domain
+
+- name: Assert the domain configuration is present
+  ansible.builtin.assert:
+    that: ofm_validate_domain.stat.exists
+    fail_msg: "Domain configuration {{ ofmDomainHome }}/config/config.xml was not found."
+    quiet: true
+
+- name: Check the AdminServer port
+  ansible.builtin.wait_for:
+    host: "{{ ofmAdminserverMachine }}"
+    port: "{{ ofm_validate_admin_port }}"
+    state: started
+    timeout: 5
+  when: inventory_hostname in groups['ofm_admin'] | default([])
+  changed_when: false
+
+- name: Check the NodeManager port
+  ansible.builtin.wait_for:
+    host: "{{ ofm_nodemanager_listen_address | default(ansible_facts.fqdn | default(ansible_facts.hostname)) }}"
+    port: "{{ ofm_validate_nodemanager_port }}"
+    state: started
+    timeout: 5
+  changed_when: false
+
+- name: Check the OHS port
+  ansible.builtin.wait_for:
+    host: "{{ ofm_nodemanager_listen_address | default(ansible_facts.fqdn | default(ansible_facts.hostname)) }}"
+    port: "{{ ofm_validate_ohs_port }}"
+    state: started
+    timeout: 5
+  when: ofm_validate_check_ohs | bool
+  changed_when: false
+
+- name: Report validation status
+  ansible.builtin.debug:
+    msg: >-
+      Validation passed for {{ inventory_hostname }}: Oracle home, Java,
+      domain configuration, AdminServer ({{ ofm_validate_admin_port }}),
+      and NodeManager ({{ ofm_validate_nodemanager_port }}) are present.

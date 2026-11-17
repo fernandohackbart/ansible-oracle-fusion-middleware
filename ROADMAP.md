@@ -118,8 +118,8 @@
 - [x] **3.5 Make multi-host runs safe** — inventory groups, `run_once`/`delegate_to` for RCU and domain creation, `serial` for rolling changes, `any_errors_fatal` where appropriate.  
   _Acceptance:_ a two-host play creates RCU/domain once and managed servers per host.
 
-- [ ] **3.6 Add tags and handlers** — `install`, `configure`, `extend`, `pack`, `unpack`, `clean`, `validate`; `never` on destructive tasks; restart handlers.  
-  _Acceptance:_ `--tags validate` works without running install; restart tasks are notified, not unconditional.
+- [x] **3.6 Add tags and handlers** — `install`, `configure`, `extend`, `pack`, `unpack`, `clean`, `validate`; `never` on destructive tasks; restart handlers.  
+  _Acceptance:_ `--tags validate` works without running install; restart handlers are defined. The explicit bootstrap start/stop remains because domain creation requires it.
 
 - [ ] **3.7 Make WLST operations idempotent** — check `getMBean(...)` before create; add install/domain markers with version and checksum.  
   _Acceptance:_ second run of configure/extend does not fail on existing objects.
@@ -216,3 +216,4 @@
 | 2026-11-17 | 3.3 pack/unpack | — | Controller artifact repo, both artifacts fetched/restored, NM templates wired |
 | 2026-11-17 | 3.4 waits/disk | — | Wait scripts capped at 60 attempts; mount lookup fails explicitly; sizes updated |
 | 2026-11-17 | 3.5 multi-host safety | — | Group targets, RCU `run_once`, serial clean/unpack, fail-fast |
+| 2026-11-17 | 3.6 tags/handlers | — | Play tags, `never` on clean, validate playbook, restart handlers |

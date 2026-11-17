@@ -11,5 +11,6 @@
   become_user: "{{ ofm_user | default('oracle') }}"
   become_method: ansible.builtin.sudo
   any_errors_fatal: true
+  tags: [install, ohs]
   roles:
     - ofm-ohs-122

@@ -2,3 +2,4 @@
 # Deprecated compatibility alias. Use OFM-domain-oem.yml.
 # Kept for one major release so existing automation does not break.
 - import_playbook: OFM-domain-oem.yml  # noqa: name[play]
+  tags: [extend, oem]

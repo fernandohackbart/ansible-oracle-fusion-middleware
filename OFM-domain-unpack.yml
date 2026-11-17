@@ -11,6 +11,7 @@
   become_user: "{{ ofm_user | default('oracle') }}"
   become_method: ansible.builtin.sudo
   any_errors_fatal: true
+  tags: [unpack, restore]
   roles:
     - ofm-infra-122
     - ofm-domain-unpack

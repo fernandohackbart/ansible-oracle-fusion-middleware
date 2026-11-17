@@ -10,5 +10,6 @@
   become_user: "{{ ofm_user | default('oracle') }}"
   become_method: ansible.builtin.sudo
   any_errors_fatal: true
+  tags: [extend, forms]
   roles:
     - ofm-domain-forms-122

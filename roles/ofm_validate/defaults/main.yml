@@ -1,0 +1,5 @@
+---
+ofm_validate_admin_port: "{{ ofmAdminserverPort | default(12001) }}"
+ofm_validate_nodemanager_port: "{{ ofmNodemgrPort | default(12000) }}"
+ofm_validate_check_ohs: false
+ofm_validate_ohs_port: 7777
